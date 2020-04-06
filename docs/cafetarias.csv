@@ -1,16 +1,16 @@
-id;nameen;namept;url;time;latitude;longitude;campus_id;url_fenix;;
-1;Main Buliding Bar;Bar do Pavilhão Central;;;38.736616;-9.139603;1;https://fenix.tecnico.ulisboa.pt/spaces-view/view/2448131362335;;
-2;Civil Building Bar;Bar Civil;;;38.737071;-9.140010;1;https://fenix.tecnico.ulisboa.pt/spaces-view/view/2448131361638;;
-3;Civil Building Canteen;Cantina Civil;;;38.737725;-9.140466;1;https://fenix.tecnico.ulisboa.pt/spaces-view/view/2448131361669;;
-4;Sena Bar and Restaurant – North Tower (-1);Sena - Pastelaria e Restaurante;;;38.737712;-9.138635;1;https://fenix.tecnico.ulisboa.pt/spaces-view/view/2448131362954;;
-5;Mechanics Building II Bar (1);Bar Mecânica II;;;38.737333;-9.137252;1;https://fenix.tecnico.ulisboa.pt/spaces-view/view/2448131364041;;
-6;Canteen;Cantina;https://www.sas.ulisboa.pt/;dias úteis, das 9:00 às 21:00 horas;38.736377;-9.136980;1;https://fenix.tecnico.ulisboa.pt/spaces-view/view/2448131384238;;
-7;AEIST Bar (-1);;;;38.736230;-9.137158;1;https://fenix.tecnico.ulisboa.pt/spaces-view/view/2448131384461;no room on fenix;
-8;Bar da Bola;Bar da Bola;;;38.736120;-9.137808;1;https://fenix.tecnico.ulisboa.pt/spaces-view/view/2448131377839;no room on fenix;
-9;Alquimia Bar – South Tower (1);Alquimia Bar;;;38.736105;-9.138434;1;https://fenix.tecnico.ulisboa.pt/spaces-view/view/2448131362723;;
-10;Mathematics Building Canteen (-1);;;;38.735486;-9.139550;1;https://fenix.tecnico.ulisboa.pt/spaces-view/view/2448131363452;;
-11;Interdisciplinary Building Bar;;;;38.736180;-9.140113;1;https://fenix.tecnico.ulisboa.pt/spaces-view/view/2448131361450;;
-12;Redbar Tagus;;https://www.facebook.com/RedbarTagusTaguspark;;38.737977;-9.303103;2;https://fenix.tecnico.ulisboa.pt/spaces-view/view/2448131365112;;
-13;Taguspark Restaurant/Bar;;;;38.736550;-9.302205;2;https://fenix.tecnico.ulisboa.pt/spaces-view/view/2448131395252;;
-14;Canteen (-1);Cantina;https://www.sas.ulisboa.pt/;dias úteis, das 12:00 às 15:00 horas;38.737977;-9.303103;2;https://fenix.tecnico.ulisboa.pt/spaces-view/view/2448131395449;;
-15;Canteen;Cantina;;;38.812575;-9.093818;3;https://fenix.tecnico.ulisboa.pt/spaces-view/view/2448131392438;no room on fenix;http://www.ctn.tecnico.ulisboa.pt/uk/uk_pr_planta.htm
+id,nameen,namept,url,time,latitude,longitude,campus_id,url_fenix
+1,"Main Buliding Bar","Bar do Pavilhão Central",,,38.736616,-9.139603,1,"https://fenix.tecnico.ulisboa.pt/spaces-view/view/2448131362335"
+2,"Civil Building Bar","Bar Civil",,,38.737071,-9.140010,1,"https://fenix.tecnico.ulisboa.pt/spaces-view/view/2448131361638"
+3,"Civil Building Canteen","Cantina Civil",,,38.737725,-9.140466,1,"https://fenix.tecnico.ulisboa.pt/spaces-view/view/2448131361669"
+4,"Sena Bar and Restaurant – North Tower (-1)","Sena - Pastelaria e Restaurante",,,38.737712,-9.138635,1,"https://fenix.tecnico.ulisboa.pt/spaces-view/view/2448131362954"
+5,"Mechanics Building II Bar (1)","Bar Mecânica II",,,38.737333,-9.137252,1,"https://fenix.tecnico.ulisboa.pt/spaces-view/view/2448131364041"
+6,"Canteen","Cantina","https://www.sas.ulisboa.pt/",dias úteis das 9:00 às 21:00 horas,38.736377,-9.136980,1,"https://fenix.tecnico.ulisboa.pt/spaces-view/view/2448131384238"
+7,"AEIST Bar (-1)",,,,38.736230,-9.137158,1,"https://fenix.tecnico.ulisboa.pt/spaces-view/view/2448131384461"
+8,"Bar da Bola","Bar da Bola",,,38.736120,-9.137808,1,"https://fenix.tecnico.ulisboa.pt/spaces-view/view/2448131377839"
+9,"Alquimia Bar – South Tower (1)","Alquimia Bar",,,38.736105,-9.138434,1,"https://fenix.tecnico.ulisboa.pt/spaces-view/view/2448131362723"
+10,"Mathematics Building Canteen (-1)",,,,38.735486,-9.139550,1,"https://fenix.tecnico.ulisboa.pt/spaces-view/view/2448131363452"
+11,"Interdisciplinary Building Bar",,,,38.736180,-9.140113,1,"https://fenix.tecnico.ulisboa.pt/spaces-view/view/2448131361450"
+12,"Redbar Tagus",,"https://www.facebook.com/RedbarTagusTaguspark",,38.737977,-9.303103,2,"https://fenix.tecnico.ulisboa.pt/spaces-view/view/2448131365112"
+13,"Taguspark Restaurant/Bar",,,,38.736550,-9.302205,2,"https://fenix.tecnico.ulisboa.pt/spaces-view/view/2448131395252"
+14,"Canteen (-1)","Cantina","https://www.sas.ulisboa.pt/",dias úteis das 12:00 às 15:00 horas,38.737977,-9.303103,2,"https://fenix.tecnico.ulisboa.pt/spaces-view/view/2448131395449"
+15,"Canteen","Cantina",,,38.812575,-9.093818,3,"https://fenix.tecnico.ulisboa.pt/spaces-view/view/2448131392438"
