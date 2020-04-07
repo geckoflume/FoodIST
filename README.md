@@ -1,2 +1,2 @@
 # FoodIST
-FoodIST: Finding food on campus
+FoodIST: Finding food on campus (group 23)

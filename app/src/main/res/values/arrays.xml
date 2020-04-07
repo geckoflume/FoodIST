@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="campuses_array">
+        <item>Alameda</item>
+        <item>Taguspark</item>
+        <item>Tecnológico e Nuclear</item>
+    </string-array>
+</resources>
