@@ -12,7 +12,11 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import java.util.ArrayList;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.AppExecutors;
@@ -57,7 +61,7 @@ public abstract class AppDatabase extends RoomDatabase {
                         executors.diskIO().execute(() -> {
                             // Generate the data for pre-population
                             AppDatabase database = AppDatabase.getInstance(appContext, executors);
-                            seedDatabase(database);
+                            seedDatabase(database, appContext);
                             // notify that the database was created and it's ready to be used
                             database.setDatabaseCreated();
                         });
@@ -79,17 +83,30 @@ public abstract class AppDatabase extends RoomDatabase {
         mIsDatabaseCreated.postValue(true);
     }
 
-    private static void seedDatabase(final AppDatabase database) {
+    private static void seedDatabase(final AppDatabase database, Context context) {
         Log.e("Database", "Seeding db should only happen on first run");
 
-        // TODO: load from json
-        List<CafeteriaEntity> cafeterias = new ArrayList<>();
-        cafeterias.add(new CafeteriaEntity("Main Buliding Bar", 38.736616, -9.139603, 1));
-        cafeterias.add(new CafeteriaEntity("Civil Building Bar", 38.737071, -9.140010, 1));
+        String json = null;
+        Type cafetariaType = new TypeToken<List<CafeteriaEntity>>() {
+        }.getType();
+        try {
+            InputStream inputStream = context.getAssets().open("cafeterias.json");
+            int size = inputStream.available();
+            byte[] buffer = new byte[size];
+            inputStream.read(buffer);
+            inputStream.close();
+            json = new String(buffer, "UTF-8");
+            Log.i("Seeding", "Json String from assets " + json);
 
-        database.runInTransaction(() -> {
-            database.cafetariaDao().insertAll(cafeterias);
-        });
+            Gson gson = new Gson();
+            List<CafeteriaEntity> cafeterias = gson.fromJson(json, cafetariaType);
+            database.runInTransaction(() -> {
+                database.cafetariaDao().insertAll(cafeterias);
+            });
+        } catch (Throwable e) {
+            e.printStackTrace();
+            Log.e("Seeding", "Error seeding database, ", e);
+        }
     }
 
     public LiveData<Boolean> getDatabaseCreated() {

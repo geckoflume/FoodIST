@@ -1,0 +1,92 @@
+[
+  {
+    "name": "Main Buliding Bar",
+    "latitude": 38.736616,
+    "longitude": -9.139603,
+    "campus_id": 1
+  },
+  {
+    "name": "Civil Building Bar",
+    "latitude": 38.737071,
+    "longitude": -9.14001,
+    "campus_id": 1
+  },
+  {
+    "name": "Civil Building Canteen",
+    "latitude": 38.737725,
+    "longitude": -9.140466,
+    "campus_id": 1
+  },
+  {
+    "name": "Sena Bar and Restaurant – North Tower (-1)",
+    "latitude": 38.737712,
+    "longitude": -9.138635,
+    "campus_id": 1
+  },
+  {
+    "name": "Mechanics Building II Bar (1)",
+    "latitude": 38.737333,
+    "longitude": -9.137252,
+    "campus_id": 1
+  },
+  {
+    "name": "Canteen",
+    "latitude": 38.736377,
+    "longitude": -9.13698,
+    "campus_id": 1
+  },
+  {
+    "name": "AEIST Bar (-1)",
+    "latitude": 38.73623,
+    "longitude": -9.137158,
+    "campus_id": 1
+  },
+  {
+    "name": "Bar da Bola",
+    "latitude": 38.73612,
+    "longitude": -9.137808,
+    "campus_id": 1
+  },
+  {
+    "name": "Alquimia Bar – South Tower (1)",
+    "latitude": 38.736105,
+    "longitude": -9.138434,
+    "campus_id": 1
+  },
+  {
+    "name": "Mathematics Building Canteen (-1)",
+    "latitude": 38.735486,
+    "longitude": -9.13955,
+    "campus_id": 1
+  },
+  {
+    "name": "Interdisciplinary Building Bar",
+    "latitude": 38.73618,
+    "longitude": -9.140113,
+    "campus_id": 1
+  },
+  {
+    "name": "Redbar Tagus",
+    "latitude": 38.737977,
+    "longitude": -9.303103,
+    "campus_id": 2
+  },
+  {
+    "name": "Taguspark Restaurant/Bar",
+    "latitude": 38.73655,
+    "longitude": -9.302205,
+    "campus_id": 2
+  },
+  {
+    "name": "Canteen (-1)",
+    "latitude": 38.737977,
+    "longitude": -9.303103,
+    "campus_id": 2
+  },
+  {
+    "name": "Canteen",
+    "latitude": 38.812575,
+    "longitude": -9.093818,
+    "campus_id": 3
+  }
+]
