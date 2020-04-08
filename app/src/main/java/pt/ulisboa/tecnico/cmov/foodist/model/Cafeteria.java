@@ -1,31 +1,17 @@
 package pt.ulisboa.tecnico.cmov.foodist.model;
 
-public class Cafeteria {
-    private String name;
-    private double latitude;
-    private double longitude;
-    private int campusId;
+public interface Cafeteria {
+    int getId();
 
-    public Cafeteria(String name, double latitude, double longitude, int campusId) {
-        this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.campusId = campusId;
-    }
+    String getName();
 
-    public String getName() {
-        return name;
-    }
+    double getLatitude();
 
-    public double getLatitude() {
-        return latitude;
-    }
+    double getLongitude();
 
-    public double getLongitude() {
-        return longitude;
-    }
+    double getDistance();
 
-    public int getCampusId() {
-        return campusId;
-    }
+    int getCampusId();
+
+    void setDistance(double distance);
 }

@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmov.foodist.adapter;
+package pt.ulisboa.tecnico.cmov.foodist.ui;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -17,11 +17,10 @@ import pt.ulisboa.tecnico.cmov.foodist.model.Cafeteria;
 
 public class CafeteriaAdapter extends RecyclerView.Adapter<CafeteriaAdapter.CafeteriaHolder> {
     private Context context;
-    private List<Cafeteria> cafeterias;
+    private List<? extends Cafeteria> cafeterias;
 
-    public CafeteriaAdapter(Context context, List<Cafeteria> cafeterias) {
+    public CafeteriaAdapter(Context context) {
         this.context = context;
-        this.cafeterias = cafeterias;
     }
 
     @NonNull
@@ -39,8 +38,17 @@ public class CafeteriaAdapter extends RecyclerView.Adapter<CafeteriaAdapter.Cafe
 
     @Override
     public int getItemCount() {
-        return cafeterias.size();
+        if (cafeterias != null)
+            return cafeterias.size();
+        else return 0;
     }
+
+
+    public void setCafeterias(List<? extends Cafeteria> cafeteriasList) {
+        this.cafeterias = cafeteriasList;
+        notifyDataSetChanged();
+    }
+
 
     class CafeteriaHolder extends RecyclerView.ViewHolder {
         private TextView name;
@@ -48,17 +56,11 @@ public class CafeteriaAdapter extends RecyclerView.Adapter<CafeteriaAdapter.Cafe
         CafeteriaHolder(View view) {
             super(view);
             name = view.findViewById(R.id.textView_name);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(context, name.getText(), Toast.LENGTH_SHORT).show();
-                }
-            });
+            itemView.setOnClickListener(view1 -> Toast.makeText(context, name.getText(), Toast.LENGTH_SHORT).show());
         }
 
         void setDetails(Cafeteria cafeteria) {
             name.setText(cafeteria.getName());
         }
     }
-
 }

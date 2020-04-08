@@ -1,23 +1,22 @@
 package pt.ulisboa.tecnico.cmov.foodist;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import java.util.ArrayList;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.List;
 
-import pt.ulisboa.tecnico.cmov.foodist.adapter.CafeteriaAdapter;
-import pt.ulisboa.tecnico.cmov.foodist.model.Cafeteria;
+import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
+import pt.ulisboa.tecnico.cmov.foodist.ui.CafeteriaAdapter;
+import pt.ulisboa.tecnico.cmov.foodist.viewmodel.CafeteriaListViewModel;
 
 public class MainActivity extends AppCompatActivity {
-    private RecyclerView recyclerViewCafeterias;
-    private CafeteriaAdapter adapterCafeterias;
-    private List<Cafeteria> cafeteriaList;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,28 +30,26 @@ public class MainActivity extends AppCompatActivity {
         // Apply the adapter to the spinner
         spinner.setAdapter(adapterCampus);
 
-        recyclerViewCafeterias = findViewById(R.id.recyclerView_cafeterias);
-        cafeteriaList = new ArrayList<>();
+        RecyclerView recyclerViewCafeterias = findViewById(R.id.recyclerView_cafeterias);
         //recyclerViewCafeterias.setLayoutManager(new LinearLayoutManager(this));
         //recyclerViewCafeterias.setItemAnimator(new DefaultItemAnimator());
-        adapterCafeterias = new CafeteriaAdapter(this, cafeteriaList);
+        CafeteriaAdapter adapterCafeterias = new CafeteriaAdapter(this);
         recyclerViewCafeterias.setAdapter(adapterCafeterias);
-        populateCafeterias();
+
+        // Get a new or existing ViewModel from the ViewModelProvider.
+        CafeteriaListViewModel mCafeteriaListViewModel = new ViewModelProvider(this).get(CafeteriaListViewModel.class);
+
+        // Add an observer on the LiveData returned by getAlphabetizedWords.
+        // The onChanged() method fires when the observed data changes and the activity is
+        // in the foreground.
+        mCafeteriaListViewModel.getCafeterias().observe(this, new Observer<List<CafeteriaEntity>>() {
+            @Override
+            public void onChanged(@Nullable final List<CafeteriaEntity> cafeterias) {
+                // Update the cached copy of the cafeterias in the adapter.
+                adapterCafeterias.setCafeterias(cafeterias);
+            }
+        });
+
     }
 
-    private void populateCafeterias() {
-        Cafeteria c = new Cafeteria("Main Buliding Bar", 38.736616, -9.139603, 1);
-        cafeteriaList.add(c);
-        c = new Cafeteria("Civil Building Bar", 38.737071, -9.140010, 1);
-        cafeteriaList.add(c);
-        c = new Cafeteria("Civil Building Canteen", 38.737725, -9.140466, 1);
-        cafeteriaList.add(c);
-        c = new Cafeteria("Sena Bar and Restaurant – North Tower", 38.737712, -9.138635, 1);
-        cafeteriaList.add(c);
-        c = new Cafeteria("Mechanics Building II Bar", 38.737333, -9.137252, 1);
-        cafeteriaList.add(c);
-        c = new Cafeteria("Canteen", 38.736377, -9.136980, 1);
-        cafeteriaList.add(c);
-        adapterCafeterias.notifyDataSetChanged();
-    }
 }
