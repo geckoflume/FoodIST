@@ -25,6 +25,8 @@ import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
 
 @Database(entities = {CafeteriaEntity.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
+
+    private static final String TAG = AppDatabase.class.getSimpleName();
     private static AppDatabase sInstance;
 
     @VisibleForTesting
@@ -84,7 +86,7 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     private static void seedDatabase(final AppDatabase database, Context context) {
-        Log.e("Database", "Seeding db should only happen on first run");
+        Log.e(TAG, "Seeding db should only happen on first run");
 
         String json = null;
         Type cafetariaType = new TypeToken<List<CafeteriaEntity>>() {
@@ -96,7 +98,6 @@ public abstract class AppDatabase extends RoomDatabase {
             inputStream.read(buffer);
             inputStream.close();
             json = new String(buffer, "UTF-8");
-            Log.i("Seeding", "Json String from assets " + json);
 
             Gson gson = new Gson();
             List<CafeteriaEntity> cafeterias = gson.fromJson(json, cafetariaType);
@@ -105,7 +106,7 @@ public abstract class AppDatabase extends RoomDatabase {
             });
         } catch (Throwable e) {
             e.printStackTrace();
-            Log.e("Seeding", "Error seeding database, ", e);
+            Log.e(TAG, "Error seeding database, ", e);
         }
     }
 

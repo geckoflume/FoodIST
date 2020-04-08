@@ -35,12 +35,6 @@ public class CafeteriaListViewModel extends AndroidViewModel {
         mCafeterias = Transformations.switchMap(
                 savedStateHandle.getLiveData("QUERY", null),
                 (Function<CharSequence, LiveData<List<CafeteriaEntity>>>) query -> {
-                    /*
-                    if (TextUtils.isEmpty(query)) {
-                        return mRepository.getCafeterias();
-                    }
-                    return mRepository.searchProducts("*" + query + "*");
-                     */
                     return mRepository.getCafeterias();
                 });
     }
