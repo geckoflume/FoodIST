@@ -7,16 +7,19 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
@@ -30,19 +33,20 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.ulisboa.tecnico.cmov.foodist.location.LocationUtils;
 import pt.ulisboa.tecnico.cmov.foodist.model.Campus;
 import pt.ulisboa.tecnico.cmov.foodist.ui.CafeteriaAdapter;
 import pt.ulisboa.tecnico.cmov.foodist.viewmodel.CafeteriaListViewModel;
+
+import static pt.ulisboa.tecnico.cmov.foodist.ui.UiUtils.showSnackbar;
 
 public class MainActivity extends AppCompatActivity {
     /**
@@ -105,25 +109,50 @@ public class MainActivity extends AppCompatActivity {
     private Location mCurrentLocation;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Campus campus = new Campus(1, "Alameda", 38.736795, -9.138637);
+        MaterialToolbar topAppBar = findViewById(R.id.topAppBar);
+        initToolbar(topAppBar);
+
+        Campus campus = new Campus(0, "Find nearest campus", 0, 0);
         campuses.add(campus);
-        campus = new Campus(2, "Taguspark", 38.737461, -9.303161);
+        campus = new Campus(1, "All cafeterias", 0, 0);
         campuses.add(campus);
-        campus = new Campus(3, "Tecnológico e Nuclear", 38.811911, -9.094221);
+        campus = new Campus(2, "Alameda", 38.736795, -9.138637);
+        campuses.add(campus);
+        campus = new Campus(3, "Taguspark", 38.737461, -9.303161);
+        campuses.add(campus);
+        campus = new Campus(4, "Tecnológico e Nuclear", 38.811911, -9.094221);
         campuses.add(campus);
 
-        spinner = findViewById(R.id.spinner_campus);
         // Create an ArrayAdapter using the string array and a default spinner layout
-        adapterCampus = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, campuses);
+        adapterCampus = new ArrayAdapter<>(this, R.layout.layout_drop_item, campuses);
         // Specify the layout to use when the list of choices appears
         adapterCampus.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         // Apply the adapter to the spinner
+        spinner = new Spinner(topAppBar.getContext());
         spinner.setAdapter(adapterCampus);
+        topAppBar.addView(spinner);
+
+        spinner.setSelection(2);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position==0) {
+                    startLocationUpdates();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
 
         RecyclerView recyclerViewCafeterias = findViewById(R.id.recyclerView_cafeterias);
         CafeteriaAdapter adapterCafeterias = new CafeteriaAdapter(this);
@@ -135,10 +164,8 @@ public class MainActivity extends AppCompatActivity {
         // Add an observer on the LiveData returned by getCafeterias.
         // The onChanged() method fires when the observed data changes and the activity is
         // in the foreground.
-        mCafeteriaListViewModel.getCafeterias().observe(this, cafeterias -> {
-            // Update the cached copy of the cafeterias in the adapter.
-            adapterCafeterias.setCafeterias(cafeterias);
-        });
+        // Update the cached copy of the cafeterias in the adapter.
+        mCafeteriaListViewModel.getCafeterias().observe(this, adapterCafeterias::setCafeterias);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mSettingsClient = LocationServices.getSettingsClient(this);
@@ -153,46 +180,38 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        if (!checkPermissions()) {
-            requestPermissions();
-        }
-    }
-
-    /**
-     * Shows a {@link Snackbar}.
-     *
-     * @param mainTextStringId The id for the string resource for the Snackbar text.
-     * @param actionStringId   The text of the action item.
-     * @param listener         The listener associated with the Snackbar action.
-     */
-    private void showSnackbar(final int mainTextStringId, final int actionStringId, View.OnClickListener listener) {
-        Snackbar.make(findViewById(android.R.id.content),
-                getString(mainTextStringId),
-                Snackbar.LENGTH_INDEFINITE)
-                .setAction(getString(actionStringId), listener).show();
+        checkPermissions();
     }
 
     /**
      * Return the current state of the permissions needed.
      */
-    private boolean checkPermissions() {
-        return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    private void checkPermissions() {
+        if (!(ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
+            requestPermissions();
+        }
     }
 
     private void startLocationPermissionRequest() {
-        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_PERMISSIONS_REQUEST_CODE);
+        ActivityCompat.requestPermissions(MainActivity.this,
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                REQUEST_PERMISSIONS_REQUEST_CODE);
     }
 
     private void requestPermissions() {
-        boolean shouldProvideRationale = ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        boolean shouldProvideRationale =
+                ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.ACCESS_FINE_LOCATION);
 
         // Provide an additional rationale to the user. This would happen if the user denied the
         // request previously, but didn't check the "Don't ask again" checkbox.
         if (shouldProvideRationale) {
             Log.i("main", "Displaying permission rationale to provide additional context");
-            showSnackbar(R.string.permission_rationale, android.R.string.ok, view -> {
-                startLocationPermissionRequest();
-            });
+            showSnackbar(findViewById(android.R.id.content), R.string.permission_rationale,
+                    android.R.string.ok, Snackbar.LENGTH_INDEFINITE, view -> {
+                        startLocationPermissionRequest();
+                    });
         } else {
             Log.i("main", "Requesting permission");
             startLocationPermissionRequest();
@@ -203,7 +222,8 @@ public class MainActivity extends AppCompatActivity {
      * Callback received when a permissions request has been completed.
      */
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
             if (grantResults.length <= 0) {
                 // If user interaction was interrupted, the permission request is cancelled and you
@@ -216,19 +236,23 @@ public class MainActivity extends AppCompatActivity {
 
                 // Notify the user via a SnackBar that they have rejected a core permission for the
                 // app, which makes the Activity useless. In a real app, core permissions would
-                // typically be best requested during a welcome-screen flow.
+                // typically be best requested during a welcome-screen flow. (TODO)
 
                 // Additionally, it is important to remember that a permission might have been
                 // rejected without asking the user for permission (device policy or "Never ask
                 // again" prompts). Therefore, a user interface affordance is typically implemented
                 // when permissions are denied. Otherwise, your app could appear unresponsive to
                 // touches or interactions which have required permissions.
-                showSnackbar(R.string.permission_denied_explanation, R.string.settings,
+                showSnackbar(findViewById(android.R.id.content),
+                        R.string.permission_denied_explanation,
+                        R.string.settings,
+                        Snackbar.LENGTH_LONG,
                         view -> {
                             // Build intent that displays the App settings screen.
                             Intent intent = new Intent();
                             intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                            Uri uri = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null);
+                            Uri uri = Uri.fromParts("package", BuildConfig.APPLICATION_ID,
+                                    null);
                             intent.setData(uri);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
@@ -237,13 +261,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private float calculateDistance(double startLatitude, double startLongitude, double endLatitude, double endLongitude) {
-        float[] results = new float[3];
-        Location.distanceBetween(startLatitude, startLongitude, endLatitude, endLongitude, results);
-        return results[0];
-    }
-
-    // Find nearest campus
+    /**
+     * Find and update nearest campus spinner
+     */
     private void updateNearestCampus() {
         Campus nearest = null;
         float distanceNearest = 0.f;
@@ -251,12 +271,24 @@ public class MainActivity extends AppCompatActivity {
         for (Campus c : campuses) {
             if (nearest == null) {
                 nearest = c;
-                distanceNearest = calculateDistance(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(), nearest.getLatitude(), nearest.getLongitude());
+                distanceNearest =
+                        LocationUtils.calculateDistance(mCurrentLocation.getLatitude(),
+                                mCurrentLocation.getLongitude(),
+                                nearest.getLatitude(),
+                                nearest.getLongitude());
             } else {
-                distanceCandidate = calculateDistance(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(), c.getLatitude(), c.getLongitude());
+                distanceCandidate =
+                        LocationUtils.calculateDistance(mCurrentLocation.getLatitude(),
+                                mCurrentLocation.getLongitude(),
+                                c.getLatitude(),
+                                c.getLongitude());
                 if (distanceCandidate < distanceNearest) {
                     nearest = c;
-                    distanceNearest = calculateDistance(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude(), nearest.getLatitude(), nearest.getLongitude());
+                    distanceNearest =
+                            LocationUtils.calculateDistance(mCurrentLocation.getLatitude(),
+                                    mCurrentLocation.getLongitude(),
+                                    nearest.getLatitude(),
+                                    nearest.getLongitude());
                 }
             }
         }
@@ -264,16 +296,8 @@ public class MainActivity extends AppCompatActivity {
         this.spinner.setSelection(this.adapterCampus.getPosition(nearest));
     }
 
-    public void onClickAutoLocation(View v) {
-        startLocationUpdates();
-    }
-
-
     /**
-     * Sets up the location request. Android has two location request settings:
-     * {@code ACCESS_COARSE_LOCATION} and {@code ACCESS_FINE_LOCATION}. These settings control
-     * the accuracy of the current location. This sample uses ACCESS_FINE_LOCATION, as defined in
-     * the AndroidManifest.xml.
+     * Sets up the location request.
      * <p/>
      * When the ACCESS_FINE_LOCATION setting is specified, combined with a fast update
      * interval (5 seconds), the Fused Location Provider API returns location updates that are
@@ -341,31 +365,36 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Requests location updates from the FusedLocationApi. Note: we don't call this unless location
-     * runtime permission has been granted.
+     * Requests location updates from the FusedLocationApi.
+     * Note: we don't call this unless location runtime permission has been granted.
      */
     private void startLocationUpdates() {
-        // Begin by checking if the device has the necessary location settings.
+        // Begin by checking if the user has granted location permissions
+        checkPermissions();
+
+        // Then by checking if the device has the necessary location settings.
         mSettingsClient.checkLocationSettings(mLocationSettingsRequest)
-                .addOnSuccessListener(this, (OnSuccessListener<LocationSettingsResponse>) locationSettingsResponse -> {
+                .addOnSuccessListener(this, locationSettingsResponse -> {
                     Log.i("main", "All location settings are satisfied.");
 
                     //mLocationRequest.setNumUpdates(1); // Not useful, we only want to request on location update but stop is triggered on onLocationResult
                     mLocationRequest.setExpirationDuration(1000 * 5); // Expire in 5s
 
                     //noinspection MissingPermission
-                    mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+                    mFusedLocationClient.requestLocationUpdates(mLocationRequest,
+                            mLocationCallback, Looper.myLooper());
                 })
-                .addOnFailureListener(this, (OnFailureListener) e -> {
+                .addOnFailureListener(this, e -> {
                     int statusCode = ((ApiException) e).getStatusCode();
                     switch (statusCode) {
                         case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                             Log.i("main", "Location settings are not satisfied. Attempting to upgrade location settings ");
                             try {
-                                // Show the dialog by calling startResolutionForResult(), and check the
-                                // result in onActivityResult().
+                                // Show the dialog by calling startResolutionForResult(), and
+                                // check the result in onActivityResult().
                                 ResolvableApiException rae = (ResolvableApiException) e;
-                                rae.startResolutionForResult(MainActivity.this, REQUEST_CHECK_SETTINGS);
+                                rae.startResolutionForResult(MainActivity.this,
+                                        REQUEST_CHECK_SETTINGS);
                             } catch (IntentSender.SendIntentException sie) {
                                 Log.i("main", "PendingIntent unable to execute request.");
                             }
@@ -373,7 +402,8 @@ public class MainActivity extends AppCompatActivity {
                         case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                             String errorMessage = "Location settings are inadequate, and cannot be fixed here. Fix in Settings.";
                             Log.e("main", errorMessage);
-                            Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+                            Toast.makeText(MainActivity.this, errorMessage,
+                                    Toast.LENGTH_LONG).show();
                     }
                 });
     }
@@ -386,5 +416,13 @@ public class MainActivity extends AppCompatActivity {
         // stopped state. Doing so helps battery performance and is especially
         // recommended in applications that request frequent location updates.
         mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+    }
+
+    private void initToolbar(MaterialToolbar toolbar) {
+        toolbar.setNavigationOnClickListener(v -> Toast.makeText(MainActivity.this, toolbar.getTitle(), Toast.LENGTH_LONG).show());
+        toolbar.setOnMenuItemClickListener(menuItem -> {
+            Toast.makeText(MainActivity.this, menuItem.getTitle(), Toast.LENGTH_LONG).show();
+            return true;
+        });
     }
 }

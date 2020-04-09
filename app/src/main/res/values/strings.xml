@@ -1,11 +1,12 @@
 <resources>
     <string name="app_name">FoodIST</string>
-    <string name="my_location">My location</string>
+    <string name="my_location">Autodetect campus</string>
     <string name="select_campus">Select campus:</string>
     <string name="available_cafeterias">Available cafeterias:</string>
     <string name="settings">Settings</string>
-    <string name="permission_denied_explanation">Permission was denied, but is needed for core functionality.</string>
+    <string name="permission_denied_explanation">Location permission was denied, but is needed for core functionality.</string>
     <string name="permission_rationale">Location permission is needed for campus selection and cafeterias distance.</string>
     <string name="no_location_detected">No location detected. Make sure location is enabled on the device.</string>
     <string name="cafeteria_picture">Cafeteria picture</string>
+    <string name="more">More</string>
 </resources>
