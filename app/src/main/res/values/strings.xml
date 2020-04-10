@@ -9,4 +9,5 @@
     <string name="no_location_detected">No location detected. Make sure location is enabled on the device.</string>
     <string name="cafeteria_picture">Cafeteria picture</string>
     <string name="more">More</string>
+    <string name="cafetaria_card">Walk time: %d min\nQueue wait time: %d min</string>
 </resources>

@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.cmov.foodist.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.model.Cafeteria;
 
 public class CafeteriaAdapter extends RecyclerView.Adapter<CafeteriaAdapter.CafeteriaHolder> {
+    public static final String EXTRA_MESSAGE = "pt.ulisboa.tecnico.cmov.foodist.CAFETERIA";
+
     private Context context;
     private List<? extends Cafeteria> cafeterias;
 
@@ -56,7 +59,11 @@ public class CafeteriaAdapter extends RecyclerView.Adapter<CafeteriaAdapter.Cafe
         CafeteriaHolder(View view) {
             super(view);
             name = view.findViewById(R.id.textView_name);
-            itemView.setOnClickListener(view1 -> Toast.makeText(context, name.getText(), Toast.LENGTH_SHORT).show());
+            itemView.setOnClickListener(view1 -> {
+                Intent intent = new Intent(view1.getContext(), CafeteriaActivity.class);
+                intent.putExtra(EXTRA_MESSAGE, name.getText());
+                context.startActivity(intent);
+            });
         }
 
         void setDetails(Cafeteria cafeteria) {

@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmov.foodist;
+package pt.ulisboa.tecnico.cmov.foodist.ui;
 
 import android.Manifest;
 import android.app.Activity;
@@ -41,9 +41,10 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.ulisboa.tecnico.cmov.foodist.BuildConfig;
+import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.location.LocationUtils;
 import pt.ulisboa.tecnico.cmov.foodist.model.Campus;
-import pt.ulisboa.tecnico.cmov.foodist.ui.CafeteriaAdapter;
 import pt.ulisboa.tecnico.cmov.foodist.viewmodel.CafeteriaListViewModel;
 
 import static pt.ulisboa.tecnico.cmov.foodist.ui.UiUtils.showSnackbar;
@@ -72,8 +73,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        MaterialToolbar topAppBar = findViewById(R.id.topAppBar);
-        initToolbar(topAppBar);
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        initToolbar(toolbar);
 
 
         RecyclerView recyclerViewCafeterias = findViewById(R.id.recyclerView_cafeterias);
@@ -107,9 +108,9 @@ public class MainActivity extends AppCompatActivity {
         adapterCampus.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         // Apply the adapter to the spinner
-        spinner = new Spinner(topAppBar.getContext());
+        spinner = new Spinner(toolbar.getContext());
         spinner.setAdapter(adapterCampus);
-        topAppBar.addView(spinner);
+        toolbar.addView(spinner);
         spinner.setSelection(1);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

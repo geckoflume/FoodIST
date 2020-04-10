@@ -13,7 +13,6 @@ public class BasicApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
         mAppExecutors = new AppExecutors();
     }
 
