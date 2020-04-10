@@ -49,65 +49,21 @@ import pt.ulisboa.tecnico.cmov.foodist.viewmodel.CafeteriaListViewModel;
 import static pt.ulisboa.tecnico.cmov.foodist.ui.UiUtils.showSnackbar;
 
 public class MainActivity extends AppCompatActivity {
-    /**
-     * Code used in requesting runtime permissions.
-     */
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 01;
-
-    /**
-     * Constant used in the location settings dialog.
-     */
     private static final int REQUEST_CHECK_SETTINGS = 0x1;
-
-    /**
-     * The desired interval for location updates. Inexact. Updates may be more or less frequent.
-     */
     private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
-
-    /**
-     * The fastest rate for active location updates. Exact. Updates will never be more frequent
-     * than this value.
-     */
     private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
             UPDATE_INTERVAL_IN_MILLISECONDS / 2;
 
-    /**
-     * Provides the entry point to the Fused Location Provider API.
-     */
-    private FusedLocationProviderClient mFusedLocationClient;
-
     private List<Campus> campuses = new ArrayList<>();
-
-    private Spinner spinner;
-
     private ArrayAdapter<Campus> adapterCampus;
-
-    /**
-     * Stores parameters for requests to the FusedLocationProviderApi.
-     */
+    private Spinner spinner;
+    private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest mLocationRequest;
-
-    /**
-     * Provides access to the Location Settings API.
-     */
     private SettingsClient mSettingsClient;
-
-    /**
-     * Stores the types of location services the client is interested in using. Used for checking
-     * settings to determine if the device has optimal location settings.
-     */
     private LocationSettingsRequest mLocationSettingsRequest;
-
-    /**
-     * Callback for Location events.
-     */
     private LocationCallback mLocationCallback;
-
-    /**
-     * Represents a geographical location.
-     */
     private Location mCurrentLocation;
-
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -115,8 +71,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         MaterialToolbar topAppBar = findViewById(R.id.topAppBar);
         initToolbar(topAppBar);
+
+
+        RecyclerView recyclerViewCafeterias = findViewById(R.id.recyclerView_cafeterias);
+        CafeteriaAdapter adapterCafeterias = new CafeteriaAdapter(this);
+        recyclerViewCafeterias.setAdapter(adapterCafeterias);
+
+        // Get a new or existing ViewModel from the ViewModelProvider.
+        CafeteriaListViewModel mCafeteriaListViewModel = new ViewModelProvider(this).get(CafeteriaListViewModel.class);
+
+        // Add an observer on the LiveData returned by getCafeterias.
+        // The onChanged() method fires when the observed data changes and the activity is
+        // in the foreground.
+        // Update the cached copy of the cafeterias in the adapter.
+        mCafeteriaListViewModel.getCafeterias().observe(this, adapterCafeterias::setCafeterias);
+
 
         Campus campus = new Campus(0, "Find nearest campus", 0, 0);
         campuses.add(campus);
@@ -138,14 +110,16 @@ public class MainActivity extends AppCompatActivity {
         spinner = new Spinner(topAppBar.getContext());
         spinner.setAdapter(adapterCampus);
         topAppBar.addView(spinner);
-
-        spinner.setSelection(2);
-
+        spinner.setSelection(1);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position==0) {
+                if (position == 0) {                                        // "Find nearest campus"
                     startLocationUpdates();
+                } else if (position == 1) {                                 // "All cafeterias"
+                    mCafeteriaListViewModel.setQuery("");
+                } else if (position > 1 && position < campuses.size()) {    // Campus selected
+                    mCafeteriaListViewModel.setQuery(String.valueOf(position - 1));
                 }
             }
 
@@ -154,22 +128,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        RecyclerView recyclerViewCafeterias = findViewById(R.id.recyclerView_cafeterias);
-        CafeteriaAdapter adapterCafeterias = new CafeteriaAdapter(this);
-        recyclerViewCafeterias.setAdapter(adapterCafeterias);
-
-        // Get a new or existing ViewModel from the ViewModelProvider.
-        CafeteriaListViewModel mCafeteriaListViewModel = new ViewModelProvider(this).get(CafeteriaListViewModel.class);
-
-        // Add an observer on the LiveData returned by getCafeterias.
-        // The onChanged() method fires when the observed data changes and the activity is
-        // in the foreground.
-        // Update the cached copy of the cafeterias in the adapter.
-        mCafeteriaListViewModel.getCafeterias().observe(this, adapterCafeterias::setCafeterias);
-
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mSettingsClient = LocationServices.getSettingsClient(this);
-
         // Kick off the process of building the LocationCallback, LocationRequest, and
         // LocationSettingsRequest objects.
         createLocationCallback();

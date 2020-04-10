@@ -50,4 +50,7 @@ public class DataRepository {
         return mDatabase.cafetariaDao().findById(cafeteriaId);
     }
 
+    public LiveData<List<CafeteriaEntity>> getCafeteriasByCampus(int campus) {
+        return mDatabase.cafetariaDao().getAllByCampusId(campus);
+    }
 }

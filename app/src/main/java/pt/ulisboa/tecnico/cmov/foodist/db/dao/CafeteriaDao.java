@@ -11,7 +11,7 @@ import java.util.List;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
 
 @Dao
-public interface CafetariaDao {
+public interface CafeteriaDao {
     @Query("SELECT * FROM cafeterias")
     LiveData<List<CafeteriaEntity>> getAll();
 

@@ -6,6 +6,8 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.SerializedName;
+
 import pt.ulisboa.tecnico.cmov.foodist.model.Cafeteria;
 
 @Entity(tableName = "cafeterias")
@@ -22,6 +24,7 @@ public class CafeteriaEntity implements Cafeteria {
     @NonNull
     private double distance = 0.;
     @NonNull
+    @SerializedName("campus_id")
     @ColumnInfo(name = "campus_id")
     private int campusId;
 

@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.cmov.foodist.viewmodel;
 
 import android.app.Application;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.arch.core.util.Function;
@@ -26,7 +27,6 @@ public class CafeteriaListViewModel extends AndroidViewModel {
                                   @NonNull SavedStateHandle savedStateHandle) {
         super(application);
         mSavedStateHandler = savedStateHandle;
-
         mRepository = ((BasicApp) application).getRepository();
 
         // Use the savedStateHandle.getLiveData() as the input to switchMap,
@@ -35,7 +35,11 @@ public class CafeteriaListViewModel extends AndroidViewModel {
         mCafeterias = Transformations.switchMap(
                 savedStateHandle.getLiveData("QUERY", null),
                 (Function<CharSequence, LiveData<List<CafeteriaEntity>>>) query -> {
-                    return mRepository.getCafeterias();
+                    if (TextUtils.isEmpty(query)) {
+                        return mRepository.getCafeterias();
+                    } else {
+                        return mRepository.getCafeteriasByCampus(Integer.parseInt((String) query));
+                    }
                 });
     }
 

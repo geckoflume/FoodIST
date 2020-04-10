@@ -20,7 +20,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.AppExecutors;
-import pt.ulisboa.tecnico.cmov.foodist.db.dao.CafetariaDao;
+import pt.ulisboa.tecnico.cmov.foodist.db.dao.CafeteriaDao;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
 
 @Database(entities = {CafeteriaEntity.class}, version = 1, exportSchema = false)
@@ -32,7 +32,7 @@ public abstract class AppDatabase extends RoomDatabase {
     @VisibleForTesting
     public static final String DATABASE_NAME = "database.db";
 
-    public abstract CafetariaDao cafetariaDao();
+    public abstract CafeteriaDao cafetariaDao();
 
     private final MutableLiveData<Boolean> mIsDatabaseCreated = new MutableLiveData<>();
 
