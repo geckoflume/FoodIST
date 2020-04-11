@@ -55,19 +55,21 @@ public class CafeteriaAdapter extends RecyclerView.Adapter<CafeteriaAdapter.Cafe
 
     class CafeteriaHolder extends RecyclerView.ViewHolder {
         private TextView name;
+        private Cafeteria cafeteria;
 
         CafeteriaHolder(View view) {
             super(view);
-            name = view.findViewById(R.id.textView_name);
+            this.name = view.findViewById(R.id.textView_name);
             itemView.setOnClickListener(view1 -> {
                 Intent intent = new Intent(view1.getContext(), CafeteriaActivity.class);
-                intent.putExtra(EXTRA_MESSAGE, name.getText());
+                intent.putExtra(EXTRA_MESSAGE, String.valueOf(this.cafeteria.getId()));
                 context.startActivity(intent);
             });
         }
 
         void setDetails(Cafeteria cafeteria) {
-            name.setText(cafeteria.getName());
+            this.cafeteria = cafeteria;
+            this.name.setText(cafeteria.getName());
         }
     }
 }

@@ -66,24 +66,19 @@ public class MainActivity extends AppCompatActivity {
     private LocationCallback mLocationCallback;
     private Location mCurrentLocation;
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
         initToolbar(toolbar);
-
 
         RecyclerView recyclerViewCafeterias = findViewById(R.id.recyclerView_cafeterias);
         CafeteriaAdapter adapterCafeterias = new CafeteriaAdapter(this);
         recyclerViewCafeterias.setAdapter(adapterCafeterias);
-
         // Get a new or existing ViewModel from the ViewModelProvider.
         CafeteriaListViewModel mCafeteriaListViewModel = new ViewModelProvider(this).get(CafeteriaListViewModel.class);
-
         // Add an observer on the LiveData returned by getCafeterias.
         // The onChanged() method fires when the observed data changes and the activity is
         // in the foreground.
@@ -91,22 +86,11 @@ public class MainActivity extends AppCompatActivity {
         mCafeteriaListViewModel.getCafeterias().observe(this, adapterCafeterias::setCafeterias);
 
 
-        Campus campus = new Campus(0, "Find nearest campus", 0, 0);
-        campuses.add(campus);
-        campus = new Campus(1, "All cafeterias", 0, 0);
-        campuses.add(campus);
-        campus = new Campus(2, "Alameda", 38.736795, -9.138637);
-        campuses.add(campus);
-        campus = new Campus(3, "Taguspark", 38.737461, -9.303161);
-        campuses.add(campus);
-        campus = new Campus(4, "Tecnológico e Nuclear", 38.811911, -9.094221);
-        campuses.add(campus);
-
+        initCampuses();
         // Create an ArrayAdapter using the string array and a default spinner layout
         adapterCampus = new ArrayAdapter<>(this, R.layout.layout_drop_item, campuses);
         // Specify the layout to use when the list of choices appears
         adapterCampus.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
         // Apply the adapter to the spinner
         spinner = new Spinner(toolbar.getContext());
         spinner.setAdapter(adapterCampus);
@@ -142,6 +126,19 @@ public class MainActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         checkPermissions();
+    }
+
+    private void initCampuses() {
+        Campus campus = new Campus(0, "Find nearest campus", 0, 0);
+        this.campuses.add(campus);
+        campus = new Campus(1, "All cafeterias", 0, 0);
+        this.campuses.add(campus);
+        campus = new Campus(2, "Alameda", 38.736795, -9.138637);
+        this.campuses.add(campus);
+        campus = new Campus(3, "Taguspark", 38.737461, -9.303161);
+        this.campuses.add(campus);
+        campus = new Campus(4, "Tecnológico e Nuclear", 38.811911, -9.094221);
+        this.campuses.add(campus);
     }
 
     /**
