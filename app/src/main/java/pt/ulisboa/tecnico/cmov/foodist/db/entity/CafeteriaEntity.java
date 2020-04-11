@@ -12,7 +12,7 @@ import pt.ulisboa.tecnico.cmov.foodist.model.Cafeteria;
 
 @Entity(tableName = "cafeterias")
 public class CafeteriaEntity implements Cafeteria {
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     @ColumnInfo(index = true)
     private int id;
     @NonNull
