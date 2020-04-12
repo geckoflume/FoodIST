@@ -4,6 +4,7 @@
     android:id="@+id/cardView_cafeteria"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    app:cardUseCompatPadding="true"
     app:cardPreventCornerOverlap="true">
 
     <LinearLayout
