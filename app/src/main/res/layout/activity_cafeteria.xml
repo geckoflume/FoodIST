@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
@@ -61,32 +62,56 @@
             <TextView
                 android:id="@+id/textView"
                 style="@style/TextAppearance.MaterialComponents.Body1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:layout_marginTop="16dp"
                 android:text="Av. Rovisco Pais, 1\n1049-001 Lisboa"
+                app:layout_constraintBottom_toBottomOf="@+id/textView_walkTime"
+                app:layout_constraintEnd_toStartOf="@+id/imageView_waitTime"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/imageView_waitTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView"
-                app:layout_constraintEnd_toStartOf="@+id/textView4"
-                app:layout_constraintTop_toTopOf="@+id/textView"
+                app:layout_constraintBottom_toBottomOf="@+id/textView_waitTime"
+                app:layout_constraintEnd_toStartOf="@+id/textView_waitTime"
+                app:layout_constraintTop_toTopOf="@+id/textView_waitTime"
                 app:srcCompat="@drawable/ic_access_time_24dp" />
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/textView_waitTime"
+                android:layout_width="64dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center_horizontal"
+                android:text="8-10 min"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/imageView_walkTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="8-10 min"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/textView_walkTime"
+                app:layout_constraintEnd_toStartOf="@+id/textView_walkTime"
+                app:layout_constraintTop_toTopOf="@+id/textView_walkTime"
+                app:srcCompat="@drawable/ic_directions_walk_24dp" />
+
+            <TextView
+                android:id="@+id/textView_walkTime"
+                android:layout_width="64dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_horizontal"
+                android:text="3 min"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/imageView" />
+                app:layout_constraintTop_toBottomOf="@+id/textView_waitTime" />
 
             <TextView
                 android:id="@+id/textView2"
@@ -159,6 +184,16 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/dish" />
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout2"
