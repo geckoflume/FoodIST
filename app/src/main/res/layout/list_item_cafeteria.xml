@@ -4,7 +4,6 @@
     android:id="@+id/cardView_cafeteria"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardUseCompatPadding="true"
     app:cardPreventCornerOverlap="true">
 
     <LinearLayout
@@ -34,9 +33,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                android:textAppearance="?attr/textAppearanceBody2"
                 android:ellipsize="marquee"
                 android:singleLine="true"
+                android:textAppearance="?attr/textAppearanceBody2"
                 android:textStyle="bold" />
 
             <TextView
@@ -44,7 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                android:text="@string/cafetaria_card"
+                android:text="@string/cafeteria_card"
                 android:textAppearance="?attr/textAppearanceBody2" />
         </LinearLayout>
 

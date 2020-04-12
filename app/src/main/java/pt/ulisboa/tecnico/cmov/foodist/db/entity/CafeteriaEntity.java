@@ -44,9 +44,17 @@ public class CafeteriaEntity implements Cafeteria {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @Override
     public String getName() {
         return name;
+    }
+
+    public void setName(@NonNull String name) {
+        this.name = name;
     }
 
     @Override
@@ -54,9 +62,17 @@ public class CafeteriaEntity implements Cafeteria {
         return latitude;
     }
 
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
     @Override
     public double getLongitude() {
         return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     @Override
@@ -65,29 +81,13 @@ public class CafeteriaEntity implements Cafeteria {
     }
 
     @Override
-    public int getCampusId() {
-        return campusId;
-    }
-
-    @Override
     public void setDistance(double distance) {
         this.distance = distance;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setName(@NonNull String name) {
-        this.name = name;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
+    @Override
+    public int getCampusId() {
+        return campusId;
     }
 
     public void setCampusId(int campusId) {

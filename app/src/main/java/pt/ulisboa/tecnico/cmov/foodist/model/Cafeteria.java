@@ -11,7 +11,7 @@ public interface Cafeteria {
 
     double getDistance();
 
-    int getCampusId();
-
     void setDistance(double distance);
+
+    int getCampusId();
 }

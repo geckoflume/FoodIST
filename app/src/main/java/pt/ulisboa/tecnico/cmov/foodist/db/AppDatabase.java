@@ -26,14 +26,10 @@ import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
 @Database(entities = {CafeteriaEntity.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
-    private static final String TAG = AppDatabase.class.getSimpleName();
-    private static AppDatabase sInstance;
-
     @VisibleForTesting
     public static final String DATABASE_NAME = "database.db";
-
-    public abstract CafeteriaDao cafetariaDao();
-
+    private static final String TAG = AppDatabase.class.getSimpleName();
+    private static AppDatabase sInstance;
     private final MutableLiveData<Boolean> mIsDatabaseCreated = new MutableLiveData<>();
 
     public static AppDatabase getInstance(final Context context, final AppExecutors executors) {
@@ -72,6 +68,33 @@ public abstract class AppDatabase extends RoomDatabase {
                 .build();
     }
 
+    private static void seedDatabase(final AppDatabase database, Context context) {
+        Log.e(TAG, "Seeding db should only happen on first run");
+
+        String json = null;
+        Type cafeteriaType = new TypeToken<List<CafeteriaEntity>>() {
+        }.getType();
+        try {
+            InputStream inputStream = context.getAssets().open("cafeterias.json");
+            int size = inputStream.available();
+            byte[] buffer = new byte[size];
+            inputStream.read(buffer);
+            inputStream.close();
+            json = new String(buffer, "UTF-8");
+
+            Gson gson = new Gson();
+            List<CafeteriaEntity> cafeterias = gson.fromJson(json, cafeteriaType);
+            database.runInTransaction(() -> {
+                database.cafeteriaDao().insertAll(cafeterias);
+            });
+        } catch (Throwable e) {
+            e.printStackTrace();
+            Log.e(TAG, "Error seeding database, ", e);
+        }
+    }
+
+    public abstract CafeteriaDao cafeteriaDao();
+
     /**
      * Check whether the database already exists and expose it via {@link #getDatabaseCreated()}
      */
@@ -83,31 +106,6 @@ public abstract class AppDatabase extends RoomDatabase {
 
     private void setDatabaseCreated() {
         mIsDatabaseCreated.postValue(true);
-    }
-
-    private static void seedDatabase(final AppDatabase database, Context context) {
-        Log.e(TAG, "Seeding db should only happen on first run");
-
-        String json = null;
-        Type cafetariaType = new TypeToken<List<CafeteriaEntity>>() {
-        }.getType();
-        try {
-            InputStream inputStream = context.getAssets().open("cafeterias.json");
-            int size = inputStream.available();
-            byte[] buffer = new byte[size];
-            inputStream.read(buffer);
-            inputStream.close();
-            json = new String(buffer, "UTF-8");
-
-            Gson gson = new Gson();
-            List<CafeteriaEntity> cafeterias = gson.fromJson(json, cafetariaType);
-            database.runInTransaction(() -> {
-                database.cafetariaDao().insertAll(cafeterias);
-            });
-        } catch (Throwable e) {
-            e.printStackTrace();
-            Log.e(TAG, "Error seeding database, ", e);
-        }
     }
 
     public LiveData<Boolean> getDatabaseCreated() {

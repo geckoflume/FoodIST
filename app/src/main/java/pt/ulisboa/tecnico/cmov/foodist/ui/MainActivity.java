@@ -90,14 +90,15 @@ public class MainActivity extends AppCompatActivity {
         // Specify the layout to use when the list of choices appears
         adapterCampus.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
-        spinner = new Spinner(toolbar.getContext());
-        spinner.setAdapter(adapterCampus);
-        toolbar.addView(spinner);
-        spinner.setSelection(1);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        this.spinner = new Spinner(toolbar.getContext());
+        this.spinner.setAdapter(adapterCampus);
+        toolbar.addView(this.spinner);
+        this.spinner.setSelection(1);
+        this.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {                                        // "Find nearest campus"
+                    spinner.setEnabled(false);
                     Toast.makeText(MainActivity.this, R.string.autodetecting_campus_toast, Toast.LENGTH_LONG).show();
                     startLocationUpdates();
                 } else if (position == 1) {                                 // "All cafeterias"
@@ -251,6 +252,7 @@ public class MainActivity extends AppCompatActivity {
         }
         Log.i("Campus", "Nearest campus is " + nearest + " at " + distanceNearest + "m.");
         this.spinner.setSelection(this.adapterCampus.getPosition(nearest));
+        this.spinner.setEnabled(true);
     }
 
     /**

@@ -20,7 +20,7 @@ public class DataRepository {
         mDatabase = database;
         mObservableCafeterias = new MediatorLiveData<>();
 
-        mObservableCafeterias.addSource(mDatabase.cafetariaDao().getAll(),
+        mObservableCafeterias.addSource(mDatabase.cafeteriaDao().getAll(),
                 cafeteriaEntities -> {
                     if (mDatabase.getDatabaseCreated().getValue() != null) {
                         mObservableCafeterias.postValue(cafeteriaEntities);
@@ -47,10 +47,10 @@ public class DataRepository {
     }
 
     public LiveData<CafeteriaEntity> loadProduct(final int cafeteriaId) {
-        return mDatabase.cafetariaDao().findById(cafeteriaId);
+        return mDatabase.cafeteriaDao().findById(cafeteriaId);
     }
 
     public LiveData<List<CafeteriaEntity>> getCafeteriasByCampus(int campus) {
-        return mDatabase.cafetariaDao().getAllByCampusId(campus);
+        return mDatabase.cafeteriaDao().getAllByCampusId(campus);
     }
 }
