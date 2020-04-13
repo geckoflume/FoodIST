@@ -11,8 +11,28 @@
     <style name="TextAppearance.CafeteriaInfo" parent="android:Widget.TextView">
         <item name="android:layout_width">@dimen/text_time_width</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">center_horizontal</item>
+        <item name="android:gravity">center</item>
         <item name="android:ellipsize">marquee</item>
         <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="TextAppearance.CafeteriaInfo.OpenClosed" parent="TextAppearance.CafeteriaInfo">
+        <item name="android:layout_width">@dimen/text_open_closed</item>
+        <item name="android:textColor">@android:color/holo_green_dark</item>
+    </style>
+
+    <style name="TextAppearance.CafeteriaInfo.Time" parent="TextAppearance.CafeteriaInfo">
+        <item name="android:layout_width">@dimen/text_time_width</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="TextAppearance.CafeteriaInfo.Time.Walk" parent="TextAppearance.CafeteriaInfo.Time">
+        <item name="android:drawableStart">@drawable/ic_directions_walk_24dp</item>
+        <item name="android:drawableLeft">@drawable/ic_directions_walk_24dp</item>
+    </style>
+
+    <style name="TextAppearance.CafeteriaInfo.Time.Wait" parent="TextAppearance.CafeteriaInfo.Time">
+        <item name="android:drawableStart">@drawable/ic_access_time_24dp</item>
+        <item name="android:drawableLeft">@drawable/ic_access_time_24dp</item>
     </style>
 </resources>

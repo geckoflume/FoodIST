@@ -4,6 +4,8 @@ import android.view.View;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import pt.ulisboa.tecnico.cmov.foodist.R;
+
 public class UiUtils {
 
     /**
@@ -18,5 +20,9 @@ public class UiUtils {
     public static void showSnackbar(View v, final int mainTextStringId, final int actionStringId,
                                     final int duration, View.OnClickListener listener) {
         Snackbar.make(v, mainTextStringId, duration).setAction(actionStringId, listener).show();
+    }
+
+    public static String formatTime(double time, String ltOne, String gtOne) {
+        return (time < 1 ? ltOne : gtOne);
     }
 }

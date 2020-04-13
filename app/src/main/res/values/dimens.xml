@@ -7,6 +7,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="dish_picture_size">96dp</dimen>
     <dimen name="dish_option_width">64dp</dimen>
-    <dimen name="text_time_width">48dp</dimen>
+    <dimen name="text_open_closed">64dp</dimen>
+    <dimen name="text_time_width">90dp</dimen> <!-- 64dp for text, 8dp padding and 24dp icon -->
 
 </resources>

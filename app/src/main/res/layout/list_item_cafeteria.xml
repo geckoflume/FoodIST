@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardView_cafeteria"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardUseCompatPadding="true"
-    app:cardPreventCornerOverlap="true">
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,8 +30,8 @@
             style="@style/TextAppearance.MaterialComponents.Body1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
+            android:layout_marginStart="21dp"
+            android:layout_marginLeft="21dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
@@ -44,77 +43,38 @@
             app:layout_constraintStart_toEndOf="@+id/imageView_thumbnail"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <TextView
+            android:id="@+id/textView_walkTime"
+            style="@style/TextAppearance.CafeteriaInfo.Time.Walk"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginBottom="16dp"
+            android:text="@{UiUtils.formatTime(cafeteriaViewModel.cafeteria.timeWalk, @string/less_one_minute_short, @string/minutes_short)}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView_thumbnail">
+            app:layout_constraintStart_toEndOf="@+id/imageView_thumbnail" />
 
-            <ImageView
-                android:id="@+id/imageView_walkTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView_walkTime"
-                app:layout_constraintEnd_toStartOf="@+id/textView_walkTime"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/textView_walkTime"
-                app:srcCompat="@drawable/ic_directions_walk_24dp" />
-
-            <TextView
-                android:id="@+id/textView_walkTime"
-                style="@style/TextAppearance.CafeteriaInfo"
-                android:text="3 min"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/constraintLayout3"
+        <TextView
+            android:id="@+id/textView_waitTime"
+            style="@style/TextAppearance.CafeteriaInfo.Time.Wait"
+            android:layout_marginStart="11dp"
+            android:layout_marginLeft="11dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:text="@{UiUtils.formatTime(cafeteriaViewModel.cafeteria.timeWait, @string/less_one_minute_short, @string/minutes_short)}"
+            app:layout_constraintBottom_toBottomOf="@+id/textView_walkTime"
             app:layout_constraintEnd_toStartOf="@+id/textView_open"
-            app:layout_constraintStart_toEndOf="@+id/constraintLayout3"
-            app:layout_constraintTop_toTopOf="@+id/constraintLayout3">
-
-            <ImageView
-                android:id="@+id/imageView_waitTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView_waitTime"
-                app:layout_constraintEnd_toStartOf="@+id/textView_waitTime"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/textView_waitTime"
-                app:srcCompat="@drawable/ic_access_time_24dp" />
-
-            <TextView
-                android:id="@+id/textView_waitTime"
-                style="@style/TextAppearance.CafeteriaInfo"
-                android:text="8 min"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintStart_toEndOf="@+id/textView_walkTime"
+            app:layout_constraintTop_toTopOf="@+id/textView_walkTime" />
 
         <TextView
             android:id="@+id/textView_open"
-            style="@style/TextAppearance.CafeteriaInfo"
+            style="@style/TextAppearance.CafeteriaInfo.OpenClosed"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
-            android:text="Open"
-            android:textColor="@android:color/holo_green_dark"
-            app:layout_constraintBottom_toBottomOf="@+id/constraintLayout4"
+            android:text="@string/open"
+            app:layout_constraintBottom_toBottomOf="@+id/textView_waitTime"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/constraintLayout4" />
+            app:layout_constraintTop_toTopOf="@+id/textView_waitTime" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
