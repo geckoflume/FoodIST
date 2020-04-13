@@ -10,13 +10,16 @@ import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import pt.ulisboa.tecnico.cmov.foodist.R;
+import pt.ulisboa.tecnico.cmov.foodist.databinding.ActivityCafeteriaBinding;
 import pt.ulisboa.tecnico.cmov.foodist.model.Cafeteria;
 import pt.ulisboa.tecnico.cmov.foodist.viewmodel.CafeteriaListViewModel;
+import pt.ulisboa.tecnico.cmov.foodist.viewmodel.CafeteriaViewModel;
 
 public class CafeteriaActivity extends AppCompatActivity {
     private Toolbar toolbar;
@@ -25,7 +28,21 @@ public class CafeteriaActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cafeteria);
+
+        // Get the Intent that started this activity and extract the string
+        String message = getIntent().getStringExtra(CafeteriaAdapter.EXTRA_MESSAGE);
+
+        CafeteriaViewModel.Factory factory = new CafeteriaViewModel.Factory(getApplication(), Integer.parseInt(message));
+        final CafeteriaViewModel model = new ViewModelProvider(this, factory).get(CafeteriaViewModel.class);
+
+        ActivityCafeteriaBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_cafeteria);
+        binding.setLifecycleOwner(this);                        // important to observe LiveData!!
+        binding.setCafeteriaViewModel(model);
+        initStatusBar();
+        initActionBar();
+    }
+
+    private void initStatusBar(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
@@ -38,25 +55,11 @@ public class CafeteriaActivity extends AppCompatActivity {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Color.TRANSPARENT);
         }
-
-
-        // Get the Intent that started this activity and extract the string
-        Intent intent = getIntent();
-        String message = intent.getStringExtra(CafeteriaAdapter.EXTRA_MESSAGE);
-
-        toolbar = findViewById(R.id.toolbar);
-        initActionBar(message);
-        CollapsingToolbarLayout collapsingToolbar = findViewById(R.id.collapsingToolbar);
-        collapsingToolbar.setTitle(message);
-
-        CafeteriaAdapter adapterCafeterias = new CafeteriaAdapter(this);
-        CafeteriaListViewModel mCafeteriaListViewModel = new ViewModelProvider(this).get(CafeteriaListViewModel.class);
-        mCafeteriaListViewModel.getCafeterias().observe(this, adapterCafeterias::setCafeterias);
     }
 
-    private void initActionBar(String title) {
+    private void initActionBar() {
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //getSupportActionBar().setTitle(title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 }

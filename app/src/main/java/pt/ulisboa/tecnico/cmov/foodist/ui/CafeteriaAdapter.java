@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.cmov.foodist.ui;
 
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -21,7 +20,7 @@ public class CafeteriaAdapter extends RecyclerView.Adapter<CafeteriaAdapter.Cafe
     public static final String EXTRA_MESSAGE = "pt.ulisboa.tecnico.cmov.foodist.CAFETERIA";
 
     private Context context;
-    private List<? extends Cafeteria> cafeterias;
+    private List<? extends Cafeteria> cafeteriaList;
 
     public CafeteriaAdapter(Context context) {
         this.context = context;
@@ -36,20 +35,20 @@ public class CafeteriaAdapter extends RecyclerView.Adapter<CafeteriaAdapter.Cafe
 
     @Override
     public void onBindViewHolder(final CafeteriaHolder holder, int position) {
-        Cafeteria cafeteria = cafeterias.get(position);
+        Cafeteria cafeteria = cafeteriaList.get(position);
         holder.setDetails(cafeteria);
     }
 
     @Override
     public int getItemCount() {
-        if (cafeterias != null)
-            return cafeterias.size();
+        if (cafeteriaList != null)
+            return cafeteriaList.size();
         else return 0;
     }
 
 
-    public void setCafeterias(List<? extends Cafeteria> cafeteriasList) {
-        this.cafeterias = cafeteriasList;
+    public void setCafeteriaList(List<? extends Cafeteria> cafeteriasList) {
+        this.cafeteriaList = cafeteriasList;
         notifyDataSetChanged();
     }
 

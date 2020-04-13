@@ -46,7 +46,7 @@ public class DataRepository {
         return mObservableCafeterias;
     }
 
-    public LiveData<CafeteriaEntity> loadProduct(final int cafeteriaId) {
+    public LiveData<CafeteriaEntity> loadCafeteria(final int cafeteriaId) {
         return mDatabase.cafeteriaDao().findById(cafeteriaId);
     }
 

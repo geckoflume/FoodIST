@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         // The onChanged() method fires when the observed data changes and the activity is
         // in the foreground.
         // Update the cached copy of the cafeterias in the adapter.
-        mCafeteriaListViewModel.getCafeterias().observe(this, adapterCafeterias::setCafeterias);
+        mCafeteriaListViewModel.getCafeterias().observe(this, adapterCafeterias::setCafeteriaList);
 
 
         initCampuses();
