@@ -14,4 +14,12 @@ public interface Cafeteria {
     void setDistance(double distance);
 
     int getCampusId();
+
+    double getTimeWait();
+
+    void setTimeWait(double time);
+
+    double getTimeWalk();
+
+    void setTimeWalk(double time);
 }

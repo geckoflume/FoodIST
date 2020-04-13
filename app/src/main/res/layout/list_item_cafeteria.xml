@@ -24,7 +24,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/cafeteria" />
+            app:srcCompat="@drawable/cafeteria_1" />
 
         <TextView
             android:id="@+id/textView_name"
@@ -68,10 +68,12 @@
 
             <TextView
                 android:id="@+id/textView_walkTime"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/text_time_width"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:text="3 min"
+                android:ellipsize="marquee"
+                android:singleLine="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -101,10 +103,12 @@
 
             <TextView
                 android:id="@+id/textView_waitTime"
-                android:layout_width="64dp"
+                android:layout_width="@dimen/text_time_width"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="8-10 min"
+                android:text="8 min"
+                android:ellipsize="marquee"
+                android:singleLine="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

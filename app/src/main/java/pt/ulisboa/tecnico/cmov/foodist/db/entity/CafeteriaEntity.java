@@ -24,6 +24,14 @@ public class CafeteriaEntity implements Cafeteria {
     @NonNull
     private double distance = 0.;
     @NonNull
+    @SerializedName("time_walk")
+    @ColumnInfo(name = "time_walk")
+    private double timeWalk = 0.;
+    @NonNull
+    @SerializedName("time_wait")
+    @ColumnInfo(name = "time_wait")
+    private double timeWait = 0.;
+    @NonNull
     @SerializedName("campus_id")
     @ColumnInfo(name = "campus_id")
     private int campusId;
@@ -88,6 +96,26 @@ public class CafeteriaEntity implements Cafeteria {
     @Override
     public int getCampusId() {
         return campusId;
+    }
+
+    @Override
+    public double getTimeWait() {
+        return timeWait;
+    }
+
+    @Override
+    public void setTimeWait(double time) {
+        this.timeWait = time;
+    }
+
+    @Override
+    public double getTimeWalk() {
+        return timeWalk;
+    }
+
+    @Override
+    public void setTimeWalk(double time) {
+        this.timeWalk = time;
     }
 
     public void setCampusId(int campusId) {
