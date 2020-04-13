@@ -28,6 +28,7 @@
 
         <TextView
             android:id="@+id/textView_name"
+            style="@style/TextAppearance.MaterialComponents.Body1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -38,7 +39,6 @@
             android:layout_weight="0"
             android:ellipsize="marquee"
             android:singleLine="true"
-            style="@style/TextAppearance.MaterialComponents.Body1"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView_thumbnail"
@@ -48,10 +48,10 @@
             android:id="@+id/constraintLayout3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
             android:layout_marginBottom="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/constraintLayout4"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/imageView_thumbnail">
 
             <ImageView
@@ -68,12 +68,8 @@
 
             <TextView
                 android:id="@+id/textView_walkTime"
-                android:layout_width="@dimen/text_time_width"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
+                style="@style/TextAppearance.CafeteriaInfo"
                 android:text="3 min"
-                android:ellipsize="marquee"
-                android:singleLine="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -85,7 +81,6 @@
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="@+id/constraintLayout3"
             app:layout_constraintEnd_toStartOf="@+id/textView_open"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/constraintLayout3"
             app:layout_constraintTop_toTopOf="@+id/constraintLayout3">
 
@@ -103,12 +98,8 @@
 
             <TextView
                 android:id="@+id/textView_waitTime"
-                android:layout_width="@dimen/text_time_width"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
+                style="@style/TextAppearance.CafeteriaInfo"
                 android:text="8 min"
-                android:ellipsize="marquee"
-                android:singleLine="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -116,16 +107,14 @@
 
         <TextView
             android:id="@+id/textView_open"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
+            style="@style/TextAppearance.CafeteriaInfo"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
             android:text="Open"
             android:textColor="@android:color/holo_green_dark"
-            app:layout_constraintBottom_toBottomOf="@+id/constraintLayout3"
+            app:layout_constraintBottom_toBottomOf="@+id/constraintLayout4"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/constraintLayout4"
-            app:layout_constraintTop_toTopOf="@+id/constraintLayout3" />
+            app:layout_constraintTop_toTopOf="@+id/constraintLayout4" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

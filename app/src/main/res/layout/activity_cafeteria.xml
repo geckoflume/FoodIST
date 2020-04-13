@@ -80,12 +80,8 @@
 
                 <TextView
                     android:id="@+id/textView_waitTime"
-                    android:layout_width="@dimen/text_time_width"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
+                    style="@style/TextAppearance.CafeteriaInfo"
                     android:text="@{cafeteriaViewModel.cafeteria.timeWait &lt; 1 ? @string/less_one_minute_short : @string/minutes_short((int)cafeteriaViewModel.cafeteria.timeWait)}"
-                    android:ellipsize="marquee"
-                    android:singleLine="true"
                     app:layout_constraintBottom_toBottomOf="@+id/imageView_waitTime"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/imageView_waitTime" />
@@ -101,12 +97,8 @@
 
                 <TextView
                     android:id="@+id/textView_walkTime"
-                    android:layout_width="@dimen/text_time_width"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
+                    style="@style/TextAppearance.CafeteriaInfo"
                     android:text="@{cafeteriaViewModel.cafeteria.timeWalk &lt; 1 ? @string/less_one_minute_short : @string/minutes_short((int)cafeteriaViewModel.cafeteria.timeWalk)}"
-                    android:ellipsize="marquee"
-                    android:singleLine="true"
                     app:layout_constraintBottom_toBottomOf="@+id/imageView_walkTime"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/imageView_walkTime" />
