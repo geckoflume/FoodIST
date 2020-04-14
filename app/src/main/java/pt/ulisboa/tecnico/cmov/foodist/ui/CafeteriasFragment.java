@@ -67,27 +67,30 @@ public class CafeteriasFragment extends Fragment implements OnMapReadyCallback {
 
     private void updateMap(List<? extends Cafeteria> cafeteriasList) {
         CameraUpdate cameraUpdate;
-
-        mMap.clear();
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-        if (cafeteriasList.size() == 1) {
-            // Workaround for "bizarre" zoom level when only one marker
-            Cafeteria cafeteria = cafeteriasList.get(0);
-            mMap.addMarker(createMarker(cafeteria));
-            cameraUpdate = CameraUpdateFactory.newLatLngZoom(
-                    new LatLng(cafeteria.getLatitude(), cafeteria.getLongitude()), 17F);
-        } else {
-            for (Cafeteria cafeteria : cafeteriasList) {
+        if (mMap != null) {
+            mMap.clear();
+
+            if (cafeteriasList.size() == 1) {
+                // Workaround for "bizarre" zoom level when only one marker
+                Cafeteria cafeteria = cafeteriasList.get(0);
                 mMap.addMarker(createMarker(cafeteria));
-                builder.include(new LatLng(cafeteria.getLatitude(), cafeteria.getLongitude()));
+                cameraUpdate = CameraUpdateFactory.newLatLngZoom(
+                        new LatLng(cafeteria.getLatitude(), cafeteria.getLongitude()), 17F);
+            } else {
+                for (Cafeteria cafeteria : cafeteriasList) {
+                    mMap.addMarker(createMarker(cafeteria));
+                    builder.include(new LatLng(cafeteria.getLatitude(), cafeteria.getLongitude()));
+                }
+                LatLngBounds bounds = builder.build();
+                int height = mapFragment.getView().getHeight();
+                // offset from edges of the map 15% of screen height
+                int padding = (int) (height * 0.15);
+                cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
             }
-            LatLngBounds bounds = builder.build();
-            int height = mapFragment.getView().getHeight();
-            int padding = (int) (height * 0.15); // offset from edges of the map 10% of screen
-            cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+            mMap.moveCamera(cameraUpdate);  // or use animateCamera() for smooth animation
         }
-        mMap.moveCamera(cameraUpdate);                  // use animateCamera() for smooth animation
     }
 
     private MarkerOptions createMarker(Cafeteria cafeteria) {
