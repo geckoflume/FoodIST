@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <import type="pt.ulisboa.tecnico.cmov.foodist.ui.UiUtils" />
+
         <variable
             name="cafeteria"
             type="pt.ulisboa.tecnico.cmov.foodist.model.Cafeteria" />
@@ -77,10 +79,12 @@
 
             <TextView
                 android:id="@+id/textView_open"
-                style="@style/TextAppearance.CafeteriaInfo.OpenClosed"
+                style="@style/TextAppearance.CafeteriaInfo"
+                android:layout_width="@dimen/text_open_closed"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
-                android:text="@string/open"
+                android:text="@{UiUtils.isOpen(cafeteria) ? @string/open : @string/closed}"
+                android:textColor="@{UiUtils.isOpen(cafeteria) ? @color/colorOpen : @color/colorClosed}"
                 app:layout_constraintBottom_toBottomOf="@+id/textView_waitTime"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/textView_waitTime" />

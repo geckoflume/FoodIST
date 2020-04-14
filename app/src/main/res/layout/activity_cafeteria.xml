@@ -3,9 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="pt.ulisboa.tecnico.cmov.foodist.ui.UiUtils"/>
-        <variable name="cafeteriaViewModel"
-            type="pt.ulisboa.tecnico.cmov.foodist.viewmodel.CafeteriaViewModel"/>
+
+        <import type="pt.ulisboa.tecnico.cmov.foodist.ui.UiUtils" />
+
+        <variable
+            name="cafeteriaViewModel"
+            type="pt.ulisboa.tecnico.cmov.foodist.viewmodel.CafeteriaViewModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -35,12 +38,12 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:contentDescription="@string/desc_cafeteria_banner"
                     android:fitsSystemWindows="true"
                     android:scaleType="centerCrop"
                     app:layout_collapseMode="parallax"
                     app:layout_collapseParallaxMultiplier="0.5"
-                    app:srcCompat="@drawable/cafeteria_1"
-                    android:contentDescription="@string/desc_cafeteria_banner" />
+                    app:srcCompat="@drawable/cafeteria_1" />
 
                 <com.google.android.material.appbar.MaterialToolbar
                     android:id="@+id/toolbar"
@@ -148,12 +151,12 @@
                         android:id="@+id/textViewSoupPicture"
                         android:layout_width="@dimen/dish_picture_size"
                         android:layout_height="@dimen/dish_picture_size"
+                        android:contentDescription="@string/desc_dish_picture"
                         android:scaleType="centerCrop"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/dish"
-                        android:contentDescription="@string/desc_dish_picture" />
+                        app:srcCompat="@drawable/dish" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <View
@@ -201,12 +204,12 @@
                         android:id="@+id/TextViewPorkchopPicture"
                         android:layout_width="@dimen/dish_picture_size"
                         android:layout_height="@dimen/dish_picture_size"
+                        android:contentDescription="@string/desc_dish_picture"
                         android:scaleType="centerCrop"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/dish"
-                        android:contentDescription="@string/desc_dish_picture" />
+                        app:srcCompat="@drawable/dish" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>

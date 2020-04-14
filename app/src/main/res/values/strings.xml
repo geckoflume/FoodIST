@@ -15,11 +15,11 @@
     <string name="less_one_minute_short">&lt;1 min</string>
     <string name="currency">%.2f €</string>
     <string name="open">Open</string>
+    <string name="closed">Closed</string>
     <string name="menu">Menu</string>
     <string name="opening_times">Opening times</string>
     <string name="desc_cafeteria_banner">Cafeteria banner picture</string>
     <string name="desc_dish_picture">Dish first picture</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">User</string>

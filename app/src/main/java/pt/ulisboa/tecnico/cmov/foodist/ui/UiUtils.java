@@ -4,7 +4,7 @@ import android.view.View;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import pt.ulisboa.tecnico.cmov.foodist.R;
+import pt.ulisboa.tecnico.cmov.foodist.model.Cafeteria;
 
 public class UiUtils {
 
@@ -24,5 +24,10 @@ public class UiUtils {
 
     public static String formatTime(double time, String ltOne, String gtOne) {
         return (time < 1 ? ltOne : gtOne);
+    }
+
+    public static boolean isOpen(Cafeteria cafeteria) {
+        // TODO
+        return false;
     }
 }
