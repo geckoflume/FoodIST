@@ -48,6 +48,8 @@ dependencies {
     implementation "androidx.work:work-runtime:$work_version"
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.google.android.gms:play-services-location:17.0.0'
+    implementation 'androidx.navigation:navigation-fragment:2.2.1'
+    implementation 'androidx.navigation:navigation-ui:2.2.1'
 
     // Android Testing Support Library's runner and rules
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

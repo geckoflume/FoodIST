@@ -3,7 +3,7 @@
     <string name="my_location">Autodetect campus</string>
     <string name="select_campus">Select campus:</string>
     <string name="available_cafeterias">Available cafeterias:</string>
-    <string name="settings">Settings</string>
+    <string name="action_settings">Settings</string>
     <string name="permission_denied_explanation">Location permission was denied, but is needed for core functionality.</string>
     <string name="permission_rationale">Location permission is needed for campus selection and cafeterias distance.</string>
     <string name="no_location_detected">No location detected. Make sure location is enabled on the device.</string>
@@ -18,5 +18,14 @@
     <string name="menu">Menu</string>
     <string name="opening_times">Opening times</string>
     <string name="desc_cafeteria_banner">Cafeteria banner picture</string>
-    <string name="desc_dish_picture">Cafeteria banner picture</string>Dish first picture
+    <string name="desc_dish_picture">Dish first picture</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">User</string>
+    <string name="nav_header_subtitle">ist000000@tecnico.ulisboa.pt</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="menu_cafeterias">Cafeterias</string>
+    <string name="menu_account">My Account</string>
+    <string name="campus">Campus</string>
 </resources>

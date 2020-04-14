@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,9 +20,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -29,11 +34,11 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -43,7 +48,6 @@ import pt.ulisboa.tecnico.cmov.foodist.BuildConfig;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.location.LocationUtils;
 import pt.ulisboa.tecnico.cmov.foodist.model.Campus;
-import pt.ulisboa.tecnico.cmov.foodist.viewmodel.CafeteriaListViewModel;
 
 import static pt.ulisboa.tecnico.cmov.foodist.ui.UiUtils.showSnackbar;
 
@@ -54,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
             UPDATE_INTERVAL_IN_MILLISECONDS / 2;
 
+    private AppBarConfiguration mAppBarConfiguration;
     private List<Campus> campuses = new ArrayList<>();
     private ArrayAdapter<Campus> adapterCampus;
     private Spinner spinner;
@@ -69,20 +74,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        MaterialToolbar toolbar = findViewById(R.id.toolbar);
-        initToolbar(toolbar);
-
-        RecyclerView recyclerViewCafeterias = findViewById(R.id.recyclerView_cafeterias);
-        CafeteriaAdapter adapterCafeterias = new CafeteriaAdapter(this);
-        recyclerViewCafeterias.setAdapter(adapterCafeterias);
-        // Get a new or existing ViewModel from the ViewModelProvider.
-        CafeteriaListViewModel mCafeteriaListViewModel = new ViewModelProvider(this).get(CafeteriaListViewModel.class);
-        // Add an observer on the LiveData returned by getCafeterias.
-        // The onChanged() method fires when the observed data changes and the activity is
-        // in the foreground.
-        // Update the cached copy of the cafeterias in the adapter.
-        mCafeteriaListViewModel.getCafeterias().observe(this, adapterCafeterias::setCafeteriaList);
-
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+        mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.nav_home)
+                .setDrawerLayout(drawer)
+                .build();
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+        NavigationUI.setupWithNavController(navigationView, navController);
 
         initCampuses();
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -90,10 +94,21 @@ public class MainActivity extends AppCompatActivity {
         // Specify the layout to use when the list of choices appears
         adapterCampus.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
-        this.spinner = new Spinner(toolbar.getContext());
-        this.spinner.setAdapter(adapterCampus);
-        toolbar.addView(this.spinner);
-        this.spinner.setSelection(1);
+        spinner = navigationView.getHeaderView(0).findViewById(R.id.spinner);
+        spinner.setAdapter(adapterCampus);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+        spinner.setPadding(0, spinner.getPaddingTop(), spinner.getPaddingRight(), spinner.getPaddingBottom());
+
+        spinner.setSelection(1);
+        /*
         this.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -120,12 +135,27 @@ public class MainActivity extends AppCompatActivity {
         createLocationCallback();
         createLocationRequest();
         buildLocationSettingsRequest();
+        */
     }
 
     @Override
     public void onStart() {
         super.onStart();
         checkPermissions();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
+                || super.onSupportNavigateUp();
     }
 
     private void initCampuses() {
@@ -203,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
                 // touches or interactions which have required permissions.
                 showSnackbar(findViewById(android.R.id.content),
                         R.string.permission_denied_explanation,
-                        R.string.settings,
+                        R.string.action_settings,
                         Snackbar.LENGTH_LONG,
                         view -> {
                             // Build intent that displays the App settings screen.
