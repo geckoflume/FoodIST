@@ -6,4 +6,7 @@
     android:layout_height="wrap_content"
     android:ellipsize="marquee"
     android:singleLine="true"
-    android:textColor="@color/colorOnPrimary" />
+    android:textColor="@color/colorOnPrimary"
+    android:drawableLeft="@drawable/ic_domain_24dp"
+    android:drawablePadding="8dp"
+    android:drawableStart="@drawable/ic_domain_24dp" />
