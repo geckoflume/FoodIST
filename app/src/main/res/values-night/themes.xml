@@ -3,7 +3,6 @@
 
     <style name="Base.AppTheme" parent="Theme.MaterialComponents.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryVariant</item>
         <item name="colorSecondary">@color/colorSecondaryVariant</item>
         <item name="colorAccent">@color/colorSecondaryVariant</item>
         <item name="colorOnPrimary">@color/colorOnPrimary</item>

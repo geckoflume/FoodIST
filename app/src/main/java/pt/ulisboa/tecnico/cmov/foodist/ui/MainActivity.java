@@ -34,6 +34,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.SettingsClient;
@@ -99,27 +100,14 @@ public class MainActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-        spinner.setPadding(0, spinner.getPaddingTop(), spinner.getPaddingRight(), spinner.getPaddingBottom());
-
-        spinner.setSelection(1);
-        /*
-        this.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {                                        // "Find nearest campus"
                     spinner.setEnabled(false);
                     Toast.makeText(MainActivity.this, R.string.autodetecting_campus_toast, Toast.LENGTH_LONG).show();
                     startLocationUpdates();
                 } else if (position == 1) {                                 // "All cafeterias"
-                    mCafeteriaListViewModel.setQuery("");
+                    //mCafeteriaListViewModel.setQuery("");
                 } else if (position > 1 && position < campuses.size()) {    // Campus selected
-                    mCafeteriaListViewModel.setQuery(String.valueOf(position - 1));
+                    //mCafeteriaListViewModel.setQuery(String.valueOf(position - 1));
                 }
             }
 
@@ -127,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+        spinner.setSelection(1);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mSettingsClient = LocationServices.getSettingsClient(this);
@@ -135,7 +124,6 @@ public class MainActivity extends AppCompatActivity {
         createLocationCallback();
         createLocationRequest();
         buildLocationSettingsRequest();
-        */
     }
 
     @Override
