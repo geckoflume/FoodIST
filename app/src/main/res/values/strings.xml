@@ -28,4 +28,5 @@
     <string name="menu_cafeterias">Cafeterias</string>
     <string name="menu_account">My Account</string>
     <string name="campus">Campus</string>
+    <string name="campus_id_key">campus_id</string>
 </resources>

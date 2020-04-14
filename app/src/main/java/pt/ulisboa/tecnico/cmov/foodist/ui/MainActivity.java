@@ -2,8 +2,10 @@ package pt.ulisboa.tecnico.cmov.foodist.ui;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
@@ -76,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -87,8 +91,10 @@ public class MainActivity extends AppCompatActivity {
                 R.id.nav_home)
                 .setDrawerLayout(drawer)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+        NavController navController = Navigation.findNavController(this,
+                R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navController,
+                mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
         initCampuses();
@@ -99,19 +105,32 @@ public class MainActivity extends AppCompatActivity {
         // Apply the adapter to the spinner
         spinner = navigationView.getHeaderView(0).findViewById(R.id.spinner);
         spinner.setAdapter(adapterCampus);
-        mCafeteriaListViewModel = new ViewModelProvider(this).get(CafeteriaListViewModel.class);
+        mCafeteriaListViewModel = new ViewModelProvider(this)
+                .get(CafeteriaListViewModel.class);
+
+        spinner.setSelection(sharedPref.getInt(getString(R.string.campus_id_key), 0));
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {                                        // "Find nearest campus"
+                if (position == 0) {
+                    // "Find nearest campus" selected
                     spinner.setEnabled(false);
-                    Toast.makeText(MainActivity.this, R.string.autodetecting_campus_toast, Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this,
+                            R.string.autodetecting_campus_toast,
+                            Toast.LENGTH_LONG).show();
                     startLocationUpdates();
-                } else if (position == 1) {                                 // "All cafeterias"
-                    mCafeteriaListViewModel.setQuery("");
-                } else if (position > 1 && position < campuses.size()) {    // Campus selected
-                    mCafeteriaListViewModel.setQuery(String.valueOf(position - 1));
+                } else if (position > 0 && position < campuses.size()) {
+                    // "All cafeterias" or campus selected
+                    editor.putInt(getString(R.string.campus_id_key), position);
+                    editor.apply();                             // apply() to commit asynchronously
+                    if (position == 1) {
+                        // "All cafeterias" selected
+                        mCafeteriaListViewModel.setQuery("");
+                    } else {
+                        // Campus selected
+                        mCafeteriaListViewModel.setQuery(String.valueOf(position - 1));
+                    }
                 }
             }
 
@@ -119,7 +138,6 @@ public class MainActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        spinner.setSelection(1);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mSettingsClient = LocationServices.getSettingsClient(this);
@@ -145,8 +163,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
+        NavController navController = Navigation.findNavController(this,
+                R.id.nav_host_fragment);
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
+                || super.onSupportNavigateUp();
     }
 
     private void initCampuses() {
