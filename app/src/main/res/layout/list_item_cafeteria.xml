@@ -1,83 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/cardView_cafeteria"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:cardPreventCornerOverlap="true"
-    app:cardUseCompatPadding="true">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <import type="pt.ulisboa.tecnico.cmov.foodist.ui.UiUtils" />
+        <variable
+            name="cafeteria"
+            type="pt.ulisboa.tecnico.cmov.foodist.model.Cafeteria" />
+    </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardView_cafeteria"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true">
 
-        <ImageView
-            android:id="@+id/imageView_thumbnail"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            android:adjustViewBounds="false"
-            android:background="#40000000"
-            android:contentDescription="@string/cafeteria_picture"
-            android:scaleType="centerCrop"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/cafeteria_1" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/textView_name"
-            style="@style/TextAppearance.MaterialComponents.Body1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="21dp"
-            android:layout_marginLeft="21dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_weight="0"
-            android:ellipsize="marquee"
-            android:singleLine="true"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView_thumbnail"
-            app:layout_constraintTop_toTopOf="parent" />
+            <ImageView
+                android:id="@+id/imageView_thumbnail"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:adjustViewBounds="false"
+                android:background="#40000000"
+                android:contentDescription="@string/cafeteria_picture"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/cafeteria_1" />
 
-        <TextView
-            android:id="@+id/textView_walkTime"
-            style="@style/TextAppearance.CafeteriaInfo.Time.Walk"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginBottom="16dp"
-            android:text="@{UiUtils.formatTime(cafeteriaViewModel.cafeteria.timeWalk, @string/less_one_minute_short, @string/minutes_short)}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView_thumbnail" />
+            <TextView
+                android:id="@+id/textView_name"
+                style="@style/TextAppearance.MaterialComponents.Body1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="21dp"
+                android:layout_marginLeft="21dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_weight="0"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:text="@{cafeteria.name}"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageView_thumbnail"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/textView_waitTime"
-            style="@style/TextAppearance.CafeteriaInfo.Time.Wait"
-            android:layout_marginStart="11dp"
-            android:layout_marginLeft="11dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:text="@{UiUtils.formatTime(cafeteriaViewModel.cafeteria.timeWait, @string/less_one_minute_short, @string/minutes_short)}"
-            app:layout_constraintBottom_toBottomOf="@+id/textView_walkTime"
-            app:layout_constraintEnd_toStartOf="@+id/textView_open"
-            app:layout_constraintStart_toEndOf="@+id/textView_walkTime"
-            app:layout_constraintTop_toTopOf="@+id/textView_walkTime" />
+            <TextView
+                android:id="@+id/textView_walkTime"
+                style="@style/TextAppearance.CafeteriaInfo.Time.Walk"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginBottom="16dp"
+                android:text="@{UiUtils.formatTime(cafeteria.timeWalk, @string/less_one_minute_short, @string/minutes_short)}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageView_thumbnail" />
 
-        <TextView
-            android:id="@+id/textView_open"
-            style="@style/TextAppearance.CafeteriaInfo.OpenClosed"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:text="@string/open"
-            app:layout_constraintBottom_toBottomOf="@+id/textView_waitTime"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textView_waitTime" />
+            <TextView
+                android:id="@+id/textView_waitTime"
+                style="@style/TextAppearance.CafeteriaInfo.Time.Wait"
+                android:layout_marginStart="11dp"
+                android:layout_marginLeft="11dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:text="@{UiUtils.formatTime(cafeteria.timeWait, @string/less_one_minute_short, @string/minutes_short)}"
+                app:layout_constraintBottom_toBottomOf="@+id/textView_walkTime"
+                app:layout_constraintEnd_toStartOf="@+id/textView_open"
+                app:layout_constraintStart_toEndOf="@+id/textView_walkTime"
+                app:layout_constraintTop_toTopOf="@+id/textView_walkTime" />
 
+            <TextView
+                android:id="@+id/textView_open"
+                style="@style/TextAppearance.CafeteriaInfo.OpenClosed"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:text="@string/open"
+                app:layout_constraintBottom_toBottomOf="@+id/textView_waitTime"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/textView_waitTime" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
+    </com.google.android.material.card.MaterialCardView>
 
-</com.google.android.material.card.MaterialCardView>
+</layout>

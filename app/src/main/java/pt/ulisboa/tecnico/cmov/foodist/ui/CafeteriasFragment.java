@@ -19,13 +19,13 @@ public class CafeteriasFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        mCafeteriaListViewModel =
-                new ViewModelProvider(this).get(CafeteriaListViewModel.class);
+        super.onViewCreated(container, savedInstanceState);
         View root = inflater.inflate(R.layout.fragment_cafeterias, container, false);
 
         RecyclerView recyclerViewCafeterias = root.findViewById(R.id.recyclerView_cafeterias);
-        CafeteriaAdapter adapterCafeterias = new CafeteriaAdapter(root.getContext());
+        CafeteriaAdapter adapterCafeterias = new CafeteriaAdapter();
         recyclerViewCafeterias.setAdapter(adapterCafeterias);
+        mCafeteriaListViewModel = new ViewModelProvider(requireActivity()).get(CafeteriaListViewModel.class);
 
         // Add an observer on the LiveData returned by getCafeterias.
         // The onChanged() method fires when the observed data changes and the activity is

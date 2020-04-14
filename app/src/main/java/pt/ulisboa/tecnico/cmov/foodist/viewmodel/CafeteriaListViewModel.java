@@ -33,7 +33,7 @@ public class CafeteriaListViewModel extends AndroidViewModel {
         // allowing us to recalculate what LiveData to get from the DataRepository
         // based on what query the user has entered
         mCafeterias = Transformations.switchMap(
-                savedStateHandle.getLiveData("QUERY", null),
+                savedStateHandle.getLiveData(QUERY_KEY, null),
                 (Function<CharSequence, LiveData<List<CafeteriaEntity>>>) query -> {
                     if (TextUtils.isEmpty(query)) {
                         return mRepository.getCafeterias();

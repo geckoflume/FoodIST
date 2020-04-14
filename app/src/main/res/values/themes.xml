@@ -11,6 +11,7 @@
         <item name="colorOnSecondary">@color/colorOnSecondary</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
 
     <style name="AppTheme" parent="Base.AppTheme" />

@@ -23,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -38,7 +39,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.SettingsClient;
-import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -49,6 +49,7 @@ import pt.ulisboa.tecnico.cmov.foodist.BuildConfig;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.location.LocationUtils;
 import pt.ulisboa.tecnico.cmov.foodist.model.Campus;
+import pt.ulisboa.tecnico.cmov.foodist.viewmodel.CafeteriaListViewModel;
 
 import static pt.ulisboa.tecnico.cmov.foodist.ui.UiUtils.showSnackbar;
 
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
     private LocationSettingsRequest mLocationSettingsRequest;
     private LocationCallback mLocationCallback;
     private Location mCurrentLocation;
+    private CafeteriaListViewModel mCafeteriaListViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +99,8 @@ public class MainActivity extends AppCompatActivity {
         // Apply the adapter to the spinner
         spinner = navigationView.getHeaderView(0).findViewById(R.id.spinner);
         spinner.setAdapter(adapterCampus);
+        mCafeteriaListViewModel = new ViewModelProvider(this).get(CafeteriaListViewModel.class);
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -105,9 +109,9 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, R.string.autodetecting_campus_toast, Toast.LENGTH_LONG).show();
                     startLocationUpdates();
                 } else if (position == 1) {                                 // "All cafeterias"
-                    //mCafeteriaListViewModel.setQuery("");
+                    mCafeteriaListViewModel.setQuery("");
                 } else if (position > 1 && position < campuses.size()) {    // Campus selected
-                    //mCafeteriaListViewModel.setQuery(String.valueOf(position - 1));
+                    mCafeteriaListViewModel.setQuery(String.valueOf(position - 1));
                 }
             }
 
@@ -142,8 +146,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
-                || super.onSupportNavigateUp();
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
     }
 
     private void initCampuses() {
@@ -393,13 +396,5 @@ public class MainActivity extends AppCompatActivity {
         // stopped state. Doing so helps battery performance and is especially
         // recommended in applications that request frequent location updates.
         mFusedLocationClient.removeLocationUpdates(mLocationCallback);
-    }
-
-    private void initToolbar(MaterialToolbar toolbar) {
-        toolbar.setNavigationOnClickListener(v -> Toast.makeText(MainActivity.this, toolbar.getTitle(), Toast.LENGTH_LONG).show());
-        toolbar.setOnMenuItemClickListener(menuItem -> {
-            Toast.makeText(MainActivity.this, menuItem.getTitle(), Toast.LENGTH_LONG).show();
-            return true;
-        });
     }
 }

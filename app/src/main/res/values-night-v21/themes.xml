@@ -4,4 +4,5 @@
     <style name="AppTheme" parent="Base.AppTheme">
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
+
 </resources>
