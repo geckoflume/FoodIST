@@ -7,20 +7,36 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.viewmodel.CafeteriaListViewModel;
 
-public class CafeteriasFragment extends Fragment {
+public class CafeteriasFragment extends Fragment implements OnMapReadyCallback {
 
     private CafeteriaListViewModel mCafeteriaListViewModel;
+    SupportMapFragment mapFragment;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         super.onViewCreated(container, savedInstanceState);
         View root = inflater.inflate(R.layout.fragment_cafeterias, container, false);
+
+        mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        if (mapFragment == null) {
+            FragmentManager fragmentManager = getChildFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            mapFragment = SupportMapFragment.newInstance();
+            fragmentTransaction.replace(R.id.map, mapFragment).commit();
+        }
+        mapFragment.getMapAsync(this);
 
         RecyclerView recyclerViewCafeterias = root.findViewById(R.id.recyclerView_cafeterias);
         CafeteriaAdapter adapterCafeterias = new CafeteriaAdapter();
@@ -33,5 +49,10 @@ public class CafeteriasFragment extends Fragment {
         // Update the cached copy of the cafeterias in the adapter.
         mCafeteriaListViewModel.getCafeterias().observe(getViewLifecycleOwner(), adapterCafeterias::setCafeteriaList);
         return root;
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+
     }
 }
