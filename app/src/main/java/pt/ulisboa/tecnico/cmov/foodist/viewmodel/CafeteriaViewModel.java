@@ -32,10 +32,7 @@ public class CafeteriaViewModel extends AndroidViewModel {
     }
 
     /**
-     * A creator is used to inject the cafeteria_1 ID into the ViewModel
-     * <p>
-     * This creator is to showcase how to inject dependencies into ViewModels. It's not
-     * actually necessary in this case, as the cafeteria_1 ID can be passed in a public method.
+     * A creator is used to inject the cafeteriaId into the ViewModel
      */
     public static class Factory extends ViewModelProvider.NewInstanceFactory {
 

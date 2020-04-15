@@ -5,6 +5,7 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -14,35 +15,36 @@ import java.util.List;
  * Parses the Directions API response, according to
  * https://developers.google.com/maps/documentation/directions/intro
  */
-public class DataParser {
-    public List<LatLng> parse(JSONObject jObject) {
-        List<LatLng> path = new ArrayList<>();
-        JSONArray jRoute;
-        JSONArray jLeg;
-        JSONArray jSteps;
+public class DirectionsParser {
+    private List<LatLng> path;
+    private int distance;
+    private int duration;
+
+    public DirectionsParser(String jsonStr) {
+        this.path = new ArrayList<>();
+        this.duration = 0;
+        this.distance = 0;
+        JSONObject jStep;
         String polyline;
-        List<LatLng> decodedPolyline;
-        int duration = 0;
 
         try {
-            jRoute = jObject.getJSONArray("routes");
+            JSONObject jObject = new JSONObject(jsonStr);
+            JSONArray jRoute = jObject.getJSONArray("routes");
             // Getting first route
-            jLeg = ((JSONObject) jRoute.get(0)).getJSONArray("legs");
+            JSONArray jLeg = ((JSONObject) jRoute.get(0)).getJSONArray("legs");
             // Getting first leg
-            jSteps = ((JSONObject) jLeg.get(0)).getJSONArray("steps");
+            JSONArray jSteps = ((JSONObject) jLeg.get(0)).getJSONArray("steps");
             // Traversing all steps
             for (int i = 0; i < jSteps.length(); i++) {
-                polyline = (String) ((JSONObject) ((JSONObject) jSteps.get(i)).get("polyline")).get("points");
-                decodedPolyline = decodePoly(polyline);
-
-                path.addAll(decodedPolyline);
-                duration += (Integer) ((JSONObject) ((JSONObject) jSteps.get(i)).get("duration")).get("value");
+                jStep = (JSONObject) jSteps.get(i);
+                polyline = (String) ((JSONObject) jStep.get("polyline")).get("points");
+                this.path.addAll(decodePoly(polyline));
+                this.duration += (Integer) ((JSONObject) jStep.get("duration")).get("value");
+                this.distance += (Integer) ((JSONObject) jStep.get("distance")).get("value");
             }
-            Log.i("Dataparser", "Total duration in s: " + duration);
-        } catch (Exception e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
-        return path;
     }
 
     /**
@@ -81,5 +83,17 @@ public class DataParser {
             poly.add(p);
         }
         return poly;
+    }
+
+    public List<LatLng> getPath() {
+        return path;
+    }
+
+    public int getDistance() {
+        return distance;
+    }
+
+    public int getDuration() {
+        return duration;
     }
 }
