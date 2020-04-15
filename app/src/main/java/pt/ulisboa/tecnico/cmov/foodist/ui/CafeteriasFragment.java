@@ -29,8 +29,9 @@ import pt.ulisboa.tecnico.cmov.foodist.viewmodel.CafeteriaListViewModel;
 public class CafeteriasFragment extends Fragment implements OnMapReadyCallback {
 
     private CafeteriaListViewModel mCafeteriaListViewModel;
-    SupportMapFragment mapFragment;
+    private SupportMapFragment mapFragment;
     private GoogleMap mMap;
+    private RecyclerView recyclerViewCafeterias;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -46,7 +47,7 @@ public class CafeteriasFragment extends Fragment implements OnMapReadyCallback {
         }
         mapFragment.getMapAsync(this);
 
-        RecyclerView recyclerViewCafeterias = root.findViewById(R.id.recyclerView_cafeterias);
+        recyclerViewCafeterias = root.findViewById(R.id.recyclerView_cafeterias);
         CafeteriaAdapter adapterCafeterias = new CafeteriaAdapter();
         recyclerViewCafeterias.setAdapter(adapterCafeterias);
 
@@ -63,7 +64,15 @@ public class CafeteriasFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setIndoorEnabled(true);
+        // Set observer
         mCafeteriaListViewModel.getCafeterias().observe(getViewLifecycleOwner(), this::updateMap);
+        /*
+        mMap.setOnMarkerClickListener(marker -> {
+            recyclerViewCafeterias.scrollToPosition(pos); // TODO: compute pos
+            return true;
+        });
+         */
     }
 
     private void updateMap(List<? extends Cafeteria> cafeteriasList) {
