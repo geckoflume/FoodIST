@@ -12,18 +12,11 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-
-import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.R;
-import pt.ulisboa.tecnico.cmov.foodist.model.Cafeteria;
 import pt.ulisboa.tecnico.cmov.foodist.viewmodel.CafeteriaListViewModel;
 
 public class CafeteriasFragment extends Fragment implements OnMapReadyCallback {
@@ -42,6 +35,7 @@ public class CafeteriasFragment extends Fragment implements OnMapReadyCallback {
         if (mapFragment == null) {
             FragmentManager fragmentManager = getChildFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            //mapFragment = SupportMapFragment.newInstance(new GoogleMapOptions().liteMode(true));     // for lite mode
             mapFragment = SupportMapFragment.newInstance();
             fragmentTransaction.replace(R.id.map, mapFragment).commit();
         }
@@ -65,42 +59,15 @@ public class CafeteriasFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setIndoorEnabled(true);
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
         // Set observer
-        mCafeteriaListViewModel.getCafeterias().observe(getViewLifecycleOwner(), this::updateMap);
+        mCafeteriaListViewModel.getCafeterias().observe(getViewLifecycleOwner(), cafeteriaEntities -> MapUtils.updateMap(this.mMap, this.mapFragment, cafeteriaEntities));
         /*
         mMap.setOnMarkerClickListener(marker -> {
             recyclerViewCafeterias.scrollToPosition(pos); // TODO: compute pos
             return true;
         });
          */
-    }
-
-    private void updateMap(List<? extends Cafeteria> cafeteriasList) {
-        CameraUpdate cameraUpdate;
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
-        if (mMap != null) {
-            mMap.clear();
-
-            if (cafeteriasList.size() == 1) {
-                // Workaround for "bizarre" zoom level when only one marker
-                Cafeteria cafeteria = cafeteriasList.get(0);
-                mMap.addMarker(MapUtils.createMarker(cafeteria));
-                cameraUpdate = CameraUpdateFactory.newLatLngZoom(
-                        new LatLng(cafeteria.getLatitude(), cafeteria.getLongitude()), 17F);
-            } else {
-                for (Cafeteria cafeteria : cafeteriasList) {
-                    // Add each cafeteria on the map and in the LatLngBounds builder
-                    mMap.addMarker(MapUtils.createMarker(cafeteria));
-                    builder.include(new LatLng(cafeteria.getLatitude(), cafeteria.getLongitude()));
-                }
-                LatLngBounds bounds = builder.build();
-                int height = mapFragment.getView().getHeight();
-                // offset from edges of the map 15% of screen height
-                int padding = (int) (height * 0.15);
-                cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-            }
-            mMap.moveCamera(cameraUpdate);  // or use animateCamera() for smooth animation
-        }
     }
 }
