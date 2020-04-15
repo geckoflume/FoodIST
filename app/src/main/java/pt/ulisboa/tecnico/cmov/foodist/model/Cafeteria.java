@@ -1,5 +1,7 @@
 package pt.ulisboa.tecnico.cmov.foodist.model;
 
+import com.google.android.gms.maps.model.PolylineOptions;
+
 public interface Cafeteria {
     int getId();
 
@@ -9,17 +11,19 @@ public interface Cafeteria {
 
     double getLongitude();
 
-    double getDistance();
+    int getDistance();
 
-    void setDistance(double distance);
+    void setDistance(int distance);
 
     int getCampusId();
 
-    double getTimeWait();
+    void setCampusId(int campusId);
 
-    void setTimeWait(double time);
+    int getTimeWait();
 
-    double getTimeWalk();
+    void setTimeWait(int time);
 
-    void setTimeWalk(double time);
+    int getTimeWalk();
+
+    void setTimeWalk(int time);
 }

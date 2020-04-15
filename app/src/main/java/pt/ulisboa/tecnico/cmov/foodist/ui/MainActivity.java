@@ -56,6 +56,7 @@ import pt.ulisboa.tecnico.cmov.foodist.viewmodel.CafeteriaListViewModel;
 import static pt.ulisboa.tecnico.cmov.foodist.ui.UiUtils.showSnackbar;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 01;
     private static final int REQUEST_CHECK_SETTINGS = 0x1;
     private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
@@ -108,18 +109,22 @@ public class MainActivity extends AppCompatActivity {
         mCafeteriaListViewModel = new ViewModelProvider(this)
                 .get(CafeteriaListViewModel.class);
 
-        spinner.setSelection(sharedPref.getInt(getString(R.string.campus_id_key), 0));
+        spinner.setSelection(sharedPref.getInt(getString(R.string.campus_id_key), 1));
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
                     // "Find nearest campus" selected
-                    spinner.setEnabled(false);
-                    Toast.makeText(MainActivity.this,
-                            R.string.autodetecting_campus_toast,
-                            Toast.LENGTH_LONG).show();
-                    startLocationUpdates();
+                    if (checkPermissions()) {
+                        spinner.setEnabled(false);
+                        Toast.makeText(MainActivity.this,
+                                R.string.autodetecting_campus_toast,
+                                Toast.LENGTH_LONG).show();
+                        startLocationUpdates();
+                    } else {
+                        requestPermissions();
+                    }
                 } else if (position > 0 && position < campuses.size()) {
                     // "All cafeterias" or campus selected
                     editor.putInt(getString(R.string.campus_id_key), position);
@@ -185,11 +190,9 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Return the current state of the permissions needed.
      */
-    private void checkPermissions() {
-        if (!(ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)) {
-            requestPermissions();
-        }
+    private boolean checkPermissions() {
+        return ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
     private void startLocationPermissionRequest() {
@@ -206,13 +209,13 @@ public class MainActivity extends AppCompatActivity {
         // Provide an additional rationale to the user. This would happen if the user denied the
         // request previously, but didn't check the "Don't ask again" checkbox.
         if (shouldProvideRationale) {
-            Log.i("main", "Displaying permission rationale to provide additional context");
+            Log.i(TAG, "Displaying permission rationale to provide additional context");
             showSnackbar(findViewById(android.R.id.content), R.string.permission_rationale,
                     android.R.string.ok, Snackbar.LENGTH_INDEFINITE, view -> {
                         startLocationPermissionRequest();
                     });
         } else {
-            Log.i("main", "Requesting permission");
+            Log.i(TAG, "Requesting permission");
             startLocationPermissionRequest();
         }
     }
@@ -227,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
             if (grantResults.length <= 0) {
                 // If user interaction was interrupted, the permission request is cancelled and you
                 // receive empty arrays.
-                Log.i("main", "User interaction was cancelled.");
+                Log.i(TAG, "User interaction was cancelled.");
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //Permission granted.
             } else {
@@ -291,7 +294,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        Log.i("Campus", "Nearest campus is " + nearest + " at " + distanceNearest + "m.");
+        Log.i(TAG, "Nearest campus is " + nearest + " at " + distanceNearest + "m.");
         this.spinner.setSelection(this.adapterCampus.getPosition(nearest));
         this.spinner.setEnabled(true);
     }
@@ -354,10 +357,10 @@ public class MainActivity extends AppCompatActivity {
             case REQUEST_CHECK_SETTINGS:
                 switch (resultCode) {
                     case Activity.RESULT_OK:
-                        Log.i("main", "User agreed to make required location settings changes.");
+                        Log.i(TAG, "User agreed to make required location settings changes.");
                         break;
                     case Activity.RESULT_CANCELED:
-                        Log.i("main", "User chose not to make required location settings changes.");
+                        Log.i(TAG, "User chose not to make required location settings changes.");
                         break;
                 }
                 break;
@@ -369,13 +372,10 @@ public class MainActivity extends AppCompatActivity {
      * Note: we don't call this unless location runtime permission has been granted.
      */
     private void startLocationUpdates() {
-        // Begin by checking if the user has granted location permissions
-        checkPermissions();
-
         // Then by checking if the device has the necessary location settings.
         mSettingsClient.checkLocationSettings(mLocationSettingsRequest)
                 .addOnSuccessListener(this, locationSettingsResponse -> {
-                    Log.i("main", "All location settings are satisfied.");
+                    Log.i(TAG, "All location settings are satisfied.");
 
                     //mLocationRequest.setNumUpdates(1); // Not useful, we only want to request on location update but stop is triggered on onLocationResult
                     mLocationRequest.setExpirationDuration(1000 * 5); // Expire in 5s
@@ -388,7 +388,7 @@ public class MainActivity extends AppCompatActivity {
                     int statusCode = ((ApiException) e).getStatusCode();
                     switch (statusCode) {
                         case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                            Log.i("main", "Location settings are not satisfied. Attempting to upgrade location settings ");
+                            Log.i(TAG, "Location settings are not satisfied. Attempting to upgrade location settings ");
                             try {
                                 // Show the dialog by calling startResolutionForResult(), and
                                 // check the result in onActivityResult().
@@ -396,12 +396,12 @@ public class MainActivity extends AppCompatActivity {
                                 rae.startResolutionForResult(MainActivity.this,
                                         REQUEST_CHECK_SETTINGS);
                             } catch (IntentSender.SendIntentException sie) {
-                                Log.i("main", "PendingIntent unable to execute request.");
+                                Log.i(TAG, "PendingIntent unable to execute request.");
                             }
                             break;
                         case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                             String errorMessage = "Location settings are inadequate, and cannot be fixed here. Fix in Settings.";
-                            Log.e("main", errorMessage);
+                            Log.e(TAG, errorMessage);
                             Toast.makeText(MainActivity.this, errorMessage,
                                     Toast.LENGTH_LONG).show();
                     }
