@@ -29,4 +29,8 @@
     <string name="menu_account">My Account</string>
     <string name="campus">Campus</string>
     <string name="campus_id_key">campus_id</string>
+    <string name="set_name_meal">Name</string>
+    <string name="set_price_meal">Price</string>
+    <string name="save_button">Save</string>
+    <string name="title_add_meal">Add a new meal</string>
 </resources>
