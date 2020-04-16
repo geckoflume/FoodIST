@@ -36,7 +36,7 @@
   },
   {
     "id": 6,
-    "name": "Canteen",
+    "name": "Alameda Canteen",
     "latitude": 38.736377,
     "longitude": -9.13698,
     "campus_id": 1
@@ -92,14 +92,14 @@
   },
   {
     "id": 14,
-    "name": "Canteen (-1)",
+    "name": "Taguspark Canteen",
     "latitude": 38.737977,
     "longitude": -9.303103,
     "campus_id": 2
   },
   {
     "id": 15,
-    "name": "Canteen",
+    "name": "CTN Canteen",
     "latitude": 38.812575,
     "longitude": -9.093818,
     "campus_id": 3

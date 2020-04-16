@@ -37,6 +37,13 @@ public abstract class UiUtils {
             return String.format(days, ceilIntDivision(time, 86400));
     }
 
+    public static String formatDistance(int distance) {
+        if (distance < 1000)
+            return String.format("%d m", distance);
+        else
+            return String.format("%d km", ceilIntDivision(distance, 1000));
+    }
+
     public static boolean isOpen(Cafeteria cafeteria) {
         // TODO
         return false;

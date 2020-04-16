@@ -53,8 +53,6 @@ import pt.ulisboa.tecnico.cmov.foodist.location.LocationUtils;
 import pt.ulisboa.tecnico.cmov.foodist.model.Campus;
 import pt.ulisboa.tecnico.cmov.foodist.viewmodel.CafeteriaListViewModel;
 
-import static pt.ulisboa.tecnico.cmov.foodist.ui.UiUtils.showSnackbar;
-
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 01;
@@ -74,20 +72,21 @@ public class MainActivity extends AppCompatActivity {
     private LocationCallback mLocationCallback;
     private Location mCurrentLocation;
     private CafeteriaListViewModel mCafeteriaListViewModel;
+    private SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
+        sharedPref = getPreferences(Context.MODE_PRIVATE);
 
+        // Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Drawer and NavigationUI
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_cafeterias)
                 .setDrawerLayout(drawer)
@@ -98,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        // Campuses spinner
         initCampuses();
         // Create an ArrayAdapter using the string array and a default spinner layout
         adapterCampus = new ArrayAdapter<>(this, R.layout.layout_drop_item, campuses);
@@ -106,44 +106,14 @@ public class MainActivity extends AppCompatActivity {
         // Apply the adapter to the spinner
         spinner = navigationView.getHeaderView(0).findViewById(R.id.spinner);
         spinner.setAdapter(adapterCampus);
+        spinner.setSelection(sharedPref.getInt(getString(R.string.campus_id_key), 1));
+        spinner.setOnItemSelectedListener(campusSelectedCallback());
+
+        // Cafeteria ListView
         mCafeteriaListViewModel = new ViewModelProvider(this)
                 .get(CafeteriaListViewModel.class);
 
-        spinner.setSelection(sharedPref.getInt(getString(R.string.campus_id_key), 1));
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
-                    // "Find nearest campus" selected
-                    if (checkPermissions()) {
-                        spinner.setEnabled(false);
-                        Toast.makeText(MainActivity.this,
-                                R.string.autodetecting_campus_toast,
-                                Toast.LENGTH_LONG).show();
-                        startLocationUpdates();
-                    } else {
-                        requestPermissions();
-                    }
-                } else if (position > 0 && position < campuses.size()) {
-                    // "All cafeterias" or campus selected
-                    editor.putInt(getString(R.string.campus_id_key), position);
-                    editor.apply();                             // apply() to commit asynchronously
-                    if (position == 1) {
-                        // "All cafeterias" selected
-                        mCafeteriaListViewModel.setQuery("");
-                    } else {
-                        // Campus selected
-                        mCafeteriaListViewModel.setQuery(String.valueOf(position - 1));
-                    }
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-
+        // Location
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mSettingsClient = LocationServices.getSettingsClient(this);
         // Kick off the process of building the LocationCallback, LocationRequest, and
@@ -210,10 +180,9 @@ public class MainActivity extends AppCompatActivity {
         // request previously, but didn't check the "Don't ask again" checkbox.
         if (shouldProvideRationale) {
             Log.i(TAG, "Displaying permission rationale to provide additional context");
-            showSnackbar(findViewById(android.R.id.content), R.string.permission_rationale,
-                    android.R.string.ok, Snackbar.LENGTH_INDEFINITE, view -> {
-                        startLocationPermissionRequest();
-                    });
+            UiUtils.showSnackbar(findViewById(android.R.id.content), R.string.permission_rationale,
+                    android.R.string.ok, Snackbar.LENGTH_INDEFINITE, view ->
+                            MainActivity.this.startLocationPermissionRequest());
         } else {
             Log.i(TAG, "Requesting permission");
             startLocationPermissionRequest();
@@ -245,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
                 // again" prompts). Therefore, a user interface affordance is typically implemented
                 // when permissions are denied. Otherwise, your app could appear unresponsive to
                 // touches or interactions which have required permissions.
-                showSnackbar(findViewById(android.R.id.content),
+                UiUtils.showSnackbar(findViewById(android.R.id.content),
                         R.string.permission_denied_explanation,
                         R.string.action_settings,
                         Snackbar.LENGTH_LONG,
@@ -299,15 +268,48 @@ public class MainActivity extends AppCompatActivity {
         this.spinner.setEnabled(true);
     }
 
+    private AdapterView.OnItemSelectedListener campusSelectedCallback() {
+        return new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    // "Find nearest campus" selected
+                    if (checkPermissions()) {
+                        spinner.setEnabled(false);
+                        Toast.makeText(MainActivity.this,
+                                R.string.autodetecting_campus_toast,
+                                Toast.LENGTH_LONG).show();
+                        startLocationUpdates();
+                    } else {
+                        requestPermissions();
+                    }
+                } else if (position > 0 && position < campuses.size()) {
+                    // "All cafeterias" or campus selected
+
+                    // apply() to commit asynchronously
+                    sharedPref.edit().putInt(getString(R.string.campus_id_key), position).apply();
+                    if (position == 1) {
+                        // "All cafeterias" selected
+                        mCafeteriaListViewModel.setQuery("");
+                    } else {
+                        // Campus selected
+                        mCafeteriaListViewModel.setQuery(String.valueOf(position - 1));
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        };
+    }
+
     /**
      * Sets up the location request.
      * <p/>
      * When the ACCESS_FINE_LOCATION setting is specified, combined with a fast update
      * interval (5 seconds), the Fused Location Provider API returns location updates that are
      * accurate to within a few feet.
-     * <p/>
-     * These settings are appropriate for mapping applications that show real-time location
-     * updates.
      */
     private void createLocationRequest() {
         mLocationRequest = new LocationRequest();
@@ -380,7 +382,6 @@ public class MainActivity extends AppCompatActivity {
                     //mLocationRequest.setNumUpdates(1); // Not useful, we only want to request on location update but stop is triggered on onLocationResult
                     mLocationRequest.setExpirationDuration(1000 * 5); // Expire in 5s
 
-                    //noinspection MissingPermission
                     mFusedLocationClient.requestLocationUpdates(mLocationRequest,
                             mLocationCallback, Looper.myLooper());
                 })
@@ -412,9 +413,7 @@ public class MainActivity extends AppCompatActivity {
      * Removes location updates from the FusedLocationApi.
      */
     private void stopLocationUpdates() {
-        // It is a good practice to remove location requests when the activity is in a paused or
-        // stopped state. Doing so helps battery performance and is especially
-        // recommended in applications that request frequent location updates.
+        // We fetch the location once, it is not useful to keep tracking the user
         mFusedLocationClient.removeLocationUpdates(mLocationCallback);
     }
 }

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/favorite"
+        android:icon="@drawable/ic_favorite_24dp"
+        android:title="Fav"
+        android:contentDescription="Fav"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/directions"
+        android:icon="@drawable/ic_directions_24dp"
+        android:title="Directions"
+        android:contentDescription="Directions"
+        app:showAsAction="ifRoom" />
+</menu>

@@ -50,6 +50,7 @@ public class CafeteriaEntity implements Cafeteria {
         return id;
     }
 
+    @Override
     public void setId(int id) {
         this.id = id;
     }
@@ -59,6 +60,7 @@ public class CafeteriaEntity implements Cafeteria {
         return name;
     }
 
+    @Override
     public void setName(@NonNull String name) {
         this.name = name;
     }
@@ -68,6 +70,7 @@ public class CafeteriaEntity implements Cafeteria {
         return latitude;
     }
 
+    @Override
     public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
@@ -77,6 +80,7 @@ public class CafeteriaEntity implements Cafeteria {
         return longitude;
     }
 
+    @Override
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }

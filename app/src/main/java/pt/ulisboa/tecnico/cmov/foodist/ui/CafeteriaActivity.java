@@ -1,7 +1,9 @@
 package pt.ulisboa.tecnico.cmov.foodist.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
@@ -10,7 +12,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -30,7 +31,6 @@ import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.databinding.ActivityCafeteriaBinding;
 import pt.ulisboa.tecnico.cmov.foodist.location.DirectionsFetcher;
-import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
 import pt.ulisboa.tecnico.cmov.foodist.location.DirectionsParser;
 import pt.ulisboa.tecnico.cmov.foodist.location.LocationUtils;
 import pt.ulisboa.tecnico.cmov.foodist.model.Cafeteria;
@@ -42,7 +42,7 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
     private GoogleMap mMap;
     private CafeteriaViewModel cafeteriaViewModel;
     private FusedLocationProviderClient fusedLocationClient;
-    private int cafeteriaId;
+    private Cafeteria baseCafeteria = null;                // for easier access to final attributes
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,15 +85,15 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
         cafeteriaViewModel.getCafeteria().observe(
                 mapFragment.getViewLifecycleOwner(),
                 cafeteriaEntity -> {
-                    if (cafeteriaId != cafeteriaEntity.getId()) {
-                        cafeteriaId = cafeteriaEntity.getId();
-                        this.updateMap(this.mMap, cafeteriaEntity);
+                    if (baseCafeteria == null) {
+                        baseCafeteria = cafeteriaEntity;
+                        this.updateMap();
                     }
                 });
     }
 
-    private void updateMap(GoogleMap map, Cafeteria cafeteria) {
-        MarkerOptions markerOptions = LocationUtils.updateMap(map, cafeteria);
+    private void updateMap() {
+        MarkerOptions markerOptions = LocationUtils.updateMap(mMap, baseCafeteria);
         fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
             // Got last known location. In some rare situations this can be null.
             if (location != null && mapFragment.getView() != null) {
@@ -121,10 +121,11 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
                         int padding = (int) (height * 0.10);
 
                         if (mapFragment.getView() != null) {
+                            @SuppressLint("ResourceType")
                             PolylineOptions polyline = new PolylineOptions()
                                     .addAll(directionsParser.getPath())
                                     .width(20)
-                                    .color(Color.BLUE);
+                                    .color(Color.parseColor(getString(R.color.colorBlueGoogleMaps)));
 
                             mapFragment.getView().post(() -> {
                                 mMap.addPolyline(polyline);
@@ -139,17 +140,22 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
         });
     }
 
+    public void openDirections(View view) {
+        // This uri does not straight open navigation on Google Maps
+        // "?q=" query parameter needed for Google Maps
+        //String uri = "geo:" + cafeteria.getLatitude() + "," + cafeteria.getLongitude() + "?q=" + cafeteria.getLatitude() + "," + cafeteria.getLongitude()
+
+        // This uri does but is not handled by every mapping app
+        String uri = "http://maps.google.com/maps?&daddr="
+                + this.baseCafeteria.getLatitude() + ","
+                + this.baseCafeteria.getLongitude();
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        startActivity(intent);
+    }
+
     public void addMeal(View view) {
         Intent intent = new Intent(this, newMeal.class);
-        CafeteriaEntity[] myCafeteria = new CafeteriaEntity[1];
-        cafeteriaViewModel.getCafeteria().observe(this, new Observer<CafeteriaEntity>() { // Send the cafeteria information
-            @Override
-            public void onChanged(CafeteriaEntity cafet){
-                myCafeteria[0] = cafet;
-            }
-        });
-        intent.putExtra("IdCafet", myCafeteria[0].getId());
+        intent.putExtra("IdCafet", baseCafeteria.getId());
         startActivity(intent);
-
     }
 }

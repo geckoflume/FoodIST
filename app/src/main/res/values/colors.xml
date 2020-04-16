@@ -8,4 +8,5 @@
     <color name="colorOnSecondary">#FFFFFF</color>
     <color name="colorOpen">@android:color/holo_green_dark</color>
     <color name="colorClosed">@android:color/holo_red_light</color>
+    <color name="colorBlueGoogleMaps">#1A73E8</color>
 </resources>
