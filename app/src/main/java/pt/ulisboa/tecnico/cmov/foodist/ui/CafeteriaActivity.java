@@ -118,7 +118,7 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
     public void addMeal(View view) {
         Intent intent = new Intent(this, newMeal.class);
         CafeteriaEntity[] myCafeteria = new CafeteriaEntity[1];
-        cafeteriaViewModel.getCafeteria().observe(this, new Observer<CafeteriaEntity>() {
+        cafeteriaViewModel.getCafeteria().observe(this, new Observer<CafeteriaEntity>() { // Send the cafeteria information
             @Override
             public void onChanged(CafeteriaEntity cafet){
                 myCafeteria[0] = cafet;
