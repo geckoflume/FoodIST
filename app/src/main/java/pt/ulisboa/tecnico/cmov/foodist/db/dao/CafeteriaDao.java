@@ -23,4 +23,7 @@ public interface CafeteriaDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<CafeteriaEntity> cafeterias);
+
+    @Query("UPDATE cafeterias SET distance = :distance, time_walk = :duration WHERE id = :cafeteriaId")
+    void updateCafeteriaDirections(int cafeteriaId, int distance, int duration);
 }

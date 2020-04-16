@@ -15,6 +15,7 @@ import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
 public class CafeteriaViewModel extends AndroidViewModel {
     private final LiveData<CafeteriaEntity> mObeservableCafeteria;
 
+    private final DataRepository mRepository;
     private final int mCafeteriaId;
 
 
@@ -22,13 +23,18 @@ public class CafeteriaViewModel extends AndroidViewModel {
                             final int cafeteriaId) {
         super(application);
         this.mCafeteriaId = cafeteriaId;
+        mRepository = repository;
 
-        mObeservableCafeteria = repository.loadCafeteria(this.mCafeteriaId);
+        mObeservableCafeteria = mRepository.loadCafeteria(this.mCafeteriaId);
     }
 
 
     public LiveData<CafeteriaEntity> getCafeteria() {
         return mObeservableCafeteria;
+    }
+
+    public void updateCafeteriaDirections(int distance, int duration) {
+        mRepository.updateCafeteriaDirections(mCafeteriaId, distance, duration);
     }
 
     /**

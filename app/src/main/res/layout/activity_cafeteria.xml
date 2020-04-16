@@ -75,7 +75,7 @@
                     android:id="@+id/textView_walkTime"
                     style="@style/TextAppearance.CafeteriaInfo.Time.Walk"
                     android:layout_marginTop="8dp"
-                    android:text="@{UiUtils.formatTime(cafeteriaViewModel.cafeteria.timeWalk, @string/less_one_minute_short, @string/minutes_short)}"
+                    android:text="@{UiUtils.formatTime(cafeteriaViewModel.cafeteria.timeWalk, @string/duration_seconds, @string/duration_minutes, @string/duration_hours, @string/duration_days)}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView_waitTime" />
 
@@ -83,7 +83,7 @@
                     android:id="@+id/textView_waitTime"
                     style="@style/TextAppearance.CafeteriaInfo.Time.Wait"
                     android:layout_marginTop="16dp"
-                    android:text="@{UiUtils.formatTime(cafeteriaViewModel.cafeteria.timeWait, @string/less_one_minute_short, @string/minutes_short)}"
+                    android:text="@{UiUtils.formatTime(cafeteriaViewModel.cafeteria.timeWait, @string/duration_seconds, @string/duration_minutes, @string/duration_hours, @string/duration_days)}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 

@@ -11,8 +11,10 @@
     <string name="more">More</string>
     <string name="cafeteria_card">Walk time: %d min (%d m)\nQueue wait time: %d min</string>
     <string name="autodetecting_campus_toast">Autodetecting your campus…</string>
-    <string name="minutes_short">%d min</string>
-    <string name="less_one_minute_short">&lt;1 min</string>
+    <string name="duration_seconds">%d s</string>
+    <string name="duration_minutes">%d min</string>
+    <string name="duration_hours">%d h</string>
+    <string name="duration_days">%d d</string>
     <string name="currency">%.2f €</string>
     <string name="open">Open</string>
     <string name="closed">Closed</string>

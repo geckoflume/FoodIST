@@ -1,7 +1,6 @@
 package pt.ulisboa.tecnico.cmov.foodist.ui;
 
 import android.graphics.Color;
-import android.location.Location;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,20 +12,21 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.tasks.Task;
 
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Objects;
 
+import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.databinding.ActivityCafeteriaBinding;
+import pt.ulisboa.tecnico.cmov.foodist.location.DirectionsFetcher;
 import pt.ulisboa.tecnico.cmov.foodist.location.DirectionsParser;
 import pt.ulisboa.tecnico.cmov.foodist.location.LocationUtils;
 import pt.ulisboa.tecnico.cmov.foodist.model.Cafeteria;
@@ -37,6 +37,8 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
     private SupportMapFragment mapFragment;
     private GoogleMap mMap;
     private CafeteriaViewModel cafeteriaViewModel;
+    private FusedLocationProviderClient fusedLocationClient;
+    private int cafeteriaId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,7 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
             fragmentTransaction.replace(R.id.mapDetail, mapFragment).commit();
         }
         mapFragment.getMapAsync(this);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
     }
 
     private void initActionBar() {
@@ -77,36 +80,57 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
         mMap.setMyLocationEnabled(true);
         cafeteriaViewModel.getCafeteria().observe(
                 mapFragment.getViewLifecycleOwner(),
-                cafeteriaEntity -> this.updateMap(this.mMap, cafeteriaEntity));
+                cafeteriaEntity -> {
+                    if (cafeteriaId != cafeteriaEntity.getId()) {
+                        cafeteriaId = cafeteriaEntity.getId();
+                        this.updateMap(this.mMap, cafeteriaEntity);
+                    }
+                });
     }
 
     private void updateMap(GoogleMap map, Cafeteria cafeteria) {
         MarkerOptions markerOptions = LocationUtils.updateMap(map, cafeteria);
-        FusedLocationProviderClient fusedLocationClient =
-                LocationServices.getFusedLocationProviderClient(this);
-
-        Task locationResult = fusedLocationClient.getLastLocation();
-        locationResult.addOnCompleteListener(this, task -> {
-            if (task.isSuccessful()) {
-                Location mLastKnownLocation = (Location) task.getResult();
-                new Thread(() -> {
+        fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+            // Got last known location. In some rare situations this can be null.
+            if (location != null && mapFragment.getView() != null) {
+                // Logic to handle location object
+                ((BasicApp) CafeteriaActivity.this.getApplication()).networkIO().execute(() -> {
                     try {
-                        URL url = LocationUtils.directionsURLBuilder(
-                                Objects.requireNonNull(mapFragment.getView()).getContext(),
+                        DirectionsFetcher directionsFetcher = new DirectionsFetcher(
+                                mapFragment.getView().getContext(),
                                 markerOptions.getPosition(),
-                                new LatLng(mLastKnownLocation.getLatitude(),
-                                        mLastKnownLocation.getLongitude()));
-                        String response = LocationUtils.fetchDirection(url);
+                                new LatLng(location.getLatitude(),
+                                        location.getLongitude()));
+                        String response = directionsFetcher.fetchDirections();
                         DirectionsParser directionsParser = new DirectionsParser(response);
-                        PolylineOptions polyline = new PolylineOptions()
-                                .addAll(directionsParser.getPath())
-                                .width(20)
-                                .color(Color.BLUE);
-                        mapFragment.getView().post(() -> mMap.addPolyline(polyline));
+                        cafeteriaViewModel.updateCafeteriaDirections(
+                                directionsParser.getDistance(),
+                                directionsParser.getDuration());
+
+                        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                        for (LatLng point : directionsParser.getPath()) {
+                            builder.include(point);
+                        }
+                        LatLngBounds bounds = builder.build();
+                        int height = mapFragment.getView().getHeight();
+                        // offset from edges of the map 10% of screen height
+                        int padding = (int) (height * 0.10);
+
+                        if (mapFragment.getView() != null) {
+                            PolylineOptions polyline = new PolylineOptions()
+                                    .addAll(directionsParser.getPath())
+                                    .width(20)
+                                    .color(Color.BLUE);
+
+                            mapFragment.getView().post(() -> {
+                                mMap.addPolyline(polyline);
+                                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));  // or use animateCamera() for smooth animation
+                            });
+                        }
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
                     }
-                }).start();
+                });
             }
         });
     }

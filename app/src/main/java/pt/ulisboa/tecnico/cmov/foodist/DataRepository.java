@@ -53,4 +53,8 @@ public class DataRepository {
     public LiveData<List<CafeteriaEntity>> getCafeteriasByCampus(int campus) {
         return mDatabase.cafeteriaDao().getAllByCampusId(campus);
     }
+
+    public void updateCafeteriaDirections(int cafeteriaId, int distance, int duration) {
+        mDatabase.cafeteriaDao().updateCafeteriaDirections(cafeteriaId, distance, duration);
+    }
 }

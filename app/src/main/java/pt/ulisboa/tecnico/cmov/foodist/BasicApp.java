@@ -2,6 +2,8 @@ package pt.ulisboa.tecnico.cmov.foodist;
 
 import android.app.Application;
 
+import java.util.concurrent.Executor;
+
 import pt.ulisboa.tecnico.cmov.foodist.db.AppDatabase;
 
 /**
@@ -22,5 +24,9 @@ public class BasicApp extends Application {
 
     public DataRepository getRepository() {
         return DataRepository.getInstance(getDatabase());
+    }
+
+    public Executor networkIO(){
+        return mAppExecutors.networkIO();
     }
 }

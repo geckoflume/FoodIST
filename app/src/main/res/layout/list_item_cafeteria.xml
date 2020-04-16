@@ -60,7 +60,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginBottom="16dp"
-                android:text="@{UiUtils.formatTime(cafeteria.timeWalk, @string/less_one_minute_short, @string/minutes_short)}"
+                android:text="@{UiUtils.formatTime(cafeteria.timeWalk, @string/duration_seconds, @string/duration_minutes, @string/duration_hours, @string/duration_days)}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView_thumbnail" />
 
@@ -71,7 +71,7 @@
                 android:layout_marginLeft="11dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginRight="10dp"
-                android:text="@{UiUtils.formatTime(cafeteria.timeWait, @string/less_one_minute_short, @string/minutes_short)}"
+                android:text="@{UiUtils.formatTime(cafeteria.timeWait, @string/duration_seconds, @string/duration_minutes, @string/duration_hours, @string/duration_days)}"
                 app:layout_constraintBottom_toBottomOf="@+id/textView_walkTime"
                 app:layout_constraintEnd_toStartOf="@+id/textView_open"
                 app:layout_constraintStart_toEndOf="@+id/textView_walkTime"
