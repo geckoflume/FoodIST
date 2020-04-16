@@ -25,7 +25,6 @@ import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
 
 @Database(entities = {CafeteriaEntity.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
-
     @VisibleForTesting
     public static final String DATABASE_NAME = "database.db";
     private static final String TAG = AppDatabase.class.getSimpleName();
@@ -47,7 +46,7 @@ public abstract class AppDatabase extends RoomDatabase {
     /**
      * Build the database. {@link Builder#build()} only sets up the database configuration and
      * creates a new instance of the database.
-     * The SQLite database is only created when it's accessed for the first time.
+     * The SQLite database is only created when it is accessed for the first time.
      */
     private static AppDatabase buildDatabase(final Context appContext,
                                              final AppExecutors executors) {
@@ -57,10 +56,10 @@ public abstract class AppDatabase extends RoomDatabase {
                     public void onCreate(@NonNull SupportSQLiteDatabase db) {
                         super.onCreate(db);
                         executors.diskIO().execute(() -> {
-                            // Generate the data for pre-population
+                            // Populate the database
                             AppDatabase database = AppDatabase.getInstance(appContext, executors);
                             seedDatabase(database, appContext);
-                            // notify that the database was created and it's ready to be used
+                            // Notify that the database was created and is ready to be used
                             database.setDatabaseCreated();
                         });
                     }
@@ -71,7 +70,7 @@ public abstract class AppDatabase extends RoomDatabase {
     private static void seedDatabase(final AppDatabase database, Context context) {
         Log.e(TAG, "Seeding db should only happen on first run");
 
-        String json = null;
+        String json;
         Type cafeteriaType = new TypeToken<List<CafeteriaEntity>>() {
         }.getType();
         try {
@@ -111,5 +110,4 @@ public abstract class AppDatabase extends RoomDatabase {
     public LiveData<Boolean> getDatabaseCreated() {
         return mIsDatabaseCreated;
     }
-
 }

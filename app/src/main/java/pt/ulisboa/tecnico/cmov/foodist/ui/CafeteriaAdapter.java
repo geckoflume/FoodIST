@@ -16,7 +16,7 @@ import pt.ulisboa.tecnico.cmov.foodist.databinding.ListItemCafeteriaBinding;
 import pt.ulisboa.tecnico.cmov.foodist.model.Cafeteria;
 
 public class CafeteriaAdapter extends RecyclerView.Adapter<CafeteriaAdapter.CafeteriaHolder> {
-    public static final String EXTRA_MESSAGE = "pt.ulisboa.tecnico.cmov.foodist.CAFETERIA";
+    public static final String EXTRA_MESSAGE = "pt.ulisboa.tecnico.cmov.foodist.CAFETERIAID";
 
     private List<? extends Cafeteria> cafeteriaList;
 
