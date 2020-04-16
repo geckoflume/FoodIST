@@ -1,13 +1,16 @@
 package pt.ulisboa.tecnico.cmov.foodist.ui;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -27,6 +30,7 @@ import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.databinding.ActivityCafeteriaBinding;
 import pt.ulisboa.tecnico.cmov.foodist.location.DirectionsFetcher;
+import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
 import pt.ulisboa.tecnico.cmov.foodist.location.DirectionsParser;
 import pt.ulisboa.tecnico.cmov.foodist.location.LocationUtils;
 import pt.ulisboa.tecnico.cmov.foodist.model.Cafeteria;
@@ -133,5 +137,19 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
                 });
             }
         });
+    }
+
+    public void addMeal(View view) {
+        Intent intent = new Intent(this, newMeal.class);
+        CafeteriaEntity[] myCafeteria = new CafeteriaEntity[1];
+        cafeteriaViewModel.getCafeteria().observe(this, new Observer<CafeteriaEntity>() { // Send the cafeteria information
+            @Override
+            public void onChanged(CafeteriaEntity cafet){
+                myCafeteria[0] = cafet;
+            }
+        });
+        intent.putExtra("IdCafet", myCafeteria[0].getId());
+        startActivity(intent);
+
     }
 }
