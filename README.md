@@ -43,17 +43,16 @@ In order to benefit from Google Maps services (itineraries, times), please set y
 ```
 To build it, use the `gradlew build` command or use "Import Project" in Android Studio. 
 
-## Useful resources:
+## Valuable resources:
 
- - Coords type REAL in SQLite:
-	 - https://stackoverflow.com/questions/46732157/which-data-type-to-store-a-longitude-and-a-latitude-in-a-sqlite-database
+ - Coordinates type in SQLite:
+	 - https://stackoverflow.com/a/46732273
 	 - https://sqlite.org/datatype3.html
-	 - https://stackoverflow.com/questions/12504208/what-mysql-data-type-should-be-used-for-latitude-longitude-with-8-decimal-places
+	 - https://stackoverflow.com/a/12504340
 	 - https://abrignoni.blogspot.com/2018/08/android-nike-run-app-geolocation-sqlite.html
 
-
  - SQLite:
-	 - https://stackoverflow.com/questions/2493331/what-are-the-best-practices-for-sqlite-on-android
+	 - https://stackoverflow.com/q/2493331
 	 - https://github.com/android/architecture-components-samples/blob/master/PersistenceContentProviderSample/app/src/main/java/com/example/android/contentprovidersample/data/SampleDatabase.java
 	 - https://codelabs.developers.google.com/codelabs/android-room-with-a-view
 
@@ -62,9 +61,12 @@ To build it, use the `gradlew build` command or use "Import Project" in Android 
 	 - https://medium.com/@droidbyme/android-cardview-with-recyclerview-90cfeda6a4d4
 
  - Map directions, zooming:
-	 - https://stackoverflow.com/questions/14828217/android-map-v2-zoom-to-show-all-the-markers
+	 - https://stackoverflow.com/a/14828739
 	 - https://medium.com/@haydar_ai/better-way-to-get-the-item-position-in-androids-recyclerview-820667d435d4
 	 - https://github.com/Vysh01/android-maps-directions
 
  - How to store dates (for opening hours):
 	 - https://codeblog.jonskeet.uk/2017/04/23/all-about-java-util-date/
+	 - https://medium.com/androiddevelopers/room-time-2b4cf9672b98
+	 - https://stackoverflow.com/a/38922755
+	 - https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html

@@ -13,6 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -43,6 +44,7 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
     private CafeteriaViewModel cafeteriaViewModel;
     private FusedLocationProviderClient fusedLocationClient;
     private CafeteriaEntity currentCafeteria;
+    private MutableLiveData<Boolean> cafeteriaWasInitialized = new MutableLiveData<>(false);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +61,11 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
         binding.setCafeteriaViewModel(cafeteriaViewModel);
         initActionBar();
 
-        cafeteriaViewModel.getCafeteria().observe(this, cafeteriaEntity ->
-                this.currentCafeteria = cafeteriaEntity);
+        cafeteriaViewModel.getCafeteria().observe(this, cafeteriaEntity -> {
+            currentCafeteria = cafeteriaEntity;
+            if (!cafeteriaWasInitialized.getValue())
+                cafeteriaWasInitialized.setValue(true);
+        });
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapDetail);
         if (mapFragment == null) {
@@ -91,44 +96,43 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     private void updateMap() {
-        fusedLocationClient.getLastLocation().addOnSuccessListener(mCurrentLocation ->
-                ((BasicApp) CafeteriaActivity.this.getApplication()).networkIO().execute(() -> {
-                    Log.w(TAG, "Starting infinite loop on networkIO thread");
-                    while (currentCafeteria == null && mapFragment == null) {
-                        // TODO: find an alternative asap for synchronization
-                    }
-                    Log.w(TAG, "Cafeteria view model got observed, now updating the map");
-                    mapFragment.getView().post(() -> LocationUtils.updateMap(mMap, currentCafeteria)); // run this on main thread
+        cafeteriaWasInitialized.observe(this, shouldUpdateMap -> {
+            if (shouldUpdateMap) {                                      // should only happen once
+                Log.w(TAG, "Cafeteria view model got observed, now updating the map");
+                fusedLocationClient.getLastLocation().addOnSuccessListener(mCurrentLocation ->
+                        ((BasicApp) getApplication()).networkIO().execute(() -> {
+                            mapFragment.getView().post(() -> LocationUtils.updateMap(mMap, currentCafeteria)); // run this on main thread
 
-                    List<LatLng> path = cafeteriaViewModel.updateCafeteriaDistance(currentCafeteria,
-                            mCurrentLocation,
-                            getString(R.string.google_maps_key));
-                    if (path != null && !path.isEmpty() ) { // ensures a route has been found and that the provided Google Maps api key is valid
-                        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                        /*
-                        for (LatLng point : path)
-                            builder.include(point);
-                        */
-                        // Should be enough in most cases, and faster
-                        builder.include(new LatLng(currentCafeteria.getLatitude(), currentCafeteria.getLongitude()));
-                        builder.include(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
-                        LatLngBounds bounds = builder.build();
-                        int height = mapFragment.getView().getHeight();
-                        // offset from edges of the map 10% of screen height
-                        int padding = (int) (height * 0.10);
+                            List<LatLng> path = cafeteriaViewModel.updateCafeteriaDistance(currentCafeteria,
+                                    mCurrentLocation, getString(R.string.google_maps_key));
+                            if (path != null && !path.isEmpty()) { // ensures a route has been found and that the provided Google Maps api key is valid
+                                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                                /*
+                                for (LatLng point : path)
+                                    builder.include(point);
+                                */
+                                // Should be enough in most cases, and faster
+                                builder.include(new LatLng(currentCafeteria.getLatitude(), currentCafeteria.getLongitude()));
+                                builder.include(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
+                                LatLngBounds bounds = builder.build();
+                                int height = mapFragment.getView().getHeight();
+                                // offset from edges of the map 10% of screen height
+                                int padding = (int) (height * 0.10);
 
-                        @SuppressLint("ResourceType")
-                        PolylineOptions polyline = new PolylineOptions()
-                                .addAll(path)
-                                .width(20)
-                                .color(Color.parseColor(getString(R.color.colorBlueGoogleMaps)));
+                                @SuppressLint("ResourceType")
+                                PolylineOptions polyline = new PolylineOptions()
+                                        .addAll(path)
+                                        .width(20)
+                                        .color(Color.parseColor(getString(R.color.colorBlueGoogleMaps)));
 
-                        mapFragment.getView().post(() -> { // run this on main thread
-                            mMap.addPolyline(polyline);
-                            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));  // or use animateCamera() for smooth animation
-                        });
-                    }
-                }));
+                                mapFragment.getView().post(() -> { // run this on main thread
+                                    mMap.addPolyline(polyline);
+                                    mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));  // or use animateCamera() for smooth animation
+                                });
+                            }
+                        }));
+            }
+        });
     }
 
     public void openDirections(View view) {
