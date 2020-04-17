@@ -166,15 +166,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initCampuses() {
-        Campus campus = new Campus(0, "Find nearest campus", 0, 0);
+        Campus campus = new Campus(0, getString(R.string.find_nearest), 0, 0);
         this.campuses.add(campus);
-        campus = new Campus(1, "All cafeterias", 0, 0);
+        campus = new Campus(1, getString(R.string.all_cafeterias), 0, 0);
         this.campuses.add(campus);
-        campus = new Campus(2, "Alameda", 38.736795, -9.138637);
+        campus = new Campus(2, getString(R.string.alameda), 38.736795, -9.138637);
         this.campuses.add(campus);
-        campus = new Campus(3, "Taguspark", 38.737461, -9.303161);
+        campus = new Campus(3, getString(R.string.taguspark), 38.737461, -9.303161);
         this.campuses.add(campus);
-        campus = new Campus(4, "Tecnológico e Nuclear", 38.811911, -9.094221);
+        campus = new Campus(4, getString(R.string.ctn), 38.811911, -9.094221);
         this.campuses.add(campus);
     }
 
@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
         return new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
+                if (((Campus) parent.getItemAtPosition(position)).getName().equals(getString(R.string.find_nearest))) { // in case the campuses are inserted in a strange order
                     // "Find nearest campus" selected
                     if (mCurrentLocation != null && PermissionsHelper.checkPermissions(MainActivity.this)) {
                         spinner.setEnabled(false);
@@ -191,14 +191,14 @@ public class MainActivity extends AppCompatActivity {
                         spinner.setSelection(adapterCampus.getPosition(nearest));
                         spinner.setEnabled(true);
                     } else {
-                        Toast.makeText(MainActivity.this, "You need to allow location permission first.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, getString(R.string.need_location), Toast.LENGTH_LONG).show();
                         PermissionsHelper.requestPermissions(MainActivity.this);
                     }
-                } else if (position > 0 && position < campuses.size()) {
+                } else {
                     // "All cafeterias" or campus selected
                     // apply() to commit asynchronously
                     sharedPref.edit().putInt(getString(R.string.campus_id_key), position).apply();
-                    if (position == 1) {
+                    if (((Campus) parent.getItemAtPosition(position)).getName().equals(getString(R.string.all_cafeterias))) {
                         // "All cafeterias" selected
                         mCafeteriaListViewModel.setQuery("");
                     } else {

@@ -41,13 +41,24 @@ public abstract class LocationUtils {
                 builder.include(new LatLng(cafeteria.getLatitude(), cafeteria.getLongitude()));
             }
             LatLngBounds bounds = builder.build();
+            bounds = expandBounds(bounds);
             int height = mapFragment.getView().getHeight();
-            // offset from edges of the map 15% of screen height
-            int padding = (int) (height * 0.15);
+            // offset from edges of the map 10% of screen height
+            int padding = (int) (height * 0.1);
             cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
 
             map.moveCamera(cameraUpdate);  // or use animateCamera() for smooth animation
         }
+    }
+
+    /**
+     * Method to expand the bounds to fit the markers heights
+     * @param bounds
+     * @return
+     */
+    public static LatLngBounds expandBounds(LatLngBounds bounds) {
+        double paddingTop = (bounds.northeast.latitude - bounds.southwest.latitude)*0.2;
+        return bounds.including(new LatLng(bounds.northeast.latitude + paddingTop, bounds.northeast.longitude));
     }
 
     public static MarkerOptions updateMap(GoogleMap map, Cafeteria cafeteria) {

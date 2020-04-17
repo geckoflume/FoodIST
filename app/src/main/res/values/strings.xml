@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">FoodIST</string>
-    <string name="my_location">Autodetect campus</string>
     <string name="select_campus">Select campus:</string>
     <string name="available_cafeterias">Available cafeterias:</string>
     <string name="action_settings">Settings</string>
@@ -37,4 +36,10 @@
     <string name="save_button">Save</string>
     <string name="title_add_meal">Add a new meal</string>
     <string name="directions">Directions</string>
+    <string name="find_nearest">Find nearest campus</string>
+    <string name="all_cafeterias">All cafeterias</string>
+    <string name="alameda">Alameda</string>
+    <string name="taguspark">Taguspark</string>
+    <string name="ctn">Tecnológico e Nuclear</string>
+    <string name="need_location">You need to allow location permission first.</string>
 </resources>
