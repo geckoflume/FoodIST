@@ -17,8 +17,7 @@ public abstract class UiUtils {
      * @param duration         The duration the Snackbar should be displayed.
      * @param listener         The listener associated with the Snackbar action.
      */
-    public static void showSnackbar(View v, final int mainTextStringId, final int actionStringId,
-                                    final int duration, View.OnClickListener listener) {
+    public static void showSnackbar(View v, final int mainTextStringId, final int actionStringId, final int duration, View.OnClickListener listener) {
         Snackbar.make(v, mainTextStringId, duration).setAction(actionStringId, listener).show();
     }
 

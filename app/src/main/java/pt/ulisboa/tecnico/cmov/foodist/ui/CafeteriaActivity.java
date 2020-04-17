@@ -95,7 +95,7 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
                 ((BasicApp) CafeteriaActivity.this.getApplication()).networkIO().execute(() -> {
                     Log.w(TAG, "Starting infinite loop on networkIO thread");
                     while (currentCafeteria == null && mapFragment == null) {
-                        // TODO: find an alternative asap
+                        // TODO: find an alternative asap for synchronization
                     }
                     Log.w(TAG, "Cafeteria view model got observed, now updating the map");
                     mapFragment.getView().post(() -> LocationUtils.updateMap(mMap, currentCafeteria)); // run this on main thread
@@ -105,8 +105,13 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
                             getString(R.string.google_maps_key));
                     if (path != null && !path.isEmpty() ) { // ensures a route has been found and that the provided Google Maps api key is valid
                         LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                        /*
                         for (LatLng point : path)
                             builder.include(point);
+                        */
+                        // Should be enough in most cases, and faster
+                        builder.include(new LatLng(currentCafeteria.getLatitude(), currentCafeteria.getLongitude()));
+                        builder.include(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
                         LatLngBounds bounds = builder.build();
                         int height = mapFragment.getView().getHeight();
                         // offset from edges of the map 10% of screen height

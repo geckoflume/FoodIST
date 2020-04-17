@@ -9,4 +9,5 @@
     android:drawablePadding="8dp"
     android:ellipsize="marquee"
     android:singleLine="true"
-    android:textColor="@color/colorOnPrimary" />
+    android:textColor="@color/colorOnPrimary"
+    android:drawableTint="@color/colorOnPrimary" />

@@ -13,7 +13,7 @@ import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
 
 @Dao
 public interface CafeteriaDao {
-    @Query("SELECT * FROM cafeterias")
+    @Query("SELECT * FROM cafeterias ORDER BY distance")
     LiveData<List<CafeteriaEntity>> getAll();
 
     @Query("SELECT * FROM cafeterias WHERE campus_id = :campusId ORDER BY distance")
