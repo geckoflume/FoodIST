@@ -21,12 +21,14 @@ public class DirectionsParser {
     private int distance;
     private int duration;
 
-    public DirectionsParser(String jsonStr) {
+    public DirectionsParser(String jsonStr, LatLng origin, LatLng dest) {
         this.path = new ArrayList<>();
         this.duration = 0;
         this.distance = 0;
         JSONObject jStep;
         String polyline;
+
+        this.path.add(origin);
 
         try {
             JSONObject jObject = new JSONObject(jsonStr);
@@ -49,6 +51,7 @@ public class DirectionsParser {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        this.path.add(dest);
     }
 
     /**

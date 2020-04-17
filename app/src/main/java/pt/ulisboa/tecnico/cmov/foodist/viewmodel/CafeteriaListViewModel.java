@@ -62,13 +62,10 @@ public class CafeteriaListViewModel extends AndroidViewModel {
         return mCafeterias;
     }
 
-    public void updateCafeteriasDistances(List<CafeteriaEntity> currentCafeterias, Location mCurrentLocation, String apiKey) {
+    public void updateCafeteriasDistances(List<CafeteriaEntity> currentCafeterias, final Location mCurrentLocation, final String apiKey) {
         for (CafeteriaEntity cafeteria : currentCafeterias) {
-            DirectionsFetcher directionsFetcher =
-                    new DirectionsFetcher(apiKey, cafeteria, mCurrentLocation);
-            String response = directionsFetcher.fetchDirections();
-
-            DirectionsParser directionsParser = new DirectionsParser(response);
+            DirectionsFetcher directionsFetcher = new DirectionsFetcher(apiKey, cafeteria, mCurrentLocation);
+            DirectionsParser directionsParser = directionsFetcher.parse();
             cafeteria.setDistance(directionsParser.getDistance());
             cafeteria.setTimeWalk(directionsParser.getDuration());
 

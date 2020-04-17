@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
@@ -42,12 +43,9 @@ public class CafeteriaViewModel extends AndroidViewModel {
         return mObservableCafeteria;
     }
 
-    public List<LatLng> updateCafeteriaDistance(CafeteriaEntity currentCafeteria, Location mCurrentLocation, String apiKey) {
-        DirectionsFetcher directionsFetcher =
-                new DirectionsFetcher(apiKey, currentCafeteria, mCurrentLocation);
-        String response = directionsFetcher.fetchDirections();
-
-        DirectionsParser directionsParser = new DirectionsParser(response);
+    public List<LatLng> updateCafeteriaDistance(CafeteriaEntity currentCafeteria, final Location mCurrentLocation, final String apiKey) {
+        DirectionsFetcher directionsFetcher = new DirectionsFetcher(apiKey, currentCafeteria, mCurrentLocation);
+        DirectionsParser directionsParser = directionsFetcher.parse();
         currentCafeteria.setDistance(directionsParser.getDistance());
         currentCafeteria.setTimeWalk(directionsParser.getDuration());
 

@@ -91,6 +91,7 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
         mMap.setIndoorEnabled(true);
         if (PermissionsHelper.checkPermissions(this)) {
             mMap.setMyLocationEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
             updateMap();
         }
     }
@@ -99,25 +100,19 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
         cafeteriaWasInitialized.observe(this, shouldUpdateMap -> {
             if (shouldUpdateMap) {                                      // should only happen once
                 Log.w(TAG, "Cafeteria view model got observed, now updating the map");
+                LocationUtils.updateMap(mMap, currentCafeteria);
                 fusedLocationClient.getLastLocation().addOnSuccessListener(mCurrentLocation ->
                         ((BasicApp) getApplication()).networkIO().execute(() -> {
-                            mapFragment.getView().post(() -> LocationUtils.updateMap(mMap, currentCafeteria)); // run this on main thread
-
                             List<LatLng> path = cafeteriaViewModel.updateCafeteriaDistance(currentCafeteria,
                                     mCurrentLocation, getString(R.string.google_maps_key));
                             if (path != null && !path.isEmpty()) { // ensures a route has been found and that the provided Google Maps api key is valid
                                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                                /*
                                 for (LatLng point : path)
                                     builder.include(point);
-                                */
-                                // Should be enough in most cases, and faster
-                                builder.include(new LatLng(currentCafeteria.getLatitude(), currentCafeteria.getLongitude()));
-                                builder.include(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
                                 LatLngBounds bounds = builder.build();
                                 int height = mapFragment.getView().getHeight();
                                 // offset from edges of the map 10% of screen height
-                                int padding = (int) (height * 0.10);
+                                int padding = (int) (height * 0.1);
 
                                 @SuppressLint("ResourceType")
                                 PolylineOptions polyline = new PolylineOptions()
