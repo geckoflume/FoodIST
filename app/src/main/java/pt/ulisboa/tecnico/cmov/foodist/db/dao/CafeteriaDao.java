@@ -5,6 +5,7 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -24,6 +25,9 @@ public interface CafeteriaDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<CafeteriaEntity> cafeterias);
 
-    @Query("UPDATE cafeterias SET distance = :distance, time_walk = :duration WHERE id = :cafeteriaId")
-    void updateCafeteriaDirections(int cafeteriaId, int distance, int duration);
+    @Update
+    void updateAll(List<CafeteriaEntity> cafeterias);
+
+    @Update
+    void update(CafeteriaEntity cafeteria);
 }

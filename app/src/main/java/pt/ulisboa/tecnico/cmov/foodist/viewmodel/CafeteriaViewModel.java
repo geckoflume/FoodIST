@@ -1,6 +1,8 @@
 package pt.ulisboa.tecnico.cmov.foodist.viewmodel;
 
 import android.app.Application;
+import android.location.Location;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -8,33 +10,50 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.List;
+
 import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
-import pt.ulisboa.tecnico.cmov.foodist.DataRepository;
+import pt.ulisboa.tecnico.cmov.foodist.db.DataRepository;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
+import pt.ulisboa.tecnico.cmov.foodist.location.DirectionsFetcher;
+import pt.ulisboa.tecnico.cmov.foodist.location.DirectionsParser;
 
 public class CafeteriaViewModel extends AndroidViewModel {
-    private final LiveData<CafeteriaEntity> mObeservableCafeteria;
+    private final LiveData<CafeteriaEntity> mObservableCafeteria;
 
     private final DataRepository mRepository;
     private final int mCafeteriaId;
 
 
     public CafeteriaViewModel(@NonNull Application application, DataRepository repository,
-                            final int cafeteriaId) {
+                              final int cafeteriaId) {
         super(application);
         this.mCafeteriaId = cafeteriaId;
         mRepository = repository;
 
-        mObeservableCafeteria = mRepository.loadCafeteria(this.mCafeteriaId);
+        mObservableCafeteria = mRepository.loadCafeteria(this.mCafeteriaId);
     }
 
 
     public LiveData<CafeteriaEntity> getCafeteria() {
-        return mObeservableCafeteria;
+        return mObservableCafeteria;
     }
 
-    public void updateCafeteriaDirections(int distance, int duration) {
-        mRepository.updateCafeteriaDirections(mCafeteriaId, distance, duration);
+    public List<LatLng> updateCafeteriaDistance(CafeteriaEntity currentCafeteria, Location mCurrentLocation, String apiKey) {
+        DirectionsFetcher directionsFetcher =
+                new DirectionsFetcher(apiKey, currentCafeteria, mCurrentLocation);
+        String response = directionsFetcher.fetchDirections();
+
+        DirectionsParser directionsParser = new DirectionsParser(response);
+        currentCafeteria.setDistance(directionsParser.getDistance());
+        currentCafeteria.setTimeWalk(directionsParser.getDuration());
+
+        Log.i("updater", "updating cafeteria " + currentCafeteria.getName());
+        mRepository.updateCafeteria(currentCafeteria);
+
+        return directionsParser.getPath();
     }
 
     /**

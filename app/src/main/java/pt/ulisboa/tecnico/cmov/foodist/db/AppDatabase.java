@@ -26,7 +26,7 @@ import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
 @Database(entities = {CafeteriaEntity.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     @VisibleForTesting
-    public static final String DATABASE_NAME = "database.db";
+    private static final String DATABASE_NAME = "database.db";
     private static final String TAG = AppDatabase.class.getSimpleName();
     private static AppDatabase sInstance;
     private final MutableLiveData<Boolean> mIsDatabaseCreated = new MutableLiveData<>();

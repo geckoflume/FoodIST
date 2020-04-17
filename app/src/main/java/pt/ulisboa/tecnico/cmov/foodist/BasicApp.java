@@ -5,6 +5,7 @@ import android.app.Application;
 import java.util.concurrent.Executor;
 
 import pt.ulisboa.tecnico.cmov.foodist.db.AppDatabase;
+import pt.ulisboa.tecnico.cmov.foodist.db.DataRepository;
 
 /**
  * Android Application class. Used for accessing singletons.

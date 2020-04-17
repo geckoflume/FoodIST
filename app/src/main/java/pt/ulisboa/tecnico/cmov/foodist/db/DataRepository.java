@@ -1,11 +1,10 @@
-package pt.ulisboa.tecnico.cmov.foodist;
+package pt.ulisboa.tecnico.cmov.foodist.db;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 
 import java.util.List;
 
-import pt.ulisboa.tecnico.cmov.foodist.db.AppDatabase;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
 
 /**
@@ -54,7 +53,11 @@ public class DataRepository {
         return mDatabase.cafeteriaDao().getAllByCampusId(campus);
     }
 
-    public void updateCafeteriaDirections(int cafeteriaId, int distance, int duration) {
-        mDatabase.cafeteriaDao().updateCafeteriaDirections(cafeteriaId, distance, duration);
+    public void updateCafeterias(List<CafeteriaEntity> currentCafeterias) {
+        mDatabase.cafeteriaDao().updateAll(currentCafeterias);
+    }
+
+    public void updateCafeteria(CafeteriaEntity currentCafeteria) {
+        mDatabase.cafeteriaDao().update(currentCafeteria);
     }
 }

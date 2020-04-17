@@ -1,7 +1,9 @@
 package pt.ulisboa.tecnico.cmov.foodist.viewmodel;
 
 import android.app.Application;
+import android.location.Location;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.arch.core.util.Function;
@@ -13,8 +15,10 @@ import androidx.lifecycle.Transformations;
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
-import pt.ulisboa.tecnico.cmov.foodist.DataRepository;
+import pt.ulisboa.tecnico.cmov.foodist.db.DataRepository;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
+import pt.ulisboa.tecnico.cmov.foodist.location.DirectionsFetcher;
+import pt.ulisboa.tecnico.cmov.foodist.location.DirectionsParser;
 
 public class CafeteriaListViewModel extends AndroidViewModel {
     private static final String QUERY_KEY = "QUERY";
@@ -55,5 +59,20 @@ public class CafeteriaListViewModel extends AndroidViewModel {
      */
     public LiveData<List<CafeteriaEntity>> getCafeterias() {
         return mCafeterias;
+    }
+
+    public void updateCafeteriasDistances(List<CafeteriaEntity> currentCafeterias, Location mCurrentLocation, String apiKey) {
+        for (CafeteriaEntity cafeteria : currentCafeterias) {
+            DirectionsFetcher directionsFetcher =
+                    new DirectionsFetcher(apiKey, cafeteria, mCurrentLocation);
+            String response = directionsFetcher.fetchDirections();
+
+            DirectionsParser directionsParser = new DirectionsParser(response);
+            cafeteria.setDistance(directionsParser.getDistance());
+            cafeteria.setTimeWalk(directionsParser.getDuration());
+
+            Log.i("updater", "updating cafeteria " + cafeteria.getName());
+        }
+        mRepository.updateCafeterias(currentCafeterias);
     }
 }

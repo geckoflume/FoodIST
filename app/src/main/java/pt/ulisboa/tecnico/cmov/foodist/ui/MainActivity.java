@@ -14,6 +14,7 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -47,8 +48,10 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
 import pt.ulisboa.tecnico.cmov.foodist.BuildConfig;
 import pt.ulisboa.tecnico.cmov.foodist.R;
+import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
 import pt.ulisboa.tecnico.cmov.foodist.location.LocationUtils;
 import pt.ulisboa.tecnico.cmov.foodist.model.Campus;
 import pt.ulisboa.tecnico.cmov.foodist.viewmodel.CafeteriaListViewModel;
@@ -64,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private List<Campus> campuses = new ArrayList<>();
     private ArrayAdapter<Campus> adapterCampus;
+    private List<CafeteriaEntity> currentCafeterias;
     private Spinner spinner;
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest mLocationRequest;
@@ -73,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
     private Location mCurrentLocation;
     private CafeteriaListViewModel mCafeteriaListViewModel;
     private SharedPreferences sharedPref;
+    private boolean canRefresh = false;
+    private MenuItem refreshMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +118,11 @@ public class MainActivity extends AppCompatActivity {
         // Cafeteria ListView
         mCafeteriaListViewModel = new ViewModelProvider(this)
                 .get(CafeteriaListViewModel.class);
+        mCafeteriaListViewModel.getCafeterias().observe(this, cafeteriaEntities -> {
+            this.currentCafeterias = cafeteriaEntities;
+            if (!canRefresh && mCurrentLocation != null)
+                enableRefresh();
+        });
 
         // Location
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -121,6 +132,8 @@ public class MainActivity extends AppCompatActivity {
         createLocationCallback();
         createLocationRequest();
         buildLocationSettingsRequest();
+
+        startLocationUpdates();
     }
 
     @Override
@@ -133,7 +146,28 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        this.refreshMenuItem = menu.getItem(0);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        switch (item.getItemId()) {
+            case R.id.action_refresh:
+                updateCafeterias();
+                break;
+        }
+        return NavigationUI.onNavDestinationSelected(item, navController)
+                || super.onOptionsItemSelected(item);
+    }
+
+    private void updateCafeterias() {
+        ((BasicApp) MainActivity.this.getApplication()).networkIO().execute(() ->
+                mCafeteriaListViewModel.updateCafeteriasDistances(
+                        currentCafeterias,
+                        mCurrentLocation,
+                        getString(R.string.google_maps_key)));
     }
 
     @Override
@@ -203,17 +237,6 @@ public class MainActivity extends AppCompatActivity {
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //Permission granted.
             } else {
-                // Permission denied.
-
-                // Notify the user via a SnackBar that they have rejected a core permission for the
-                // app, which makes the Activity useless. In a real app, core permissions would
-                // typically be best requested during a welcome-screen flow. (TODO)
-
-                // Additionally, it is important to remember that a permission might have been
-                // rejected without asking the user for permission (device policy or "Never ask
-                // again" prompts). Therefore, a user interface affordance is typically implemented
-                // when permissions are denied. Otherwise, your app could appear unresponsive to
-                // touches or interactions which have required permissions.
                 UiUtils.showSnackbar(findViewById(android.R.id.content),
                         R.string.permission_denied_explanation,
                         R.string.action_settings,
@@ -237,8 +260,8 @@ public class MainActivity extends AppCompatActivity {
      */
     private void updateNearestCampus() {
         Campus nearest = null;
-        float distanceNearest = 0.f;
-        float distanceCandidate;
+        double distanceNearest = 0.f;
+        double distanceCandidate;
         for (Campus c : campuses) {
             if (nearest == null) {
                 nearest = c;
@@ -274,12 +297,12 @@ public class MainActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
                     // "Find nearest campus" selected
-                    if (checkPermissions()) {
+                    if (mCurrentLocation != null) {
                         spinner.setEnabled(false);
                         Toast.makeText(MainActivity.this,
                                 R.string.autodetecting_campus_toast,
                                 Toast.LENGTH_LONG).show();
-                        startLocationUpdates();
+                        updateNearestCampus();
                     } else {
                         requestPermissions();
                     }
@@ -335,7 +358,8 @@ public class MainActivity extends AppCompatActivity {
             public void onLocationResult(LocationResult locationResult) {
                 mCurrentLocation = locationResult.getLastLocation();
                 stopLocationUpdates();
-                updateNearestCampus();
+                if (!canRefresh && currentCafeterias != null)
+                    enableRefresh();
             }
         };
     }
@@ -380,7 +404,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.i(TAG, "All location settings are satisfied.");
 
                     //mLocationRequest.setNumUpdates(1); // Not useful, we only want to request on location update but stop is triggered on onLocationResult
-                    mLocationRequest.setExpirationDuration(1000 * 5); // Expire in 5s
+                    mLocationRequest.setExpirationDuration(1000 * 30); // Expire in 30s
 
                     mFusedLocationClient.requestLocationUpdates(mLocationRequest,
                             mLocationCallback, Looper.myLooper());
@@ -415,5 +439,9 @@ public class MainActivity extends AppCompatActivity {
     private void stopLocationUpdates() {
         // We fetch the location once, it is not useful to keep tracking the user
         mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+    }
+
+    private void enableRefresh() {
+        refreshMenuItem.setEnabled(true);
     }
 }

@@ -1,30 +1,24 @@
 package pt.ulisboa.tecnico.cmov.foodist.location;
 
-import android.content.Context;
-
-import com.google.android.gms.maps.model.LatLng;
+import android.location.Location;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
-import pt.ulisboa.tecnico.cmov.foodist.R;
+import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
 
 public class DirectionsFetcher {
-    private URL url;
+    private final String baseUrl = "https://maps.googleapis.com/maps/api/directions/json?origin=";
+    private String urlString;
 
-    public DirectionsFetcher(Context context, LatLng l1, LatLng l2) throws MalformedURLException {
-        String strUrl = "https://maps.googleapis.com/maps/api/directions/json?origin="
-                + l1.latitude + ","
-                + l1.longitude + "&destination="
-                + l2.latitude + ","
-                + l2.longitude + "&mode=walking&key="
-                + context.getString(R.string.google_maps_key);
-        this.url = new URL(strUrl);
+    public DirectionsFetcher(String apiKey, CafeteriaEntity cafeteria, Location location) {
+        urlString = baseUrl + cafeteria.getLatitude() + "," + cafeteria.getLongitude()
+                + "&destination=" + location.getLatitude() + "," + location.getLongitude()
+                + "&mode=walking&key=" + apiKey; // context.getString(R.string.google_maps_key);
     }
 
     public String fetchDirections() {
@@ -33,8 +27,9 @@ public class DirectionsFetcher {
         HttpURLConnection urlConnection = null;
 
         try {
+            URL url = new URL(urlString);
             // Creating an http connection
-            urlConnection = (HttpURLConnection) this.url.openConnection();
+            urlConnection = (HttpURLConnection) url.openConnection();
             // Connecting to url
             urlConnection.connect();
             // Reading response from url
