@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +28,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
+import pt.ulisboa.tecnico.cmov.foodist.PermissionsHelper;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.databinding.ActivityCafeteriaBinding;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
@@ -34,6 +36,7 @@ import pt.ulisboa.tecnico.cmov.foodist.location.LocationUtils;
 import pt.ulisboa.tecnico.cmov.foodist.viewmodel.CafeteriaViewModel;
 
 public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCallback {
+    private static final String TAG = CafeteriaActivity.class.getSimpleName();
     private Toolbar toolbar;
     private SupportMapFragment mapFragment;
     private GoogleMap mMap;
@@ -81,43 +84,46 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setIndoorEnabled(true);
-        mMap.setMyLocationEnabled(true);
-        this.updateMap();
+        if (PermissionsHelper.checkPermissions(this)) {
+            mMap.setMyLocationEnabled(true);
+            updateMap();
+        }
     }
 
     private void updateMap() {
-        fusedLocationClient.getLastLocation().addOnSuccessListener(mCurrentLocation -> {
-        ((BasicApp) CafeteriaActivity.this.getApplication()).networkIO().execute(() -> {
-            while (cafeteriaViewModel == null && mapFragment == null) {
-            }
-            mapFragment.getView().post(() -> LocationUtils.updateMap(mMap, currentCafeteria)); // run this on main thread
+        fusedLocationClient.getLastLocation().addOnSuccessListener(mCurrentLocation ->
+                ((BasicApp) CafeteriaActivity.this.getApplication()).networkIO().execute(() -> {
+                    Log.w(TAG, "Starting infinite loop on networkIO thread");
+                    while (currentCafeteria == null && mapFragment == null) {
+                        // TODO: find an alternative asap
+                    }
+                    Log.w(TAG, "Cafeteria view model got observed, now updating the map");
+                    mapFragment.getView().post(() -> LocationUtils.updateMap(mMap, currentCafeteria)); // run this on main thread
 
-                List<LatLng> path = cafeteriaViewModel.updateCafeteriaDistance(currentCafeteria,
-                        mCurrentLocation,
-                        getString(R.string.google_maps_key));
-                LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                for (LatLng point : path) {
-                    builder.include(point);
-                }
-                LatLngBounds bounds = builder.build();
-                int height = mapFragment.getView().getHeight();
-                // offset from edges of the map 10% of screen height
-                int padding = (int) (height * 0.10);
+                    List<LatLng> path = cafeteriaViewModel.updateCafeteriaDistance(currentCafeteria,
+                            mCurrentLocation,
+                            getString(R.string.google_maps_key));
+                    if (path != null && !path.isEmpty() ) { // ensures a route has been found and that the provided Google Maps api key is valid
+                        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                        for (LatLng point : path)
+                            builder.include(point);
+                        LatLngBounds bounds = builder.build();
+                        int height = mapFragment.getView().getHeight();
+                        // offset from edges of the map 10% of screen height
+                        int padding = (int) (height * 0.10);
 
-                if (mapFragment.getView() != null) {
-                    @SuppressLint("ResourceType")
-                    PolylineOptions polyline = new PolylineOptions()
-                            .addAll(path)
-                            .width(20)
-                            .color(Color.parseColor(getString(R.color.colorBlueGoogleMaps)));
+                        @SuppressLint("ResourceType")
+                        PolylineOptions polyline = new PolylineOptions()
+                                .addAll(path)
+                                .width(20)
+                                .color(Color.parseColor(getString(R.color.colorBlueGoogleMaps)));
 
-                    mapFragment.getView().post(() -> { // run this on main thread
-                        mMap.addPolyline(polyline);
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));  // or use animateCamera() for smooth animation
-                    });
-                }
-            });
-        });
+                        mapFragment.getView().post(() -> { // run this on main thread
+                            mMap.addPolyline(polyline);
+                            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));  // or use animateCamera() for smooth animation
+                        });
+                    }
+                }));
     }
 
     public void openDirections(View view) {

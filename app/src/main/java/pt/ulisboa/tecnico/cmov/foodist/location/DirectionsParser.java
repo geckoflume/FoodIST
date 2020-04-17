@@ -16,6 +16,7 @@ import java.util.List;
  * https://developers.google.com/maps/documentation/directions/intro
  */
 public class DirectionsParser {
+    private static final String TAG = DirectionsParser.class.getSimpleName();
     private List<LatLng> path;
     private int distance;
     private int duration;
@@ -30,18 +31,21 @@ public class DirectionsParser {
         try {
             JSONObject jObject = new JSONObject(jsonStr);
             JSONArray jRoute = jObject.getJSONArray("routes");
-            // Getting first route
-            JSONArray jLeg = ((JSONObject) jRoute.get(0)).getJSONArray("legs");
-            // Getting first leg
-            JSONArray jSteps = ((JSONObject) jLeg.get(0)).getJSONArray("steps");
-            // Traversing all steps
-            for (int i = 0; i < jSteps.length(); i++) {
-                jStep = (JSONObject) jSteps.get(i);
-                polyline = (String) ((JSONObject) jStep.get("polyline")).get("points");
-                this.path.addAll(decodePoly(polyline));
-                this.duration += (Integer) ((JSONObject) jStep.get("duration")).get("value");
-                this.distance += (Integer) ((JSONObject) jStep.get("distance")).get("value");
-            }
+            // Getting first route if it exists
+            if (jRoute.length() != 0) {
+                JSONArray jLeg = jRoute.getJSONObject(0).getJSONArray("legs");
+                // Getting first leg
+                JSONArray jSteps = jLeg.getJSONObject(0).getJSONArray("steps");
+                // Traversing all steps
+                for (int i = 0; i < jSteps.length(); i++) {
+                    jStep = jSteps.getJSONObject(i);
+                    polyline = jStep.getJSONObject("polyline").getString("points");
+                    this.path.addAll(decodePoly(polyline));
+                    this.duration += jStep.getJSONObject("duration").getInt("value");
+                    this.distance += jStep.getJSONObject("distance").getInt("value");
+                }
+            } else
+                Log.e(TAG, "Could not find a route, wrong location or API key?");
         } catch (JSONException e) {
             e.printStackTrace();
         }

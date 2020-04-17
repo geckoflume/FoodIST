@@ -68,7 +68,7 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     private static void seedDatabase(final AppDatabase database, Context context) {
-        Log.e(TAG, "Seeding db should only happen on first run");
+        Log.w(TAG, "Seeding db should only happen on first run");
 
         String json;
         Type cafeteriaType = new TypeToken<List<CafeteriaEntity>>() {

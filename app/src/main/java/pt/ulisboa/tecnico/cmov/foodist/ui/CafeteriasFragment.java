@@ -19,6 +19,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 
+import pt.ulisboa.tecnico.cmov.foodist.PermissionsHelper;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.location.LocationUtils;
 import pt.ulisboa.tecnico.cmov.foodist.viewmodel.CafeteriaListViewModel;
@@ -63,7 +64,7 @@ public class CafeteriasFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setIndoorEnabled(true);
-        if (checkPermissions()) {
+        if (PermissionsHelper.checkPermissions(getActivity())) {
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
         }
@@ -78,8 +79,4 @@ public class CafeteriasFragment extends Fragment implements OnMapReadyCallback {
          */
     }
 
-    private boolean checkPermissions() {
-        return ActivityCompat.checkSelfPermission(getContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-    }
 }

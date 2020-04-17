@@ -21,6 +21,7 @@ import pt.ulisboa.tecnico.cmov.foodist.location.DirectionsFetcher;
 import pt.ulisboa.tecnico.cmov.foodist.location.DirectionsParser;
 
 public class CafeteriaListViewModel extends AndroidViewModel {
+    private static final String TAG = CafeteriaListViewModel.class.getSimpleName();
     private static final String QUERY_KEY = "QUERY";
 
     private final SavedStateHandle mSavedStateHandler;
@@ -71,7 +72,7 @@ public class CafeteriaListViewModel extends AndroidViewModel {
             cafeteria.setDistance(directionsParser.getDistance());
             cafeteria.setTimeWalk(directionsParser.getDuration());
 
-            Log.i("updater", "updating cafeteria " + cafeteria.getName());
+            Log.i(TAG, "Updating distance and walk time for cafeteria " + cafeteria.getName());
         }
         mRepository.updateCafeterias(currentCafeterias);
     }
