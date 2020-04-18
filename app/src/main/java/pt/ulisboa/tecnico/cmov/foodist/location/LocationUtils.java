@@ -56,7 +56,7 @@ public abstract class LocationUtils {
      * @param bounds
      * @return
      */
-    public static LatLngBounds expandBounds(LatLngBounds bounds) {
+    private static LatLngBounds expandBounds(LatLngBounds bounds) {
         double paddingTop = (bounds.northeast.latitude - bounds.southwest.latitude)*0.2;
         return bounds.including(new LatLng(bounds.northeast.latitude + paddingTop, bounds.northeast.longitude));
     }

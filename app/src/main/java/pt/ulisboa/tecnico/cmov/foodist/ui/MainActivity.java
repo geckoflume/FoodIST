@@ -23,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -72,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     private Location mCurrentLocation;
     private CafeteriaListViewModel mCafeteriaListViewModel;
     private SharedPreferences sharedPref;
-    private boolean canRefresh = false;
+    private MutableLiveData<Boolean> canRefresh = new MutableLiveData<>(false);
     private MenuItem refreshMenuItem;
 
     @Override
@@ -109,10 +110,16 @@ public class MainActivity extends AppCompatActivity {
         mCafeteriaListViewModel = new ViewModelProvider(this).get(CafeteriaListViewModel.class);
         mCafeteriaListViewModel.getCafeterias().observe(this, cafeteriaEntities -> {
             currentCafeterias = cafeteriaEntities;
-            if (!canRefresh && mCurrentLocation != null) {
+            if (!canRefresh.getValue() && mCurrentLocation != null) {
                 Log.i(TAG, "Toggling refresh button from observer");
-                enableRefresh();
+                canRefresh.setValue(true);
             }
+        });
+
+        // Refresh button
+        canRefresh.observe(this, canRefresh -> {
+            if (canRefresh)
+                refreshMenuItem.setEnabled(true);
         });
 
         // Location
@@ -160,9 +167,13 @@ public class MainActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
     }
 
-    private void updateCafeterias() {
-        ((BasicApp) MainActivity.this.getApplication()).networkIO().execute(() ->
-                mCafeteriaListViewModel.updateCafeteriasDistances(currentCafeterias, mCurrentLocation, getString(R.string.google_maps_key)));
+    public void updateCafeterias() {
+        if(mCurrentLocation != null)
+            ((BasicApp) MainActivity.this.getApplication()).networkIO().execute(() -> mCafeteriaListViewModel.updateCafeteriasDistances(currentCafeterias, mCurrentLocation, getString(R.string.google_maps_key)));
+        else {
+            mCafeteriaListViewModel.setUpdating(false);
+            Toast.makeText(MainActivity.this, R.string.no_location_detected, Toast.LENGTH_LONG).show();
+        }
     }
 
     private void initCampuses() {
@@ -220,8 +231,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == PermissionsHelper.REQUEST_PERMISSIONS_REQUEST_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                //Permission granted.
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // If user interaction was interrupted, the permission request is cancelled and you
+                // receive empty arrays.
+                // Permission granted.
                 startLocationUpdates();
             } else {
                 UiUtils.showSnackbar(findViewById(android.R.id.content), R.string.permission_denied_explanation, R.string.action_settings, Snackbar.LENGTH_LONG, view -> {
@@ -265,9 +278,9 @@ public class MainActivity extends AppCompatActivity {
 
                 // We fetch the location once, it is not useful to keep tracking the user
                 stopLocationUpdates();
-                if (!canRefresh && currentCafeterias != null) {
+                if (!canRefresh.getValue() && currentCafeterias != null) {
                     Log.i(TAG, "Toggling refresh button from createLocationCallback");
-                    enableRefresh();
+                    canRefresh.setValue(true);
                 }
             }
         };
@@ -323,8 +336,4 @@ public class MainActivity extends AppCompatActivity {
         mFusedLocationClient.removeLocationUpdates(mLocationCallback);
     }
 
-    private void enableRefresh() {
-        canRefresh = true;
-        refreshMenuItem.setEnabled(true);
-    }
 }

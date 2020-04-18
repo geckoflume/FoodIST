@@ -13,7 +13,7 @@
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="map_height_portrait">256dp</dimen>
-    <dimen name="map_width_landscape">512dp</dimen>
+    <dimen name="map_width_landscape">448dp</dimen>
     <dimen name="map_detail_height_portrait">192dp</dimen>
     <dimen name="map_detail_width_landscape">512dp</dimen>
 

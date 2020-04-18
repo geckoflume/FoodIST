@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.Transformations;
 
@@ -27,6 +28,7 @@ public class CafeteriaListViewModel extends AndroidViewModel {
     private final SavedStateHandle mSavedStateHandler;
     private final DataRepository mRepository;
     private final LiveData<List<CafeteriaEntity>> mCafeterias;
+    private MutableLiveData<Boolean> updating = new MutableLiveData<>(false);
 
     public CafeteriaListViewModel(@NonNull Application application,
                                   @NonNull SavedStateHandle savedStateHandle) {
@@ -63,6 +65,7 @@ public class CafeteriaListViewModel extends AndroidViewModel {
     }
 
     public void updateCafeteriasDistances(List<CafeteriaEntity> currentCafeterias, final Location mCurrentLocation, final String apiKey) {
+        updating.postValue(true);
         for (CafeteriaEntity cafeteria : currentCafeterias) {
             DirectionsFetcher directionsFetcher = new DirectionsFetcher(apiKey, cafeteria, mCurrentLocation);
             DirectionsParser directionsParser = directionsFetcher.parse();
@@ -72,5 +75,14 @@ public class CafeteriaListViewModel extends AndroidViewModel {
             Log.i(TAG, "Updating distance and walk time for cafeteria " + cafeteria.getName());
         }
         mRepository.updateCafeterias(currentCafeterias);
+        updating.postValue(false);
+    }
+
+    public LiveData<Boolean> isUpdating() {
+        return updating;
+    }
+
+    public void setUpdating(boolean b) {
+        updating.postValue(b);
     }
 }

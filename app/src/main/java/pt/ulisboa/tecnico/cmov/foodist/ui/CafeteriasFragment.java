@@ -1,19 +1,17 @@
 package pt.ulisboa.tecnico.cmov.foodist.ui;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -30,6 +28,7 @@ public class CafeteriasFragment extends Fragment implements OnMapReadyCallback {
     private SupportMapFragment mapFragment;
     private GoogleMap mMap;
     private RecyclerView recyclerViewCafeterias;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -57,6 +56,11 @@ public class CafeteriasFragment extends Fragment implements OnMapReadyCallback {
         // in the foreground.
         // Update the cached copy of the cafeterias in the adapter.
         mCafeteriaListViewModel.getCafeterias().observe(getViewLifecycleOwner(), adapterCafeterias::setCafeteriaList);
+        swipeRefreshLayout = root.findViewById(R.id.swipeRefresh);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+        swipeRefreshLayout.setOnRefreshListener(() -> ((MainActivity) getActivity()).updateCafeterias());
+        mCafeteriaListViewModel.isUpdating().observe(getViewLifecycleOwner(), isUpdating -> swipeRefreshLayout.setRefreshing(isUpdating));
+
         return root;
     }
 
@@ -78,5 +82,4 @@ public class CafeteriasFragment extends Fragment implements OnMapReadyCallback {
         });
          */
     }
-
 }
