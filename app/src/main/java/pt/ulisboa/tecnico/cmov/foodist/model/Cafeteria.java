@@ -2,8 +2,6 @@ package pt.ulisboa.tecnico.cmov.foodist.model;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.maps.model.PolylineOptions;
-
 public interface Cafeteria {
     int getId();
     void setId(int id);

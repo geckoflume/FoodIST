@@ -65,7 +65,7 @@ public class CafeteriaListViewModel extends AndroidViewModel {
     }
 
     public void updateCafeteriasDistances(List<CafeteriaEntity> currentCafeterias, final Location mCurrentLocation, final String apiKey) {
-        updating.postValue(true);
+        setUpdating(true);
         for (CafeteriaEntity cafeteria : currentCafeterias) {
             DirectionsFetcher directionsFetcher = new DirectionsFetcher(apiKey, cafeteria, mCurrentLocation);
             DirectionsParser directionsParser = directionsFetcher.parse();
@@ -75,7 +75,7 @@ public class CafeteriaListViewModel extends AndroidViewModel {
             Log.i(TAG, "Updating distance and walk time for cafeteria " + cafeteria.getName());
         }
         mRepository.updateCafeterias(currentCafeterias);
-        updating.postValue(false);
+        setUpdating(false);
     }
 
     public LiveData<Boolean> isUpdating() {

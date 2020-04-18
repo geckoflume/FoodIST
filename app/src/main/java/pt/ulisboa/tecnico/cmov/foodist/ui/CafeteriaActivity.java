@@ -2,7 +2,6 @@ package pt.ulisboa.tecnico.cmov.foodist.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,11 +9,13 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -44,7 +45,7 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
     private CafeteriaViewModel cafeteriaViewModel;
     private FusedLocationProviderClient fusedLocationClient;
     private CafeteriaEntity currentCafeteria;
-    private MutableLiveData<Boolean> cafeteriaWasInitialized = new MutableLiveData<>(false);
+    private MutableLiveData<Boolean> updateRequest = new MutableLiveData<>(false);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +64,8 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
 
         cafeteriaViewModel.getCafeteria().observe(this, cafeteriaEntity -> {
             currentCafeteria = cafeteriaEntity;
-            if (!cafeteriaWasInitialized.getValue())
-                cafeteriaWasInitialized.setValue(true);
+            if (!updateRequest.getValue())
+                updateRequest.setValue(true);
         });
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapDetail);
@@ -77,6 +78,14 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
         }
         mapFragment.getMapAsync(this);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipeRefresh_cafeteria);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+        cafeteriaViewModel.isUpdating().observe(this, swipeRefreshLayout::setRefreshing);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            updateRequest.setValue(false);
+            updateRequest.setValue(true);
+        });
     }
 
     private void initActionBar() {
@@ -97,9 +106,11 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     private void updateMap() {
-        cafeteriaWasInitialized.observe(this, shouldUpdateMap -> {
+        updateRequest.observe(this, shouldUpdateMap -> {
             if (shouldUpdateMap) {                                      // should only happen once
                 Log.w(TAG, "Cafeteria view model got observed, now updating the map");
+                cafeteriaViewModel.setUpdating(true);
+                mMap.clear();
                 LocationUtils.updateMap(mMap, currentCafeteria);
                 fusedLocationClient.getLastLocation().addOnSuccessListener(mCurrentLocation ->
                         ((BasicApp) getApplication()).networkIO().execute(() -> {
@@ -118,11 +129,12 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
                                 PolylineOptions polyline = new PolylineOptions()
                                         .addAll(path)
                                         .width(20)
-                                        .color(Color.parseColor(getString(R.color.colorBlueGoogleMaps)));
+                                        .color(ResourcesCompat.getColor(getResources(), R.color.colorBlueGoogleMaps, null)); // more elegant than Color.parseColor(getString(R.color.colorBlueGoogleMaps));
 
                                 mapFragment.getView().post(() -> { // run this on main thread
                                     mMap.addPolyline(polyline);
                                     mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));  // or use animateCamera() for smooth animation
+                                    cafeteriaViewModel.setUpdating(false);
                                 });
                             }
                         }));

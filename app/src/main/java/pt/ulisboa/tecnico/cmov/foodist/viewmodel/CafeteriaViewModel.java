@@ -7,12 +7,12 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
@@ -23,11 +23,11 @@ import pt.ulisboa.tecnico.cmov.foodist.location.DirectionsParser;
 
 public class CafeteriaViewModel extends AndroidViewModel {
     private static final String TAG = CafeteriaViewModel.class.getSimpleName();
-    private final LiveData<CafeteriaEntity> mObservableCafeteria;
 
+    private final LiveData<CafeteriaEntity> mObservableCafeteria;
+    private MutableLiveData<Boolean> updating = new MutableLiveData<>(false);
     private final DataRepository mRepository;
     private final int mCafeteriaId;
-
 
     public CafeteriaViewModel(@NonNull Application application, DataRepository repository,
                               final int cafeteriaId) {
@@ -53,6 +53,14 @@ public class CafeteriaViewModel extends AndroidViewModel {
         mRepository.updateCafeteria(currentCafeteria);
 
         return directionsParser.getPath();
+    }
+
+    public LiveData<Boolean> isUpdating() {
+        return updating;
+    }
+
+    public void setUpdating(boolean b) {
+        updating.postValue(b);
     }
 
     /**

@@ -59,7 +59,7 @@ public class CafeteriasFragment extends Fragment implements OnMapReadyCallback {
         swipeRefreshLayout = root.findViewById(R.id.swipeRefresh);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(() -> ((MainActivity) getActivity()).updateCafeterias());
-        mCafeteriaListViewModel.isUpdating().observe(getViewLifecycleOwner(), isUpdating -> swipeRefreshLayout.setRefreshing(isUpdating));
+        mCafeteriaListViewModel.isUpdating().observe(getViewLifecycleOwner(), swipeRefreshLayout::setRefreshing);
 
         return root;
     }
