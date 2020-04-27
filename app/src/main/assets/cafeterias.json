@@ -4,7 +4,24 @@
     "name": "Main Buliding Bar",
     "latitude": 38.736616,
     "longitude": -9.139603,
-    "campus_id": 1
+    "campus_id": 1,
+    "opening_hours": [
+      {
+        "day": "Monday",
+        "opens": "11:30",
+        "closes": "13:30"
+      },
+      {
+        "day": "Monday",
+        "opens": "18:30",
+        "closes": "20:30"
+      },
+      {
+        "day": "Tuesday",
+        "opens": "11:30",
+        "closes": "13:30"
+      }
+    ]
   },
   {
     "id": 2,

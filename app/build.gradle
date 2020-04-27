@@ -49,8 +49,10 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.google.android.gms:play-services-location:17.0.0'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
-    implementation 'androidx.navigation:navigation-fragment:2.2.1'
-    implementation 'androidx.navigation:navigation-ui:2.2.1'
+    implementation 'androidx.navigation:navigation-fragment:2.2.2'
+    implementation 'androidx.navigation:navigation-ui:2.2.2'
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.2.3'
 
     // Android Testing Support Library's runner and rules
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

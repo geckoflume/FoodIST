@@ -2,6 +2,8 @@ package pt.ulisboa.tecnico.cmov.foodist;
 
 import android.app.Application;
 
+import com.jakewharton.threetenabp.AndroidThreeTen;
+
 import java.util.concurrent.Executor;
 
 import pt.ulisboa.tecnico.cmov.foodist.db.AppDatabase;
@@ -17,6 +19,7 @@ public class BasicApp extends Application {
     public void onCreate() {
         super.onCreate();
         mAppExecutors = new AppExecutors();
+        AndroidThreeTen.init(this);
     }
 
     public AppDatabase getDatabase() {
