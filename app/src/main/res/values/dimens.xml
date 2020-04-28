@@ -8,12 +8,12 @@
     <dimen name="dish_picture_size">96dp</dimen>
     <dimen name="dish_option_width">64dp</dimen>
     <dimen name="text_open_closed">64dp</dimen>
-    <dimen name="text_time_width">90dp</dimen> <!-- 64dp for text, 8dp padding and 24dp icon -->
+    <dimen name="text_time_width">90dp</dimen>
     <dimen name="nav_header_vertical_spacing">8dp</dimen>
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="map_height_portrait">256dp</dimen>
-    <dimen name="map_width_landscape">448dp</dimen>
+    <dimen name="map_width_landscape">288dp</dimen>
     <dimen name="map_detail_height_portrait">192dp</dimen>
     <dimen name="map_detail_width_landscape">512dp</dimen>
 

@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -52,6 +53,7 @@ import pt.ulisboa.tecnico.cmov.foodist.PermissionsHelper;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
 import pt.ulisboa.tecnico.cmov.foodist.model.Campus;
+import pt.ulisboa.tecnico.cmov.foodist.model.Status;
 import pt.ulisboa.tecnico.cmov.foodist.viewmodel.CafeteriaListViewModel;
 
 public class MainActivity extends AppCompatActivity {
@@ -89,15 +91,21 @@ public class MainActivity extends AppCompatActivity {
         // Drawer and NavigationUI
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_cafeterias).setDrawerLayout(drawer).build();
+        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_cafeterias, R.id.nav_account).setDrawerLayout(drawer).build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        // Account data
+        TextView textView_username = navigationView.getHeaderView(0).findViewById(R.id.textView_username);
+        TextView textView_email = navigationView.getHeaderView(0).findViewById(R.id.textView_email);
+        textView_username.setText(sharedPref.getString("username", getString(R.string.default_username)) + " - " + Status.getInstance(this).get(sharedPref.getInt("status", Status.DEFAULT)));
+        textView_email.setText(sharedPref.getString("email", getString(R.string.default_email)));
+
         // Campuses spinner
         initCampuses();
         // Create an ArrayAdapter using the string array and a default spinner layout
-        adapterCampus = new ArrayAdapter<>(this, R.layout.layout_drop_item, campuses);
+        adapterCampus = new ArrayAdapter<>(this, R.layout.layout_drop_campus, campuses);
         // Specify the layout to use when the list of choices appears
         adapterCampus.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner

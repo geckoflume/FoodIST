@@ -24,8 +24,8 @@
     <string name="desc_dish_picture">Dish first picture</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">User</string>
-    <string name="nav_header_subtitle">ist000000@tecnico.ulisboa.pt</string>
+    <string name="default_username">User</string>
+    <string name="default_email">ist000000@tecnico.ulisboa.pt</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="menu_cafeterias">Cafeterias</string>
     <string name="menu_account">My Account</string>
@@ -42,4 +42,12 @@
     <string name="taguspark">Taguspark</string>
     <string name="ctn">Tecnológico e Nuclear</string>
     <string name="need_location">You need to allow location permission first.</string>
+    <string name="username">Username (eg: istxxxxxx)</string>
+    <string name="email">Email (eg: istxxxxxx@tecnico.ulisboa.pt)</string>
+    <string name="status">Status</string>
+    <string name="student">Student</string>
+    <string name="professor">Professor</string>
+    <string name="researcher">Researcher</string>
+    <string name="staff">Staff</string>
+    <string name="general_public">General Public</string>
 </resources>
