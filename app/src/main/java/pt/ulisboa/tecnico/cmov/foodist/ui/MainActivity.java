@@ -44,7 +44,6 @@ import com.google.android.gms.location.SettingsClient;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
@@ -177,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateCafeterias() {
-        if(mCurrentLocation != null)
+        if (mCurrentLocation != null)
             ((BasicApp) MainActivity.this.getApplication()).networkIO().execute(() -> mCafeteriaListViewModel.updateCafeteriasDistances(currentCafeterias, mCurrentLocation, getString(R.string.google_maps_key)));
         else {
             mCafeteriaListViewModel.setUpdating(false);
@@ -189,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
         return new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (((Campus) parent.getItemAtPosition(position)).getName().equals(getString(R.string.find_nearest))) { // in case the campuses are inserted in a strange order
+                if (parent.getItemAtPosition(position).toString().equals(getString(R.string.find_nearest))) { // in case the campuses are inserted in a strange order
                     // "Find nearest campus" selected
                     if (mCurrentLocation != null && PermissionsHelper.checkPermissions(MainActivity.this)) {
                         spinner.setEnabled(false);
@@ -205,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
                     // "All cafeterias" or campus selected
                     // apply() to commit asynchronously
                     sharedPref.edit().putInt(getString(R.string.campus_id_key), position).apply();
-                    if (((Campus) parent.getItemAtPosition(position)).getName().equals(getString(R.string.all_cafeterias))) {
+                    if (((Campus) parent.getItemAtPosition(position)).toString().equals(getString(R.string.all_cafeterias))) {
                         // "All cafeterias" selected
                         mCafeteriaListViewModel.setQuery("");
                     } else {

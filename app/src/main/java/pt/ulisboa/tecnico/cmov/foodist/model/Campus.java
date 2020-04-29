@@ -47,15 +47,11 @@ public class Campus {
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public double getLatitude() {
+    private double getLatitude() {
         return latitude;
     }
 
-    public double getLongitude() {
+    private double getLongitude() {
         return longitude;
     }
 
