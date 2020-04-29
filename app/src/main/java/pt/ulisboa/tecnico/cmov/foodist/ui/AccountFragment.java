@@ -28,6 +28,9 @@ import pt.ulisboa.tecnico.cmov.foodist.model.Status;
  * A simple {@link Fragment} subclass.
  */
 public class AccountFragment extends Fragment {
+    private Button saveButton;
+    private int newStatus = Status.DEFAULT;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -35,11 +38,27 @@ public class AccountFragment extends Fragment {
 
         // Statuses
         ArrayList<String> statuses = Status.getInstance(getContext());
+
+        // Set to the defined values
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+
+        TextInputLayout textInputLayout_username = root.findViewById(R.id.textInputLayout_username);
+        TextInputEditText textInputEditText_username = root.findViewById(R.id.textInputEditText_username);
+        TextInputLayout textInputLayout_email = root.findViewById(R.id.textInputLayout_email);
+        TextInputEditText textInputEditText_email = root.findViewById(R.id.textInputEditText_email);
+        AutoCompleteTextView dropdownStatus = root.findViewById(R.id.dropdown_status);
+        saveButton = root.findViewById(R.id.button_saveAccount);
+
+        String username = sharedPref.getString("username", "");
+        String email = sharedPref.getString("email", "");
+        int status = sharedPref.getInt("status", Status.DEFAULT);
+
+        textInputEditText_username.setText(username);
+        textInputEditText_email.setText(email);
+        dropdownStatus.setText(statuses.get(status));
 
         // Status dropdown
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.layout_drop_status, statuses);
-        AutoCompleteTextView dropdownStatus = root.findViewById(R.id.dropdown_status);
         // To fix inputmethod showing up (https://github.com/material-components/material-components-android/issues/1143)
         dropdownStatus.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
@@ -47,16 +66,6 @@ public class AccountFragment extends Fragment {
                 imm.hideSoftInputFromWindow(root.getWindowToken(), 0);
             }
         });
-
-        TextInputLayout textInputLayout_username = root.findViewById(R.id.textInputLayout_username);
-        TextInputEditText textInputEditText_username = root.findViewById(R.id.textInputEditText_username);
-        TextInputLayout textInputLayout_email = root.findViewById(R.id.textInputLayout_email);
-        TextInputEditText textInputEditText_email = root.findViewById(R.id.textInputEditText_email);
-
-        // Set to the defined values
-        textInputEditText_username.setText(sharedPref.getString("username", ""));
-        textInputEditText_email.setText(sharedPref.getString("email", ""));
-        dropdownStatus.setText(statuses.get(sharedPref.getInt("status", Status.DEFAULT)));
         dropdownStatus.setAdapter(adapter);
 
         // Form validation
@@ -64,6 +73,7 @@ public class AccountFragment extends Fragment {
             public void afterTextChanged(Editable s) {
                 if (textInputLayout_username.getError() != null)
                     textInputLayout_username.setError(null);
+                resetSaveButton();
             }
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -73,10 +83,12 @@ public class AccountFragment extends Fragment {
             }
         });
 
+        // Listeners
         textInputEditText_email.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
                 if (textInputLayout_email.getError() != null)
                     textInputLayout_email.setError(null);
+                resetSaveButton();
             }
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -85,8 +97,13 @@ public class AccountFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
         });
-        Button button = root.findViewById(R.id.button_saveAccount);
-        button.setOnClickListener(v -> {
+
+        dropdownStatus.setOnItemClickListener((parent, arg1, pos, id) -> {
+            newStatus = pos;
+            resetSaveButton();
+        });
+
+        saveButton.setOnClickListener(v -> {
             // fetch username and check if it is valid
             String newUsername = textInputEditText_username.getText().toString();
             if (!isValidUsername(newUsername))
@@ -97,14 +114,18 @@ public class AccountFragment extends Fragment {
             if (!isValidEmail(newEmail))
                 textInputLayout_email.setError("Please enter a valid email address");
 
-            // fetch status
-            int newStatus = statuses.indexOf(dropdownStatus.getText().toString());
+            // status already fetched in newStatus
 
             // save the new values if they are valid
             if (isValidUsername(newUsername) && isValidEmail(newEmail)) {
-                sharedPref.edit().putString("username", newUsername).apply();
-                sharedPref.edit().putString("email", newEmail).apply();
-                sharedPref.edit().putInt("status", newStatus).apply();
+                // if user data has changed
+                if (!newUsername.equals(username) || !newEmail.equals(email) || newStatus != status) {
+                    sharedPref.edit().putString("username", newUsername).apply();
+                    sharedPref.edit().putString("email", newEmail).apply();
+                    sharedPref.edit().putInt("status", newStatus).apply();
+                    ((MainActivity) getActivity()).updateUser();
+                }
+                saveButton.setText(R.string.saved);
             }
         });
 
@@ -117,5 +138,10 @@ public class AccountFragment extends Fragment {
 
     private boolean isValidEmail(CharSequence target) {
         return target != null && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+    }
+
+    private void resetSaveButton() {
+        if (saveButton.getText().equals(getString(R.string.saved)))
+            saveButton.setText(R.string.save_button);
     }
 }

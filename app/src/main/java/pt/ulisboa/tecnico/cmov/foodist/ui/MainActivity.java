@@ -77,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences sharedPref;
     private MutableLiveData<Boolean> canRefresh = new MutableLiveData<>(false);
     private MenuItem refreshMenuItem;
+    private TextView textView_username;
+    private TextView textView_email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,10 +99,9 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
         // Account data
-        TextView textView_username = navigationView.getHeaderView(0).findViewById(R.id.textView_username);
-        TextView textView_email = navigationView.getHeaderView(0).findViewById(R.id.textView_email);
-        textView_username.setText(sharedPref.getString("username", getString(R.string.default_username)) + " - " + Status.getInstance(this).get(sharedPref.getInt("status", Status.DEFAULT)));
-        textView_email.setText(sharedPref.getString("email", getString(R.string.default_email)));
+        textView_username = navigationView.getHeaderView(0).findViewById(R.id.textView_username);
+        textView_email = navigationView.getHeaderView(0).findViewById(R.id.textView_email);
+        updateUser();
 
         // Campuses spinner
         initCampuses();
@@ -344,4 +345,8 @@ public class MainActivity extends AppCompatActivity {
         mFusedLocationClient.removeLocationUpdates(mLocationCallback);
     }
 
+    public void updateUser() {
+        textView_username.setText(sharedPref.getString("username", getString(R.string.default_username)) + " - " + Status.getInstance(this).get(sharedPref.getInt("status", Status.DEFAULT)));
+        textView_email.setText(sharedPref.getString("email", getString(R.string.default_email)));
+    }
 }
