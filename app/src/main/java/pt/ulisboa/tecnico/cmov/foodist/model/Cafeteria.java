@@ -7,7 +7,7 @@ public interface Cafeteria {
     void setId(int id);
 
     String getName();
-    void setName(@NonNull String name);
+    void setName(String name);
 
     double getLatitude();
     void setLatitude(double latitude);

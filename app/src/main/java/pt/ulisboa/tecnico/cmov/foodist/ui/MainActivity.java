@@ -82,7 +82,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        sharedPref = getPreferences(Context.MODE_PRIVATE);
+        sharedPref = getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
         // Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -127,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
             if (canRefresh) {
                 refreshMenuItem.setEnabled(true);
                 spinner.setSelection(Campus.AUTODETECT);
+                updateCafeterias();
             }
         });
 

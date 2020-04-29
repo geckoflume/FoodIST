@@ -1,0 +1,44 @@
+[
+  {
+    "day_of_week": "MONDAY",
+    "from_time": "11:45",
+    "to_time": "14:30",
+    "cafeteria_id": 1,
+    "status": 0
+  },
+  {
+    "day_of_week": "MONDAY",
+    "from_time": "11:45",
+    "to_time": "14:30",
+    "cafeteria_id": 1,
+    "status": 0
+  },
+  {
+    "day_of_week": "TUESDAY",
+    "from_time": "11:45",
+    "to_time": "14:30",
+    "cafeteria_id": 1,
+    "status": 0
+  },
+  {
+    "day_of_week": "WEDNESDAY",
+    "from_time": "11:45",
+    "to_time": "14:30",
+    "cafeteria_id": 1,
+    "status": 0
+  },
+  {
+    "day_of_week": "THURSDAY",
+    "from_time": "11:45",
+    "to_time": "14:30",
+    "cafeteria_id": 1,
+    "status": 0
+  },
+  {
+    "day_of_week": "FRIDAY",
+    "from_time": "11:45",
+    "to_time": "14:30",
+    "cafeteria_id": 1,
+    "status": 0
+  }
+]

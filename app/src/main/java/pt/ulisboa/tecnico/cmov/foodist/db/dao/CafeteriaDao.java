@@ -5,11 +5,13 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import androidx.room.Update;
 
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
+import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaWithOpeningHours;
 
 @Dao
 public interface CafeteriaDao {
@@ -30,4 +32,12 @@ public interface CafeteriaDao {
 
     @Update
     void update(CafeteriaEntity cafeteria);
+
+    @Transaction
+    @Query("SELECT * FROM cafeterias")
+    LiveData<List<CafeteriaWithOpeningHours>> getCafeteriasWithOpeningHours();
+
+    @Transaction
+    @Query("SELECT * FROM cafeterias WHERE id LIKE :id LIMIT 1")
+    LiveData<List<CafeteriaWithOpeningHours>> getCafeteriaWithOpeningHours(int id);
 }

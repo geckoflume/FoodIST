@@ -1,7 +1,9 @@
 package pt.ulisboa.tecnico.cmov.foodist.ui;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,7 +37,9 @@ import pt.ulisboa.tecnico.cmov.foodist.PermissionsHelper;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.databinding.ActivityCafeteriaBinding;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
+import pt.ulisboa.tecnico.cmov.foodist.db.entity.OpeningHoursEntity;
 import pt.ulisboa.tecnico.cmov.foodist.location.LocationUtils;
+import pt.ulisboa.tecnico.cmov.foodist.model.Status;
 import pt.ulisboa.tecnico.cmov.foodist.viewmodel.CafeteriaViewModel;
 
 public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -57,7 +61,10 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
         // Get the Intent that started this activity and extract the string
         String message = getIntent().getStringExtra(CafeteriaAdapter.EXTRA_MESSAGE);
 
-        CafeteriaViewModel.Factory factory = new CafeteriaViewModel.Factory(getApplication(), Integer.parseInt(message));
+        SharedPreferences sharedPref = getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        int statusId = sharedPref.getInt("status", Status.DEFAULT);
+        CafeteriaViewModel.Factory factory = new CafeteriaViewModel.Factory(getApplication(), Integer.parseInt(message), statusId);
         cafeteriaViewModel = new ViewModelProvider(this, factory).get(CafeteriaViewModel.class);
 
         binding.setLifecycleOwner(this);                        // important to observe LiveData!!
@@ -68,6 +75,14 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
             currentCafeteria = cafeteriaEntity;
             if (!updateRequest.getValue())
                 updateRequest.setValue(true);
+        });
+
+        cafeteriaViewModel.getOpeningHours().observe(this, openingHoursEntities -> {
+            String s = "";
+            for (OpeningHoursEntity o : openingHoursEntities) {
+                s += o.toString() + "\n";
+            }
+            cafeteriaViewModel.updateOpenHoursText(s);
         });
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapDetail);
