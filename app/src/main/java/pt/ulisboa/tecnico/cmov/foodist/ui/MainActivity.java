@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
     private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
 
     private AppBarConfiguration mAppBarConfiguration;
-    private List<Campus> campuses = new ArrayList<>();
     private ArrayAdapter<Campus> adapterCampus;
     private List<CafeteriaEntity> currentCafeterias;
     private Spinner spinner;
@@ -103,17 +102,16 @@ public class MainActivity extends AppCompatActivity {
         textView_email = navigationView.getHeaderView(0).findViewById(R.id.textView_email);
         updateUser();
 
-        // Campuses spinner
-        initCampuses();
         // Create an ArrayAdapter using the string array and a default spinner layout
-        adapterCampus = new ArrayAdapter<>(this, R.layout.layout_drop_campus, campuses);
+        adapterCampus = new ArrayAdapter<>(this, R.layout.layout_drop_campus, Campus.getInstance(this));
         // Specify the layout to use when the list of choices appears
         adapterCampus.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         spinner = navigationView.getHeaderView(0).findViewById(R.id.spinner);
         spinner.setAdapter(adapterCampus);
-        spinner.setSelection(sharedPref.getInt(getString(R.string.campus_id_key), 1));
+        //spinner.setSelection(sharedPref.getInt(getString(R.string.campus_id_key), 1));
         spinner.setOnItemSelectedListener(campusSelectedCallback());
+        spinner.setSelection(Campus.DEFAULT);
 
         // Cafeteria ListView
         mCafeteriaListViewModel = new ViewModelProvider(this).get(CafeteriaListViewModel.class);
@@ -127,8 +125,10 @@ public class MainActivity extends AppCompatActivity {
 
         // Refresh button
         canRefresh.observe(this, canRefresh -> {
-            if (canRefresh)
+            if (canRefresh) {
                 refreshMenuItem.setEnabled(true);
+                spinner.setSelection(Campus.AUTODETECT);
+            }
         });
 
         // Location
@@ -185,19 +185,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void initCampuses() {
-        Campus campus = new Campus(0, getString(R.string.find_nearest), 0, 0);
-        this.campuses.add(campus);
-        campus = new Campus(1, getString(R.string.all_cafeterias), 0, 0);
-        this.campuses.add(campus);
-        campus = new Campus(2, getString(R.string.alameda), 38.736795, -9.138637);
-        this.campuses.add(campus);
-        campus = new Campus(3, getString(R.string.taguspark), 38.737461, -9.303161);
-        this.campuses.add(campus);
-        campus = new Campus(4, getString(R.string.ctn), 38.811911, -9.094221);
-        this.campuses.add(campus);
-    }
-
     private AdapterView.OnItemSelectedListener campusSelectedCallback() {
         return new AdapterView.OnItemSelectedListener() {
             @Override
@@ -207,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
                     if (mCurrentLocation != null && PermissionsHelper.checkPermissions(MainActivity.this)) {
                         spinner.setEnabled(false);
                         Toast.makeText(MainActivity.this, R.string.autodetecting_campus_toast, Toast.LENGTH_LONG).show();
-                        Campus nearest = Campus.findNearest(campuses, mCurrentLocation);
+                        Campus nearest = Campus.findNearest(getApplicationContext(), mCurrentLocation);
                         spinner.setSelection(adapterCampus.getPosition(nearest));
                         spinner.setEnabled(true);
                     } else {
