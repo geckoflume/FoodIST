@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.cmov.foodist.ui;
 
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -45,10 +46,12 @@ public abstract class UiUtils {
             return String.format("%d km", ceilIntDivision(distance, 1000));
     }
 
-    public static boolean isOpen(List<OpeningHoursEntity> openingHours) {
+    public static boolean isOpen(List<OpeningHoursEntity> openingHours, int status) {
         for (OpeningHoursEntity hour : openingHours) {
-            if (hour.isOpen())
+            if (hour.getStatus() == status && hour.isOpen()) {
+                Log.e("ui", hour.toString());
                 return true;
+            }
         }
         return false;
     }

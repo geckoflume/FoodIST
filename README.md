@@ -28,7 +28,7 @@ More information: [https://fenix.tecnico.ulisboa.pt/disciplinas/CMov4/2019-2020/
 
 This application is built around the MVVM (Model View View-Model) design pattern, using Room, a DAO with LiveData and ViewModels.
 
-Static cafeteria data are stored in a SQLite database, populated from a [JSON array](app/src/main/assets/cafeterias.json).
+Static cafeteria data and opening times are stored in a SQLite database, populated from JSON arrays [1](app/src/main/assets/cafeterias.json) and [2](app/src/main/assets/opening_hours.json) (see [Generate opening_hours.json](#generate_opening_hours_json)).
 
 The architecture is build around the [Jetpack components collection](https://developer.android.com/jetpack) in Java, to introduce best Android practices (such as AndroidX, DataBinding, LiveData, Fragments...) and the layouts are designed with the help of [Google's Material Design components](https://material.io/develop/android/).
 
@@ -49,6 +49,24 @@ In order to benefit from Google Maps services (itineraries, times), please set y
 <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">YOUR_KEY_HERE</string>
 ```
 To build it, use the `gradlew build` command or use "Import Project" in Android Studio. 
+
+### Generate opening_hours.json
+
+By default, the opening times are the following:
+| Status         | Days            | Times         |
+|----------------|-----------------|---------------|
+| Student        | MONDAY - FRIDAY | 11:30 - 15:00 |
+| Professor      | MONDAY - FRIDAY | 11:30 - 18:00 |
+| Researcher     | MONDAY - FRIDAY | 11:30 - 18:00 |
+| Staff          | MONDAY - FRIDAY | 00:00 - 23:59 |
+| General Public | MONDAY - FRIDAY | 12:00 - 14:00 |
+
+To quickly generate a new JSON file containing different data, you can use the [generate_openingtimes.sh](generate_openingtimes.sh) script, which provides a basic yet useful assistant to help you do that painful task.
+Syntax :
+```shell script
+./generate_openingtimes.sh
+```
+> Note: this script requires [jq](https://stedolan.github.io/jq/) to run.
 
 ## Valuable resources:
 

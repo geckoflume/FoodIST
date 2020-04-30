@@ -9,6 +9,10 @@
         <variable
             name="cafeteriaWithOpeningHours"
             type="pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaWithOpeningHours" />
+
+        <variable
+            name="isOpen"
+            type="boolean" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -83,8 +87,8 @@
                 android:layout_width="@dimen/text_open_closed"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
-                android:text="@{UiUtils.isOpen(cafeteriaWithOpeningHours.openingHours) ? @string/open : @string/closed}"
-                android:textColor="@{UiUtils.isOpen(cafeteriaWithOpeningHours.openingHours) ? @color/colorOpen : @color/colorClosed}"
+                android:text="@{isOpen ? @string/open : @string/closed}"
+                android:textColor="@{isOpen ? @color/colorOpen : @color/colorClosed}"
                 app:layout_constraintBottom_toBottomOf="@+id/textView_waitTime"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/textView_waitTime" />

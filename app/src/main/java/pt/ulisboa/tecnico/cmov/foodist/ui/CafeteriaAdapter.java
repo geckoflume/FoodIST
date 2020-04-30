@@ -16,23 +16,25 @@ import pt.ulisboa.tecnico.cmov.foodist.databinding.ListItemCafeteriaBinding;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaWithOpeningHours;
 
 public class CafeteriaAdapter extends RecyclerView.Adapter<CafeteriaAdapter.CafeteriaHolder> {
-    public static final String EXTRA_MESSAGE = "pt.ulisboa.tecnico.cmov.foodist.CAFETERIAID";
+    static final String EXTRA_MESSAGE = "pt.ulisboa.tecnico.cmov.foodist.CAFETERIAID";
 
     private List<CafeteriaWithOpeningHours> cafeteriaList;
+    private int status;
 
     @NonNull
     @Override
-    public CafeteriaHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ListItemCafeteriaBinding cafeteriaListItemBinding =
-                DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
-                        R.layout.list_item_cafeteria, parent, false);
+    public CafeteriaHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        ListItemCafeteriaBinding cafeteriaListItemBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(parent.getContext()),
+                R.layout.list_item_cafeteria, parent, false);
         return new CafeteriaHolder(cafeteriaListItemBinding);
     }
 
     @Override
     public void onBindViewHolder(final CafeteriaHolder holder, int position) {
-        CafeteriaWithOpeningHours cafeteria = cafeteriaList.get(position);
-        holder.listItemCafeteriaBinding.setCafeteriaWithOpeningHours(cafeteria);
+        CafeteriaWithOpeningHours cafeteriaWithOpeningHours = cafeteriaList.get(position);
+        holder.listItemCafeteriaBinding.setCafeteriaWithOpeningHours(cafeteriaWithOpeningHours);
+        holder.listItemCafeteriaBinding.setIsOpen(UiUtils.isOpen(cafeteriaWithOpeningHours.openingHours, status));
     }
 
     @Override
@@ -43,22 +45,28 @@ public class CafeteriaAdapter extends RecyclerView.Adapter<CafeteriaAdapter.Cafe
     }
 
 
-    public void setCafeteriaList(List<CafeteriaWithOpeningHours> cafeteriasList) {
+    void setCafeteriaList(List<CafeteriaWithOpeningHours> cafeteriasList) {
         this.cafeteriaList = cafeteriasList;
         notifyDataSetChanged();
     }
 
+    void setStatus(int status) {
+        this.status = status;
+        notifyDataSetChanged();
+    }
 
-    class CafeteriaHolder extends RecyclerView.ViewHolder {
+
+    static class CafeteriaHolder extends RecyclerView.ViewHolder {
         private ListItemCafeteriaBinding listItemCafeteriaBinding;
 
-        public CafeteriaHolder(@NonNull ListItemCafeteriaBinding listItemCafeteriaBinding) {
+        CafeteriaHolder(@NonNull ListItemCafeteriaBinding listItemCafeteriaBinding) {
             super(listItemCafeteriaBinding.getRoot());
             this.listItemCafeteriaBinding = listItemCafeteriaBinding;
             itemView.setOnClickListener(view1 -> {
                 Intent intent = new Intent(view1.getContext(), CafeteriaActivity.class);
                 intent.putExtra(EXTRA_MESSAGE, String.valueOf(listItemCafeteriaBinding.getCafeteriaWithOpeningHours().cafeteria.getId()));
                 listItemCafeteriaBinding.getRoot().getContext().startActivity(intent);
+                /*
                 // Check if we're running on Android 5.0 or higher
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     // Apply activity transition
@@ -66,6 +74,7 @@ public class CafeteriaAdapter extends RecyclerView.Adapter<CafeteriaAdapter.Cafe
                 } else {
                     // Swap without transition
                 }
+                 */
             });
         }
     }

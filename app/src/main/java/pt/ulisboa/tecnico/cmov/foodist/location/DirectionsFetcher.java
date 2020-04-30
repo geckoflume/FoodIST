@@ -55,7 +55,8 @@ public class DirectionsFetcher {
             e.printStackTrace();
         } finally {
             try {
-                iStream.close();
+                if (iStream != null)
+                    iStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }

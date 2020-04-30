@@ -45,8 +45,8 @@ public class CafeteriaListViewModel extends AndroidViewModel {
         // allowing us to recalculate what LiveData to get from the DataRepository
         // based on the user campus and status
         CustomLiveData trigger = new CustomLiveData(
-                savedStateHandle.getLiveData(CAMPUS_KEY, Campus.ALL),
-                savedStateHandle.getLiveData(STATUS_KEY, Status.DEFAULT));
+                mSavedStateHandler.getLiveData(CAMPUS_KEY, Campus.ALL),
+                mSavedStateHandler.getLiveData(STATUS_KEY, Status.DEFAULT));
         mCafeterias = Transformations.switchMap(trigger, value -> {
             if (value.first == Campus.ALL) {
                 return mRepository.getCafeterias();
@@ -75,6 +75,10 @@ public class CafeteriaListViewModel extends AndroidViewModel {
         // This ensures that we retain the value across process death
         // and is used as the input into the Transformations.switchMap above
         mSavedStateHandler.set(STATUS_KEY, status);
+    }
+
+    public LiveData<Integer> getStatus() {
+        return mSavedStateHandler.getLiveData(STATUS_KEY, Status.DEFAULT);
     }
 
     /**
