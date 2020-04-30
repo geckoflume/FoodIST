@@ -1,4 +1,9 @@
+<img align="left" width="80" height="80" src="app/src/main/res/mipmap-xxhdpi/ic_launcher.png" alt="FoodIST icon">
+
 # FoodIST: Finding food on campus
+
+![Android CI](https://github.com/geckoflume/FoodIST/workflows/Android%20CI/badge.svg)
+
 Android application project for Mobile and Ubiquitous Computing class @ Instituto Superior Técnico, Lisbon, Portugal.
 
 Meant to be used with the [FoodIST REST Server](https://github.com/geckoflume/FoodIST-Server), it provides ability to locate cafeterias, crowdsource cafeteria menus, dishes pictures and queue wait times.
