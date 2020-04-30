@@ -7,8 +7,8 @@
         <import type="pt.ulisboa.tecnico.cmov.foodist.ui.UiUtils" />
 
         <variable
-            name="cafeteria"
-            type="pt.ulisboa.tecnico.cmov.foodist.model.Cafeteria" />
+            name="cafeteriaWithOpeningHours"
+            type="pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaWithOpeningHours" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -48,7 +48,7 @@
                 android:layout_weight="0"
                 android:ellipsize="marquee"
                 android:singleLine="true"
-                android:text="@{cafeteria.name}"
+                android:text="@{cafeteriaWithOpeningHours.cafeteria.name}"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView_thumbnail"
@@ -60,7 +60,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginBottom="16dp"
-                android:text="@{UiUtils.formatTime(cafeteria.timeWalk, @string/duration_seconds, @string/duration_minutes, @string/duration_hours, @string/duration_days)}"
+                android:text="@{UiUtils.formatTime(cafeteriaWithOpeningHours.cafeteria.timeWalk, @string/duration_seconds, @string/duration_minutes, @string/duration_hours, @string/duration_days)}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView_thumbnail" />
 
@@ -71,7 +71,7 @@
                 android:layout_marginLeft="11dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginRight="10dp"
-                android:text="@{UiUtils.formatTime(cafeteria.timeWait, @string/duration_seconds, @string/duration_minutes, @string/duration_hours, @string/duration_days)}"
+                android:text="@{UiUtils.formatTime(cafeteriaWithOpeningHours.cafeteria.timeWait, @string/duration_seconds, @string/duration_minutes, @string/duration_hours, @string/duration_days)}"
                 app:layout_constraintBottom_toBottomOf="@+id/textView_walkTime"
                 app:layout_constraintEnd_toStartOf="@+id/textView_open"
                 app:layout_constraintStart_toEndOf="@+id/textView_walkTime"
@@ -83,8 +83,8 @@
                 android:layout_width="@dimen/text_open_closed"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
-                android:text="@{UiUtils.isOpen(cafeteria) ? @string/open : @string/closed}"
-                android:textColor="@{UiUtils.isOpen(cafeteria) ? @color/colorOpen : @color/colorClosed}"
+                android:text="@{UiUtils.isOpen(cafeteriaWithOpeningHours.openingHours) ? @string/open : @string/closed}"
+                android:textColor="@{UiUtils.isOpen(cafeteriaWithOpeningHours.openingHours) ? @color/colorOpen : @color/colorClosed}"
                 app:layout_constraintBottom_toBottomOf="@+id/textView_waitTime"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/textView_waitTime" />

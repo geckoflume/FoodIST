@@ -12,9 +12,6 @@ import pt.ulisboa.tecnico.cmov.foodist.db.entity.OpeningHoursEntity;
 
 @Dao
 public interface OpeningHoursDao {
-    @Query("SELECT * FROM openinghours ORDER BY day_of_week, from_time")
-    LiveData<List<OpeningHoursEntity>> getAll();
-
     @Query("SELECT * FROM openinghours WHERE cafeteria_id = :cafeteriaId AND status = :status ORDER BY day_of_week, from_time")
     LiveData<List<OpeningHoursEntity>> getAllByCafeteriaIdStatus(int cafeteriaId, int status);
 

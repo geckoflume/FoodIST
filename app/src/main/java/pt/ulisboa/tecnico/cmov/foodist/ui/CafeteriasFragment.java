@@ -55,7 +55,7 @@ public class CafeteriasFragment extends Fragment implements OnMapReadyCallback {
         // The onChanged() method fires when the observed data changes and the activity is
         // in the foreground.
         // Update the cached copy of the cafeterias in the adapter.
-        mCafeteriaListViewModel.getCafeterias().observe(getViewLifecycleOwner(), adapterCafeterias::setCafeteriaList);
+        mCafeteriaListViewModel.getCafeteriasWithOpeningHours().observe(getViewLifecycleOwner(), adapterCafeterias::setCafeteriaList);
         swipeRefreshLayout = root.findViewById(R.id.swipeRefresh);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(() -> ((MainActivity) getActivity()).updateCafeterias());

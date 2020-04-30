@@ -34,10 +34,11 @@ public interface CafeteriaDao {
     void update(CafeteriaEntity cafeteria);
 
     @Transaction
-    @Query("SELECT * FROM cafeterias")
-    LiveData<List<CafeteriaWithOpeningHours>> getCafeteriasWithOpeningHours();
+    @Query("SELECT cafeterias.* FROM cafeterias JOIN openinghours ON openinghours.cafeteria_id = cafeterias.id WHERE openinghours.status = :status GROUP BY cafeterias.id")
+    LiveData<List<CafeteriaWithOpeningHours>> getCafeteriasWithOpeningHours(int status);
 
     @Transaction
-    @Query("SELECT * FROM cafeterias WHERE id LIKE :id LIMIT 1")
-    LiveData<List<CafeteriaWithOpeningHours>> getCafeteriaWithOpeningHours(int id);
+    @Query("SELECT cafeterias.* FROM cafeterias JOIN openinghours ON openinghours.cafeteria_id = cafeterias.id WHERE cafeterias.campus_id = :campusId AND openinghours.status = :status GROUP BY cafeterias.id")
+    LiveData<List<CafeteriaWithOpeningHours>> getCafeteriasWithOpeningHoursByCampus(int status, int campusId);
+
 }

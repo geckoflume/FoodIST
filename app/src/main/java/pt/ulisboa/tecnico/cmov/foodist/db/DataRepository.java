@@ -6,6 +6,7 @@ import androidx.lifecycle.MediatorLiveData;
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
+import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaWithOpeningHours;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.OpeningHoursEntity;
 
 /**
@@ -65,4 +66,11 @@ public class DataRepository {
     }
 
 
+    public LiveData<List<CafeteriaWithOpeningHours>> getCafeteriasWithOpeningHours(int status) {
+        return mDatabase.cafeteriaDao().getCafeteriasWithOpeningHours(status);
+    }
+
+    public LiveData<List<CafeteriaWithOpeningHours>> getCafeteriasWithOpeningHoursByCampus(int status, int campus) {
+        return mDatabase.cafeteriaDao().getCafeteriasWithOpeningHoursByCampus(status, campus);
+    }
 }

@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey;
 import com.google.gson.annotations.SerializedName;
 
 import org.threeten.bp.DayOfWeek;
+import org.threeten.bp.LocalDate;
 import org.threeten.bp.LocalTime;
 import org.threeten.bp.format.TextStyle;
 
@@ -105,8 +106,9 @@ public class OpeningHoursEntity implements OpeningHours {
     }
 
     public boolean isOpen() {
+        DayOfWeek today = LocalDate.now().getDayOfWeek();
         LocalTime now = LocalTime.now();
-        return now.isAfter(fromTime) && now.isBefore(toTime);
+        return today.equals(dayOfWeek) && now.isAfter(fromTime) && now.isBefore(toTime);
     }
 
     @Override

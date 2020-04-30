@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Cafeteria ListView
         mCafeteriaListViewModel = new ViewModelProvider(this).get(CafeteriaListViewModel.class);
+        mCafeteriaListViewModel.setStatus(sharedPref.getInt("status", Status.DEFAULT));
         mCafeteriaListViewModel.getCafeterias().observe(this, cafeteriaEntities -> {
             currentCafeterias = cafeteriaEntities;
             if (!canRefresh.getValue() && mCurrentLocation != null) {
@@ -190,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
         return new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (parent.getItemAtPosition(position).toString().equals(getString(R.string.find_nearest))) { // in case the campuses are inserted in a strange order
+                if (position == Campus.AUTODETECT) {
                     // "Find nearest campus" selected
                     if (mCurrentLocation != null && PermissionsHelper.checkPermissions(MainActivity.this)) {
                         spinner.setEnabled(false);
@@ -203,16 +204,9 @@ public class MainActivity extends AppCompatActivity {
                         PermissionsHelper.requestPermissions(MainActivity.this);
                     }
                 } else {
-                    // "All cafeterias" or campus selected
                     // apply() to commit asynchronously
                     sharedPref.edit().putInt(getString(R.string.campus_id_key), position).apply();
-                    if (((Campus) parent.getItemAtPosition(position)).toString().equals(getString(R.string.all_cafeterias))) {
-                        // "All cafeterias" selected
-                        mCafeteriaListViewModel.setQuery("");
-                    } else {
-                        // Campus selected
-                        mCafeteriaListViewModel.setQuery(String.valueOf(position - 1));
-                    }
+                    mCafeteriaListViewModel.setCampus(position);
                 }
             }
 
@@ -336,5 +330,9 @@ public class MainActivity extends AppCompatActivity {
     public void updateUser() {
         textView_username.setText(sharedPref.getString("username", getString(R.string.default_username)) + " - " + Status.getInstance(this).get(sharedPref.getInt("status", Status.DEFAULT)));
         textView_email.setText(sharedPref.getString("email", getString(R.string.default_email)));
+    }
+
+    public void updateStatus() {
+        mCafeteriaListViewModel.setStatus(sharedPref.getInt("status", Status.DEFAULT));
     }
 }

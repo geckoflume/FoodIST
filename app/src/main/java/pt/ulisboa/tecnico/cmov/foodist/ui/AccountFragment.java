@@ -125,6 +125,7 @@ public class AccountFragment extends Fragment {
                     sharedPref.edit().putString("email", newEmail).apply();
                     sharedPref.edit().putInt("status", newStatus).apply();
                     ((MainActivity) getActivity()).updateUser();
+                    ((MainActivity) getActivity()).updateStatus();
                 }
                 saveButton.setText(R.string.saved);
             }

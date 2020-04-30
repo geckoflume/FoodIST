@@ -13,12 +13,12 @@ import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.databinding.ListItemCafeteriaBinding;
-import pt.ulisboa.tecnico.cmov.foodist.model.Cafeteria;
+import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaWithOpeningHours;
 
 public class CafeteriaAdapter extends RecyclerView.Adapter<CafeteriaAdapter.CafeteriaHolder> {
     public static final String EXTRA_MESSAGE = "pt.ulisboa.tecnico.cmov.foodist.CAFETERIAID";
 
-    private List<? extends Cafeteria> cafeteriaList;
+    private List<CafeteriaWithOpeningHours> cafeteriaList;
 
     @NonNull
     @Override
@@ -31,8 +31,8 @@ public class CafeteriaAdapter extends RecyclerView.Adapter<CafeteriaAdapter.Cafe
 
     @Override
     public void onBindViewHolder(final CafeteriaHolder holder, int position) {
-        Cafeteria cafeteria = cafeteriaList.get(position);
-        holder.listItemCafeteriaBinding.setCafeteria(cafeteria);
+        CafeteriaWithOpeningHours cafeteria = cafeteriaList.get(position);
+        holder.listItemCafeteriaBinding.setCafeteriaWithOpeningHours(cafeteria);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class CafeteriaAdapter extends RecyclerView.Adapter<CafeteriaAdapter.Cafe
     }
 
 
-    public void setCafeteriaList(List<? extends Cafeteria> cafeteriasList) {
+    public void setCafeteriaList(List<CafeteriaWithOpeningHours> cafeteriasList) {
         this.cafeteriaList = cafeteriasList;
         notifyDataSetChanged();
     }
@@ -57,7 +57,7 @@ public class CafeteriaAdapter extends RecyclerView.Adapter<CafeteriaAdapter.Cafe
             this.listItemCafeteriaBinding = listItemCafeteriaBinding;
             itemView.setOnClickListener(view1 -> {
                 Intent intent = new Intent(view1.getContext(), CafeteriaActivity.class);
-                intent.putExtra(EXTRA_MESSAGE, String.valueOf(listItemCafeteriaBinding.getCafeteria().getId()));
+                intent.putExtra(EXTRA_MESSAGE, String.valueOf(listItemCafeteriaBinding.getCafeteriaWithOpeningHours().cafeteria.getId()));
                 listItemCafeteriaBinding.getRoot().getContext().startActivity(intent);
                 // Check if we're running on Android 5.0 or higher
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

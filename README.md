@@ -14,14 +14,15 @@ More information: [https://fenix.tecnico.ulisboa.pt/disciplinas/CMov4/2019-2020/
 - Campus autoselection based on device location
 - Cafeteria details: name, opening hours, map, estimated walk time and itinerary
 - Mockup static dishes
+- User status selection and cafeterias/opening times displayed accordingly
 - Dark theme compatible
 
 ## TODO
 
+- Server data fetching
 - Ability to add dishes/meals
 - Beacons detection
 - Caching
-- User status selection
 
 ## Specifications
 
