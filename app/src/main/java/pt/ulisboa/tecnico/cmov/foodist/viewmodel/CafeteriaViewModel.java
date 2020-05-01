@@ -19,8 +19,10 @@ import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
 import pt.ulisboa.tecnico.cmov.foodist.db.DataRepository;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.OpeningHoursEntity;
-import pt.ulisboa.tecnico.cmov.foodist.location.DirectionsFetcher;
-import pt.ulisboa.tecnico.cmov.foodist.location.DirectionsParser;
+import pt.ulisboa.tecnico.cmov.foodist.net.DirectionsFetcher;
+import pt.ulisboa.tecnico.cmov.foodist.net.DirectionsParser;
+import pt.ulisboa.tecnico.cmov.foodist.net.ServerFetcher;
+import pt.ulisboa.tecnico.cmov.foodist.net.ServerParser;
 
 public class CafeteriaViewModel extends AndroidViewModel {
     private static final String TAG = CafeteriaViewModel.class.getSimpleName();
@@ -69,6 +71,13 @@ public class CafeteriaViewModel extends AndroidViewModel {
         mRepository.updateCafeteria(currentCafeteria);
 
         return directionsParser.getPath();
+    }
+
+    public void updateCafeteriaWaitTime() {
+        ServerFetcher serverFetcher = new ServerFetcher();
+        String responseCafeteria = serverFetcher.fetchCafeteria(mCafeteriaId);
+        ServerParser serverParser = new ServerParser();
+        mRepository.updateCafeteriaPartial(serverParser.parseCafeteria(responseCafeteria));
     }
 
     public LiveData<Boolean> isUpdating() {

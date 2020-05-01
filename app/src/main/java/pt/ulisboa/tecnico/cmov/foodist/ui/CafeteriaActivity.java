@@ -38,7 +38,6 @@ import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.databinding.ActivityCafeteriaBinding;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.OpeningHoursEntity;
-import pt.ulisboa.tecnico.cmov.foodist.location.LocationUtils;
 import pt.ulisboa.tecnico.cmov.foodist.model.Status;
 import pt.ulisboa.tecnico.cmov.foodist.viewmodel.CafeteriaViewModel;
 
@@ -126,49 +125,47 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
         if (PermissionsHelper.checkPermissions(this)) {
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
-            updateMap();
-        }
-    }
 
-    private void updateMap() {
-        updateRequest.observe(this, shouldUpdateMap -> {
-            if (shouldUpdateMap) {
-                Log.w(TAG, "Cafeteria view model got observed, now updating the map");
-                cafeteriaViewModel.setUpdating(true);
-                mMap.clear();
-                LocationUtils.updateMap(mMap, currentCafeteria);
-                if (isCheckBoxRouteTicked) {
-                    fusedLocationClient.getLastLocation().addOnSuccessListener(mCurrentLocation ->
-                            ((BasicApp) getApplication()).networkIO().execute(() -> {
-                                List<LatLng> path = cafeteriaViewModel.updateCafeteriaDistance(currentCafeteria,
-                                        mCurrentLocation, getString(R.string.google_maps_key));
-                                if (path != null && !path.isEmpty()) { // ensures a route has been found and that the provided Google Maps api key is valid
-                                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                                    for (LatLng point : path)
-                                        builder.include(point);
-                                    LatLngBounds bounds = builder.build();
-                                    int height = mapFragment.getView().getHeight();
-                                    // offset from edges of the map 10% of screen height
-                                    int padding = (int) (height * 0.1);
+            updateRequest.observe(this, shouldUpdateMap -> {
+                if (shouldUpdateMap) {
+                    Log.w(TAG, "Cafeteria view model got observed, now updating the map");
+                    cafeteriaViewModel.setUpdating(true);
+                    mMap.clear();
+                    LocationUtils.updateMap(mMap, currentCafeteria);
+                    ((BasicApp) getApplication()).networkIO().execute(() -> cafeteriaViewModel.updateCafeteriaWaitTime());
+                    if (isCheckBoxRouteTicked) {
+                        fusedLocationClient.getLastLocation().addOnSuccessListener(mCurrentLocation ->
+                                ((BasicApp) getApplication()).networkIO().execute(() -> {
+                                    List<LatLng> path = cafeteriaViewModel.updateCafeteriaDistance(currentCafeteria,
+                                            mCurrentLocation, getString(R.string.google_maps_key));
+                                    if (path != null && !path.isEmpty()) { // ensures a route has been found and that the provided Google Maps api key is valid
+                                        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                                        for (LatLng point : path)
+                                            builder.include(point);
+                                        LatLngBounds bounds = builder.build();
+                                        int height = mapFragment.getView().getHeight();
+                                        // offset from edges of the map 10% of screen height
+                                        int padding = (int) (height * 0.1);
 
-                                    @SuppressLint("ResourceType")
-                                    PolylineOptions polyline = new PolylineOptions()
-                                            .addAll(path)
-                                            .width(20)
-                                            .color(ResourcesCompat.getColor(getResources(), R.color.colorBlueGoogleMaps, null)); // more elegant than Color.parseColor(getString(R.color.colorBlueGoogleMaps));
+                                        @SuppressLint("ResourceType")
+                                        PolylineOptions polyline = new PolylineOptions()
+                                                .addAll(path)
+                                                .width(20)
+                                                .color(ResourcesCompat.getColor(getResources(), R.color.colorBlueGoogleMaps, null)); // more elegant than Color.parseColor(getString(R.color.colorBlueGoogleMaps));
 
-                                    mapFragment.getView().post(() -> { // run this on main thread
-                                        mMap.addPolyline(polyline);
-                                        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));  // or use animateCamera() for smooth animation
-                                        cafeteriaViewModel.setUpdating(false);
-                                    });
-                                }
-                            }));
-                } else {
-                    cafeteriaViewModel.setUpdating(false);
+                                        mapFragment.getView().post(() -> { // run this on main thread
+                                            mMap.addPolyline(polyline);
+                                            mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));  // or use animateCamera() for smooth animation
+                                            cafeteriaViewModel.setUpdating(false);
+                                        });
+                                    }
+                                }));
+                    } else {
+                        cafeteriaViewModel.setUpdating(false);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     public void openDirections(View view) {

@@ -28,6 +28,7 @@ More information: [https://fenix.tecnico.ulisboa.pt/disciplinas/CMov4/2019-2020/
 - Ability to add dishes/meals
 - Beacons detection
 - Caching
+- Support pre-Lollipop devices (https://android.jlelse.eu/android-vector-drawables-on-pre-lollipop-crash-solution-45c0c34f0160)
 
 ## Specifications
 
@@ -36,6 +37,8 @@ This application is built around the MVVM (Model View View-Model) design pattern
 Static cafeteria data and opening times are stored in a SQLite database, populated from JSON arrays [1](app/src/main/assets/cafeterias.json) and [2](app/src/main/assets/opening_hours.json) (see [Generate opening_hours.json](#generate-opening_hoursjson)).
 
 The architecture is build around the [Jetpack components collection](https://developer.android.com/jetpack) in Java, to introduce best Android practices (such as AndroidX, DataBinding, LiveData, Fragments...) and the layouts are designed with the help of [Google's Material Design components](https://material.io/develop/android/).
+
+The multi-threading are managed by `java.util.concurrent` Executors, to support future Android versions (see [Android AsyncTask API deprecating in Android 11](https://stackoverflow.com/q/58767733/9875498)).
 
 ### Local database specification
 

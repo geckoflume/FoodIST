@@ -19,7 +19,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 
 import pt.ulisboa.tecnico.cmov.foodist.PermissionsHelper;
 import pt.ulisboa.tecnico.cmov.foodist.R;
-import pt.ulisboa.tecnico.cmov.foodist.location.LocationUtils;
 import pt.ulisboa.tecnico.cmov.foodist.viewmodel.CafeteriaListViewModel;
 
 public class CafeteriasFragment extends Fragment implements OnMapReadyCallback {

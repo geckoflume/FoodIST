@@ -180,10 +180,17 @@ public class MainActivity extends AppCompatActivity {
 
     public void updateCafeterias() {
         if (mCurrentLocation != null)
-            ((BasicApp) MainActivity.this.getApplication()).networkIO().execute(() -> mCafeteriaListViewModel.updateCafeteriasDistances(currentCafeterias, mCurrentLocation, getString(R.string.google_maps_key)));
+            ((BasicApp) MainActivity.this.getApplication()).networkIO().execute(() -> {
+                mCafeteriaListViewModel.setUpdating(true);
+                mCafeteriaListViewModel.updateCafeteriasDistances(currentCafeterias, mCurrentLocation, getString(R.string.google_maps_key));
+                mCafeteriaListViewModel.updateCafeteriasWaitTimes();
+                mCafeteriaListViewModel.setUpdating(false);
+            });
         else {
-            mCafeteriaListViewModel.setUpdating(false);
+            mCafeteriaListViewModel.setUpdating(true);
             Toast.makeText(MainActivity.this, R.string.no_location_detected, Toast.LENGTH_LONG).show();
+            mCafeteriaListViewModel.updateCafeteriasWaitTimes();
+            mCafeteriaListViewModel.setUpdating(false);
         }
     }
 

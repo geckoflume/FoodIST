@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.R;
-import pt.ulisboa.tecnico.cmov.foodist.location.LocationUtils;
+import pt.ulisboa.tecnico.cmov.foodist.ui.LocationUtils;
 
 public class Campus {
     private static final String TAG = Campus.class.getSimpleName();

@@ -6,6 +6,7 @@ import androidx.lifecycle.MediatorLiveData;
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
+import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaPartialEntity;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaWithOpeningHours;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.OpeningHoursEntity;
 
@@ -57,8 +58,16 @@ public class DataRepository {
         mDatabase.cafeteriaDao().updateAll(currentCafeterias);
     }
 
+    public void updateCafeteriasPartial(List<CafeteriaPartialEntity> cafeteriaPartialEntities) {
+        mDatabase.cafeteriaDao().updateAllPartial(cafeteriaPartialEntities);
+    }
+
     public void updateCafeteria(CafeteriaEntity currentCafeteria) {
         mDatabase.cafeteriaDao().update(currentCafeteria);
+    }
+
+    public void updateCafeteriaPartial(CafeteriaPartialEntity cafeteriaPartialEntity) {
+        mDatabase.cafeteriaDao().updatePartial(cafeteriaPartialEntity);
     }
 
     public LiveData<List<OpeningHoursEntity>> loadOpeningHours(final int cafeteriaId, final int status) {

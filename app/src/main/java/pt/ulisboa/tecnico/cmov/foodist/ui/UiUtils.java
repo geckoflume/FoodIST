@@ -49,7 +49,6 @@ public abstract class UiUtils {
     public static boolean isOpen(List<OpeningHoursEntity> openingHours, int status) {
         for (OpeningHoursEntity hour : openingHours) {
             if (hour.getStatus() == status && hour.isOpen()) {
-                Log.e("ui", hour.toString());
                 return true;
             }
         }

@@ -1,11 +1,10 @@
-package pt.ulisboa.tecnico.cmov.foodist.location;
+package pt.ulisboa.tecnico.cmov.foodist.net;
 
 import android.location.Location;
 
 import com.google.android.gms.maps.model.LatLng;
 
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
-import pt.ulisboa.tecnico.cmov.foodist.net.NetUtils;
 
 public class DirectionsFetcher {
     private final String baseUrl = "https://maps.googleapis.com/maps/api/directions/json?origin=";
