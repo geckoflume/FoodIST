@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.cmov.foodist.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,11 +12,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -26,6 +32,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
 
@@ -34,8 +41,10 @@ import pt.ulisboa.tecnico.cmov.foodist.PermissionsHelper;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.databinding.ActivityCafeteriaBinding;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
+import pt.ulisboa.tecnico.cmov.foodist.db.entity.DishEntity;
 import pt.ulisboa.tecnico.cmov.foodist.location.LocationUtils;
 import pt.ulisboa.tecnico.cmov.foodist.viewmodel.CafeteriaViewModel;
+import pt.ulisboa.tecnico.cmov.foodist.viewmodel.DishViewModel;
 
 public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCallback {
     private static final String TAG = CafeteriaActivity.class.getSimpleName();
@@ -46,6 +55,9 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
     private FusedLocationProviderClient fusedLocationClient;
     private CafeteriaEntity currentCafeteria;
     private MutableLiveData<Boolean> updateRequest = new MutableLiveData<>(false);
+    private List<DishEntity> listDishes;
+    private DishViewModel dishViewModel;
+    private AppBarConfiguration mAppBarConfiguration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +98,19 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
             updateRequest.setValue(false);
             updateRequest.setValue(true);
         });
+
+        //Get all dishes without selected by cafet
+        dishViewModel = new ViewModelProvider(this).get(DishViewModel.class);
+        dishViewModel.getDish().observe(this, dishEntities -> {
+            listDishes = dishEntities;
+        });
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_cafeterias).setDrawerLayout(drawer).build();
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+        NavigationUI.setupWithNavController(navigationView, navController);
     }
 
     private void initActionBar() {
@@ -158,8 +183,8 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(urlNavigation)));
     }
 
-    public void addMeal(View view) {
-        Intent intent = new Intent(this, newMeal.class);
+    public void addDish(View view) {
+        Intent intent = new Intent(this, NewDish.class);
         intent.putExtra("IdCafet", currentCafeteria.getId());
         startActivity(intent);
     }

@@ -33,4 +33,6 @@ public class BasicApp extends Application {
     public Executor networkIO(){
         return mAppExecutors.networkIO();
     }
+
+    public Executor diskIO() { return mAppExecutors.diskIO(); }
 }

@@ -21,9 +21,11 @@ import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.AppExecutors;
 import pt.ulisboa.tecnico.cmov.foodist.db.dao.CafeteriaDao;
+import pt.ulisboa.tecnico.cmov.foodist.db.dao.DishDao;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
+import pt.ulisboa.tecnico.cmov.foodist.db.entity.DishEntity;
 
-@Database(entities = {CafeteriaEntity.class}, version = 1, exportSchema = false)
+@Database(entities = {CafeteriaEntity.class, DishEntity.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     @VisibleForTesting
     private static final String DATABASE_NAME = "database.db";
@@ -90,9 +92,27 @@ public abstract class AppDatabase extends RoomDatabase {
             e.printStackTrace();
             Log.e(TAG, "Error seeding database, ", e);
         }
+        Type dishType = new TypeToken<List<DishEntity>>(){
+        }.getType();
+        try {
+            int size = 150;
+            byte[] buffer = new byte[size];
+            json = new String(buffer, "UTF-8");
+
+            Gson gson = new Gson();
+            List<DishEntity> dishes = gson.fromJson(json, dishType);
+            database.runInTransaction(() -> {
+                database.dishDao().insertAll(dishes);
+            });
+        } catch (Throwable e) {
+            e.printStackTrace();
+            Log.e(TAG, "Error seeding database, ", e);
+        }
     }
 
     public abstract CafeteriaDao cafeteriaDao();
+
+    public abstract DishDao dishDao();
 
     /**
      * Check whether the database already exists and expose it via {@link #getDatabaseCreated()}
