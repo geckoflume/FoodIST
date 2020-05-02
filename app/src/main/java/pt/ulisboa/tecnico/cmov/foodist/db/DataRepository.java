@@ -6,9 +6,9 @@ import androidx.lifecycle.MediatorLiveData;
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
-import pt.ulisboa.tecnico.cmov.foodist.db.entity.DishEntity;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaPartialEntity;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaWithOpeningHours;
+import pt.ulisboa.tecnico.cmov.foodist.db.entity.DishEntity;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.OpeningHoursEntity;
 
 /**
@@ -18,7 +18,6 @@ public class DataRepository {
     private static DataRepository sInstance;
     private final AppDatabase mDatabase;
     private MediatorLiveData<List<CafeteriaEntity>> mObservableCafeterias;
-    private MediatorLiveData<List<DishEntity>> mObservableDish;
 
     private DataRepository(final AppDatabase database) {
         mDatabase = database;
@@ -28,15 +27,6 @@ public class DataRepository {
                 cafeteriaEntities -> {
                     if (mDatabase.getDatabaseCreated().getValue() != null)
                         mObservableCafeterias.postValue(cafeteriaEntities);
-                });
-
-        mObservableDish = new MediatorLiveData<>();
-
-        mObservableDish.addSource(mDatabase.dishDao().getAll(),
-                dishEntities -> {
-                    if (mDatabase.getDatabaseCreated().getValue() != null) {
-                        mObservableDish.postValue(dishEntities);
-                    }
                 });
     }
 
@@ -93,8 +83,8 @@ public class DataRepository {
         return mDatabase.cafeteriaDao().getCafeteriasWithOpeningHoursByCampus(status, campus);
     }
 
-    public LiveData<List<DishEntity>> getDish(){
-        return mObservableDish;
+    public LiveData<List<DishEntity>> getDishesByCafeteria(int cafeteriaId) {
+        return mDatabase.dishDao().getAllByCafeteria(cafeteriaId);
     }
 
     public void insertDish(DishEntity dish) {

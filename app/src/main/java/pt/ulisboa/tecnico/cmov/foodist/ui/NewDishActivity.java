@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import pt.ulisboa.tecnico.cmov.foodist.R;
 
-public class NewDish extends AppCompatActivity {
+public class NewDishActivity extends AppCompatActivity {
 
     private DataRepository mRepository;
 
@@ -27,9 +27,9 @@ public class NewDish extends AppCompatActivity {
     }
 
     public void createDish(View view) {
-        EditText editTextName = (EditText) findViewById(R.id.set_name);
+        EditText editTextName = findViewById(R.id.set_name);
         String name = editTextName.getText().toString();
-        EditText editTextPrice = (EditText) findViewById(R.id.set_price);
+        EditText editTextPrice = findViewById(R.id.set_price);
         String price = editTextPrice.getText().toString();
 
         Intent intent = getIntent();

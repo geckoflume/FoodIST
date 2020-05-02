@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,16 +14,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -35,7 +30,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
 
@@ -44,11 +38,10 @@ import pt.ulisboa.tecnico.cmov.foodist.PermissionsHelper;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.databinding.ActivityCafeteriaBinding;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
-import pt.ulisboa.tecnico.cmov.foodist.db.entity.DishEntity;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.OpeningHoursEntity;
 import pt.ulisboa.tecnico.cmov.foodist.model.Status;
 import pt.ulisboa.tecnico.cmov.foodist.viewmodel.CafeteriaViewModel;
-import pt.ulisboa.tecnico.cmov.foodist.viewmodel.DishViewModel;
+import pt.ulisboa.tecnico.cmov.foodist.viewmodel.DishListViewModel;
 
 public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCallback {
     private static final String TAG = CafeteriaActivity.class.getSimpleName();
@@ -59,9 +52,7 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
     private FusedLocationProviderClient fusedLocationClient;
     private CafeteriaEntity currentCafeteria;
     private MutableLiveData<Boolean> updateRequest = new MutableLiveData<>(false);
-    private List<DishEntity> listDishes;
-    private DishViewModel dishViewModel;
-    private AppBarConfiguration mAppBarConfiguration;
+    private DishListViewModel dishListViewModel;
     private boolean isCheckBoxRouteTicked = false;
 
     @Override
@@ -123,18 +114,14 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
             updateRequest.setValue(true);
         });
 
-        //Get all dishes without selected by cafet
-        dishViewModel = new ViewModelProvider(this).get(DishViewModel.class);
-        dishViewModel.getDish().observe(this, dishEntities -> {
-            listDishes = dishEntities;
-        });
-/*
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_cafeterias).setDrawerLayout(drawer).build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);*/
+        //Get all dishes by cafet
+        DishListViewModel.Factory factoryDishes = new DishListViewModel.Factory(getApplication(), Integer.parseInt(message));
+        dishListViewModel = new ViewModelProvider(this, factoryDishes).get(DishListViewModel.class);
+
+        RecyclerView recyclerViewDishes = this.findViewById(R.id.recyclerView_dishes);
+        DishAdapter adapterDishes = new DishAdapter();
+        recyclerViewDishes.setAdapter(adapterDishes);
+        dishListViewModel.getDishes().observe(this, adapterDishes::setDishList);
     }
 
     private void initActionBar() {
@@ -210,7 +197,7 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     public void addDish(View view) {
-        Intent intent = new Intent(this, NewDish.class);
+        Intent intent = new Intent(this, NewDishActivity.class);
         intent.putExtra("IdCafet", currentCafeteria.getId());
         startActivity(intent);
     }

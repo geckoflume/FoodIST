@@ -1,7 +1,5 @@
 package pt.ulisboa.tecnico.cmov.foodist.ui;
 
-import android.content.Intent;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -55,18 +53,14 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.DishHolder> {
         public DishHolder(@NonNull ListItemDishBinding listItemDishBinding) {
             super(listItemDishBinding.getRoot());
             this.listItemDishBinding = listItemDishBinding;
+            /*
+            // TODO: onclick on a dish, display details, pictures
             itemView.setOnClickListener(view1 -> {
                 Intent intent = new Intent(view1.getContext(), CafeteriaActivity.class); //Wait what ? --> Do the Dish Acti for the next
                 intent.putExtra(EXTRA_MESSAGE, String.valueOf(listItemDishBinding.getDish().getId()));
                 listItemDishBinding.getRoot().getContext().startActivity(intent);
-                // Check if we're running on Android 5.0 or higher
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    // Apply activity transition
-                    // TODO: https://developer.android.com/training/transitions/start-activity https://medium.com/@jim.zack.hu/android-inbox-material-transitions-for-recyclerview-71fc7326bcb5
-                } else {
-                    // Swap without transition
-                }
             });
+            */
         }
     }
 }

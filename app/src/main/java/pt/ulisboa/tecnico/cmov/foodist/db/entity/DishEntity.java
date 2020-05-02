@@ -11,8 +11,7 @@ import pt.ulisboa.tecnico.cmov.foodist.model.Dish;
 
 @Entity(tableName = "dishes")
 public class DishEntity implements Dish {
-
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(index = true)
     private int id;
 
@@ -27,13 +26,10 @@ public class DishEntity implements Dish {
     @ColumnInfo(name = "cafet_id")
     private int cafetId;
 
-    public DishEntity(){
-        name="null";
-        price="free";
-        cafetId=0;
+    public DishEntity() {
     }
 
-    public DishEntity(String n, String p, int i){
+    public DishEntity(String n, String p, int i) {
         this.name = n;
         this.price = p;
         this.cafetId = i;
