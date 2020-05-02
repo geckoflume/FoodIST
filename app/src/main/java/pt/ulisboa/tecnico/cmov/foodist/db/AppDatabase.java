@@ -35,7 +35,7 @@ import pt.ulisboa.tecnico.cmov.foodist.db.entity.DishEntity;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.OpeningHoursEntity;
 import pt.ulisboa.tecnico.cmov.foodist.model.Dish;
 
-@Database(entities = {CafeteriaEntity.class, OpeningHoursEntity.class, Dish.class}, version = 1, exportSchema = false)
+@Database(entities = {CafeteriaEntity.class, OpeningHoursEntity.class, DishEntity.class}, version = 1, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
     @VisibleForTesting
@@ -115,22 +115,6 @@ public abstract class AppDatabase extends RoomDatabase {
 
             List<OpeningHoursEntity> openingHours = gson.fromJson(json, openingHoursType);
             database.runInTransaction(() -> database.openingHoursDao().insertAll(openingHours));
-        } catch (Throwable e) {
-            e.printStackTrace();
-            Log.e(TAG, "Error seeding database, ", e);
-        }
-        Type dishType = new TypeToken<List<DishEntity>>(){
-        }.getType();
-        try {
-            int size = 150;
-            byte[] buffer = new byte[size];
-            json = new String(buffer, "UTF-8");
-
-            Gson gson = new Gson();
-            List<DishEntity> dishes = gson.fromJson(json, dishType);
-            database.runInTransaction(() -> {
-                database.dishDao().insertAll(dishes);
-            });
         } catch (Throwable e) {
             e.printStackTrace();
             Log.e(TAG, "Error seeding database, ", e);

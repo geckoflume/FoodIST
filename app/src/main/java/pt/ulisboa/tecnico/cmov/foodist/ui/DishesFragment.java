@@ -19,7 +19,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 
 import pt.ulisboa.tecnico.cmov.foodist.PermissionsHelper;
 import pt.ulisboa.tecnico.cmov.foodist.R;
-import pt.ulisboa.tecnico.cmov.foodist.location.LocationUtils;
 import pt.ulisboa.tecnico.cmov.foodist.viewmodel.DishViewModel;
 
 public class DishesFragment extends Fragment {
@@ -48,7 +47,7 @@ public class DishesFragment extends Fragment {
         mDishListViewModel.getDish().observe(getViewLifecycleOwner(), adapterDishes::setDishList);
         swipeRefreshLayout = root.findViewById(R.id.swipeRefresh);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
-        swipeRefreshLayout.setOnRefreshListener(() -> ((CafeteriaActivity) getActivity()).updateDish());
+        //swipeRefreshLayout.setOnRefreshListener(() -> ((CafeteriaActivity) getActivity()).updateDish());
         mDishListViewModel.isUpdating().observe(getViewLifecycleOwner(), swipeRefreshLayout::setRefreshing); // TODO
 
         return root;

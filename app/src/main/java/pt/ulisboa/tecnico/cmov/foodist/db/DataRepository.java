@@ -77,18 +77,13 @@ public class DataRepository {
         mDatabase.cafeteriaDao().update(currentCafeteria);
     }
 
-    public LiveData<List<DishEntity>> getDish(){
-        return mObservableDish;
-    }
-
-    public void insertDish(DishEntity dish) {
-        mDatabase.dishDao().insert(dish);
-    }
-
     public void updateCafeteriaPartial(CafeteriaPartialEntity cafeteriaPartialEntity) {
         mDatabase.cafeteriaDao().updatePartial(cafeteriaPartialEntity);
     }
 
+    public LiveData<List<OpeningHoursEntity>> loadOpeningHours(final int cafeteriaId, final int status) {
+        return mDatabase.openingHoursDao().getAllByCafeteriaIdStatus(cafeteriaId, status);
+    }
 
     public LiveData<List<CafeteriaWithOpeningHours>> getCafeteriasWithOpeningHours(int status) {
         return mDatabase.cafeteriaDao().getCafeteriasWithOpeningHours(status);
@@ -96,5 +91,13 @@ public class DataRepository {
 
     public LiveData<List<CafeteriaWithOpeningHours>> getCafeteriasWithOpeningHoursByCampus(int status, int campus) {
         return mDatabase.cafeteriaDao().getCafeteriasWithOpeningHoursByCampus(status, campus);
+    }
+
+    public LiveData<List<DishEntity>> getDish(){
+        return mObservableDish;
+    }
+
+    public void insertDish(DishEntity dish) {
+        mDatabase.dishDao().insert(dish);
     }
 }
