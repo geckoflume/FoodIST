@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmov.foodist.location;
+package pt.ulisboa.tecnico.cmov.foodist.net;
 
 import android.util.Log;
 

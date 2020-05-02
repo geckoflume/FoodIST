@@ -40,7 +40,8 @@ public class AccountFragment extends Fragment {
         ArrayList<String> statuses = Status.getInstance(getContext());
 
         // Set to the defined values
-        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
         TextInputLayout textInputLayout_username = root.findViewById(R.id.textInputLayout_username);
         TextInputEditText textInputEditText_username = root.findViewById(R.id.textInputEditText_username);
@@ -124,6 +125,7 @@ public class AccountFragment extends Fragment {
                     sharedPref.edit().putString("email", newEmail).apply();
                     sharedPref.edit().putInt("status", newStatus).apply();
                     ((MainActivity) getActivity()).updateUser();
+                    ((MainActivity) getActivity()).updateStatus();
                 }
                 saveButton.setText(R.string.saved);
             }

@@ -19,7 +19,7 @@
     <string name="open">Open</string>
     <string name="closed">Closed</string>
     <string name="menu">Menu</string>
-    <string name="opening_times">Hours</string>
+    <string name="opening_times">Opening hours</string>
     <string name="desc_cafeteria_banner">Cafeteria banner picture</string>
     <string name="desc_dish_picture">Dish first picture</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -51,5 +51,7 @@
     <string name="staff">Staff</string>
     <string name="general_public">General Public</string>
     <string name="saved">Saved!</string>
+    <string name="show_route">Show route</string>
+    <string name="preference_file_key">settings</string>
     <string name="menu_dishes">Dishes</string>
 </resources>

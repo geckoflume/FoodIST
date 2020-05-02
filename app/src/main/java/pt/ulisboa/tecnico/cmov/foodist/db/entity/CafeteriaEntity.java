@@ -16,28 +16,22 @@ public class CafeteriaEntity implements Cafeteria {
     private int id;
 
     @NonNull
-    private String name;
+    private String name = "";
 
-    @NonNull
     private double latitude;
 
-    @NonNull
     private double longitude;
 
-    @NonNull
     private int distance = 0;
 
-    @NonNull
-    @SerializedName("time_walk")
-    @ColumnInfo(name = "time_walk")
+    @SerializedName("walk_time")
+    @ColumnInfo(name = "walk_time")
     private int timeWalk = 0;
 
-    @NonNull
-    @SerializedName("time_wait")
-    @ColumnInfo(name = "time_wait")
+    @SerializedName("wait_time")
+    @ColumnInfo(name = "wait_time")
     private int timeWait = 0;
 
-    @NonNull
     @SerializedName("campus_id")
     @ColumnInfo(name = "campus_id")
     private int campusId;
@@ -55,52 +49,43 @@ public class CafeteriaEntity implements Cafeteria {
         this.id = id;
     }
 
-    @Override
+    @NonNull
     public String getName() {
         return name;
     }
 
-    @Override
     public void setName(@NonNull String name) {
         this.name = name;
     }
 
-    @Override
     public double getLatitude() {
         return latitude;
     }
 
-    @Override
     public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
-    @Override
     public double getLongitude() {
         return longitude;
     }
 
-    @Override
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
-    @Override
     public int getDistance() {
         return distance;
     }
 
-    @Override
     public void setDistance(int distance) {
         this.distance = distance;
     }
 
-    @Override
     public int getCampusId() {
         return campusId;
     }
 
-    @Override
     public void setCampusId(int campusId) {
         this.campusId = campusId;
     }
@@ -115,12 +100,10 @@ public class CafeteriaEntity implements Cafeteria {
         this.timeWait = time;
     }
 
-    @Override
     public int getTimeWalk() {
         return timeWalk;
     }
 
-    @Override
     public void setTimeWalk(int time) {
         this.timeWalk = time;
     }

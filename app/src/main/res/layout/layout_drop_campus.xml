@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/text1"
     style="?attr/spinnerDropDownItemStyle"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:drawableStart="@drawable/ic_domain_24dp"
     android:drawableLeft="@drawable/ic_domain_24dp"
     android:drawablePadding="8dp"
+    android:drawableTint="@color/colorOnPrimary"
     android:ellipsize="marquee"
     android:singleLine="true"
-    android:textColor="@color/colorOnPrimary"
-    android:drawableTint="@color/colorOnPrimary" />
+    android:textColor="@color/colorOnPrimary" />

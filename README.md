@@ -1,4 +1,9 @@
+<img align="left" width="80" height="80" src="app/src/main/res/mipmap-xxhdpi/ic_launcher.png" alt="FoodIST icon">
+
 # FoodIST: Finding food on campus
+
+![Android CI](https://github.com/geckoflume/FoodIST/workflows/Android%20CI/badge.svg)
+
 Android application project for Mobile and Ubiquitous Computing class @ Instituto Superior Técnico, Lisbon, Portugal.
 
 Meant to be used with the [FoodIST REST Server](https://github.com/geckoflume/FoodIST-Server), it provides ability to locate cafeterias, crowdsource cafeteria menus, dishes pictures and queue wait times.
@@ -14,22 +19,26 @@ More information: [https://fenix.tecnico.ulisboa.pt/disciplinas/CMov4/2019-2020/
 - Campus autoselection based on device location
 - Cafeteria details: name, opening hours, map, estimated walk time and itinerary
 - Mockup static dishes
+- User status selection and cafeterias/opening times displayed accordingly
 - Dark theme compatible
 
 ## TODO
 
+- Server data fetching
 - Ability to add dishes/meals
 - Beacons detection
 - Caching
-- User status selection
+- Support pre-Lollipop devices (https://android.jlelse.eu/android-vector-drawables-on-pre-lollipop-crash-solution-45c0c34f0160)
 
 ## Specifications
 
 This application is built around the MVVM (Model View View-Model) design pattern, using Room, a DAO with LiveData and ViewModels.
 
-Static cafeteria data are stored in a SQLite database, populated from a [JSON array](app/src/main/assets/cafeterias.json).
+Static cafeteria data and opening times are stored in a SQLite database, populated from JSON arrays [1](app/src/main/assets/cafeterias.json) and [2](app/src/main/assets/opening_hours.json) (see [Generate opening_hours.json](#generate-opening_hoursjson)).
 
 The architecture is build around the [Jetpack components collection](https://developer.android.com/jetpack) in Java, to introduce best Android practices (such as AndroidX, DataBinding, LiveData, Fragments...) and the layouts are designed with the help of [Google's Material Design components](https://material.io/develop/android/).
+
+The multi-threading are managed by `java.util.concurrent` Executors, to support future Android versions (see [Android AsyncTask API deprecating in Android 11](https://stackoverflow.com/q/58767733/9875498)).
 
 ### Local database specification
 
@@ -48,6 +57,24 @@ In order to benefit from Google Maps services (itineraries, times), please set y
 <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">YOUR_KEY_HERE</string>
 ```
 To build it, use the `gradlew build` command or use "Import Project" in Android Studio. 
+
+### Generate opening_hours.json
+
+By default, the opening times are the following:
+| Status         | Days            | Times         |
+|----------------|-----------------|---------------|
+| Student        | MONDAY - FRIDAY | 11:30 - 15:00 |
+| Professor      | MONDAY - FRIDAY | 11:30 - 18:00 |
+| Researcher     | MONDAY - FRIDAY | 11:30 - 18:00 |
+| Staff          | MONDAY - FRIDAY | 00:00 - 23:59 |
+| General Public | MONDAY - FRIDAY | 12:00 - 14:00 |
+
+To quickly generate a new JSON file containing different data, you can use the [generate_openingtimes.sh](generate_openingtimes.sh) script, which provides a basic yet useful assistant to help you do that painful task.
+Syntax :
+```shell script
+./generate_openingtimes.sh
+```
+> Note: this script requires [jq](https://stedolan.github.io/jq/) to run.
 
 ## Valuable resources:
 

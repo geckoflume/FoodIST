@@ -8,11 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.R;
-import pt.ulisboa.tecnico.cmov.foodist.location.LocationUtils;
+import pt.ulisboa.tecnico.cmov.foodist.ui.LocationUtils;
 
 public class Campus {
     private static final String TAG = Campus.class.getSimpleName();
     public static final int AUTODETECT = 0;
+    public static final int ALL = 1;
     public static final int DEFAULT = 1;
     public static final int FIRST_CAMPUS = 2;
     public static final int DISTANCE_THRESHOLD = 1000; // if the campus is more than 1km away, we ignore it
@@ -47,15 +48,11 @@ public class Campus {
         return id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public double getLatitude() {
+    private double getLatitude() {
         return latitude;
     }
 
-    public double getLongitude() {
+    private double getLongitude() {
         return longitude;
     }
 

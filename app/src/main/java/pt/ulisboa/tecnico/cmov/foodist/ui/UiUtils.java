@@ -1,10 +1,13 @@
 package pt.ulisboa.tecnico.cmov.foodist.ui;
 
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import pt.ulisboa.tecnico.cmov.foodist.model.Cafeteria;
+import java.util.List;
+
+import pt.ulisboa.tecnico.cmov.foodist.db.entity.OpeningHoursEntity;
 
 public abstract class UiUtils {
 
@@ -43,8 +46,12 @@ public abstract class UiUtils {
             return String.format("%d km", ceilIntDivision(distance, 1000));
     }
 
-    public static boolean isOpen(Cafeteria cafeteria) {
-        // TODO
+    public static boolean isOpen(List<OpeningHoursEntity> openingHours, int status) {
+        for (OpeningHoursEntity hour : openingHours) {
+            if (hour.getStatus() == status && hour.isOpen()) {
+                return true;
+            }
+        }
         return false;
     }
 }

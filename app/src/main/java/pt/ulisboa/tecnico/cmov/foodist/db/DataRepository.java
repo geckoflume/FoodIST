@@ -7,6 +7,9 @@ import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.DishEntity;
+import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaPartialEntity;
+import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaWithOpeningHours;
+import pt.ulisboa.tecnico.cmov.foodist.db.entity.OpeningHoursEntity;
 
 /**
  * Repository handling the work with cafeterias.
@@ -23,9 +26,8 @@ public class DataRepository {
 
         mObservableCafeterias.addSource(mDatabase.cafeteriaDao().getAll(),
                 cafeteriaEntities -> {
-                    if (mDatabase.getDatabaseCreated().getValue() != null) {
+                    if (mDatabase.getDatabaseCreated().getValue() != null)
                         mObservableCafeterias.postValue(cafeteriaEntities);
-                    }
                 });
 
         mObservableDish = new MediatorLiveData<>();
@@ -41,9 +43,8 @@ public class DataRepository {
     public static DataRepository getInstance(final AppDatabase database) {
         if (sInstance == null) {
             synchronized (DataRepository.class) {
-                if (sInstance == null) {
+                if (sInstance == null)
                     sInstance = new DataRepository(database);
-                }
             }
         }
         return sInstance;
@@ -56,16 +57,20 @@ public class DataRepository {
         return mObservableCafeterias;
     }
 
-    public LiveData<CafeteriaEntity> loadCafeteria(final int cafeteriaId) {
-        return mDatabase.cafeteriaDao().findById(cafeteriaId);
-    }
-
     public LiveData<List<CafeteriaEntity>> getCafeteriasByCampus(int campus) {
         return mDatabase.cafeteriaDao().getAllByCampusId(campus);
     }
 
+    public LiveData<CafeteriaEntity> loadCafeteria(final int cafeteriaId) {
+        return mDatabase.cafeteriaDao().findById(cafeteriaId);
+    }
+
     public void updateCafeterias(List<CafeteriaEntity> currentCafeterias) {
         mDatabase.cafeteriaDao().updateAll(currentCafeterias);
+    }
+
+    public void updateCafeteriasPartial(List<CafeteriaPartialEntity> cafeteriaPartialEntities) {
+        mDatabase.cafeteriaDao().updateAllPartial(cafeteriaPartialEntities);
     }
 
     public void updateCafeteria(CafeteriaEntity currentCafeteria) {
@@ -78,5 +83,18 @@ public class DataRepository {
 
     public void insertDish(DishEntity dish) {
         mDatabase.dishDao().insert(dish);
+    }
+
+    public void updateCafeteriaPartial(CafeteriaPartialEntity cafeteriaPartialEntity) {
+        mDatabase.cafeteriaDao().updatePartial(cafeteriaPartialEntity);
+    }
+
+
+    public LiveData<List<CafeteriaWithOpeningHours>> getCafeteriasWithOpeningHours(int status) {
+        return mDatabase.cafeteriaDao().getCafeteriasWithOpeningHours(status);
+    }
+
+    public LiveData<List<CafeteriaWithOpeningHours>> getCafeteriasWithOpeningHoursByCampus(int status, int campus) {
+        return mDatabase.cafeteriaDao().getCafeteriasWithOpeningHoursByCampus(status, campus);
     }
 }

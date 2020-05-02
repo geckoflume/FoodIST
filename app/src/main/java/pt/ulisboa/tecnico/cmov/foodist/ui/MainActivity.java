@@ -44,7 +44,6 @@ import com.google.android.gms.location.SettingsClient;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
@@ -83,7 +82,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        sharedPref = getPreferences(Context.MODE_PRIVATE);
+        sharedPref = getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
         // Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Cafeteria ListView
         mCafeteriaListViewModel = new ViewModelProvider(this).get(CafeteriaListViewModel.class);
+        mCafeteriaListViewModel.setStatus(sharedPref.getInt("status", Status.DEFAULT));
         mCafeteriaListViewModel.getCafeterias().observe(this, cafeteriaEntities -> {
             currentCafeterias = cafeteriaEntities;
             if (!canRefresh.getValue() && mCurrentLocation != null) {
@@ -128,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
             if (canRefresh) {
                 refreshMenuItem.setEnabled(true);
                 spinner.setSelection(Campus.AUTODETECT);
+                updateCafeterias();
             }
         });
 
@@ -177,11 +179,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateCafeterias() {
-        if(mCurrentLocation != null)
-            ((BasicApp) MainActivity.this.getApplication()).networkIO().execute(() -> mCafeteriaListViewModel.updateCafeteriasDistances(currentCafeterias, mCurrentLocation, getString(R.string.google_maps_key)));
+        if (mCurrentLocation != null)
+            ((BasicApp) MainActivity.this.getApplication()).networkIO().execute(() -> {
+                mCafeteriaListViewModel.setUpdating(true);
+                mCafeteriaListViewModel.updateCafeteriasDistances(currentCafeterias, mCurrentLocation, getString(R.string.google_maps_key));
+                mCafeteriaListViewModel.updateCafeteriasWaitTimes();
+                mCafeteriaListViewModel.setUpdating(false);
+            });
         else {
-            mCafeteriaListViewModel.setUpdating(false);
+            mCafeteriaListViewModel.setUpdating(true);
             Toast.makeText(MainActivity.this, R.string.no_location_detected, Toast.LENGTH_LONG).show();
+            mCafeteriaListViewModel.updateCafeteriasWaitTimes();
+            mCafeteriaListViewModel.setUpdating(false);
         }
     }
 
@@ -189,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
         return new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (((Campus) parent.getItemAtPosition(position)).getName().equals(getString(R.string.find_nearest))) { // in case the campuses are inserted in a strange order
+                if (position == Campus.AUTODETECT) {
                     // "Find nearest campus" selected
                     if (mCurrentLocation != null && PermissionsHelper.checkPermissions(MainActivity.this)) {
                         spinner.setEnabled(false);
@@ -202,16 +211,9 @@ public class MainActivity extends AppCompatActivity {
                         PermissionsHelper.requestPermissions(MainActivity.this);
                     }
                 } else {
-                    // "All cafeterias" or campus selected
                     // apply() to commit asynchronously
                     sharedPref.edit().putInt(getString(R.string.campus_id_key), position).apply();
-                    if (((Campus) parent.getItemAtPosition(position)).getName().equals(getString(R.string.all_cafeterias))) {
-                        // "All cafeterias" selected
-                        mCafeteriaListViewModel.setQuery("");
-                    } else {
-                        // Campus selected
-                        mCafeteriaListViewModel.setQuery(String.valueOf(position - 1));
-                    }
+                    mCafeteriaListViewModel.setCampus(position);
                 }
             }
 
@@ -335,5 +337,9 @@ public class MainActivity extends AppCompatActivity {
     public void updateUser() {
         textView_username.setText(sharedPref.getString("username", getString(R.string.default_username)) + " - " + Status.getInstance(this).get(sharedPref.getInt("status", Status.DEFAULT)));
         textView_email.setText(sharedPref.getString("email", getString(R.string.default_email)));
+    }
+
+    public void updateStatus() {
+        mCafeteriaListViewModel.setStatus(sharedPref.getInt("status", Status.DEFAULT));
     }
 }
