@@ -105,7 +105,7 @@
                         android:id="@+id/textView_walkDistance"
                         style="@style/TextAppearance.CafeteriaInfo.Distance"
                         android:layout_marginTop="8dp"
-                        android:text="@{UiUtils.formatDistance(cafeteriaViewModel.cafeteria.distance)}"
+                        android:text="@{UiUtils.formatDistance(cafeteriaViewModel.cafeteria.distance, @string/distance_meters, @string/distance_km)}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView_walkTime" />
 

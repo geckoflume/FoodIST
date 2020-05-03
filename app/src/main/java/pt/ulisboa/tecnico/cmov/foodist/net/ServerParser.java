@@ -7,6 +7,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaPartialEntity;
+import pt.ulisboa.tecnico.cmov.foodist.db.entity.DishEntity;
 
 public class ServerParser {
     private static final String TAG = ServerParser.class.getSimpleName();
@@ -24,10 +25,14 @@ public class ServerParser {
     public CafeteriaPartialEntity parseCafeteria(String response) {
         CafeteriaPartialEntity cafeteriaEntity;
 
-        Type cafeteriaType = new TypeToken<CafeteriaPartialEntity>() {
-        }.getType();
-
-        cafeteriaEntity = new Gson().fromJson(response, cafeteriaType);
+        cafeteriaEntity = new Gson().fromJson(response, CafeteriaPartialEntity.class);
         return cafeteriaEntity;
+    }
+
+    public DishEntity parseDish(String response) {
+        DishEntity ret = null;
+        if (response != null)
+            ret = new Gson().fromJson(response, DishEntity.class);
+        return ret;
     }
 }

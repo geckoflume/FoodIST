@@ -16,4 +16,6 @@
 
     <style name="AppTheme" parent="Base.AppTheme" />
 
+    <style name="AppTheme.Transparent" parent="AppTheme" />
+
 </resources>

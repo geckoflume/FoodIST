@@ -114,7 +114,7 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
             updateRequest.setValue(true);
         });
 
-        //Get all dishes by cafet
+        //Get all dishes by cafeteriaId
         DishListViewModel.Factory factoryDishes = new DishListViewModel.Factory(getApplication(), Integer.parseInt(message));
         dishListViewModel = new ViewModelProvider(this, factoryDishes).get(DishListViewModel.class);
 
@@ -128,6 +128,10 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(v -> {
+            setResult(RESULT_CANCELED);
+            finish();
+        });
     }
 
     @Override
@@ -198,7 +202,7 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
 
     public void addDish(View view) {
         Intent intent = new Intent(this, NewDishActivity.class);
-        intent.putExtra("IdCafet", currentCafeteria.getId());
-        startActivity(intent);
+        intent.putExtra("cafeteriaId", currentCafeteria.getId());
+        startActivityForResult(intent, 1);
     }
 }

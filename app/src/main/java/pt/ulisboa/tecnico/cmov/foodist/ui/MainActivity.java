@@ -44,13 +44,10 @@ import com.google.android.gms.location.SettingsClient;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.List;
-
 import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
 import pt.ulisboa.tecnico.cmov.foodist.BuildConfig;
 import pt.ulisboa.tecnico.cmov.foodist.PermissionsHelper;
 import pt.ulisboa.tecnico.cmov.foodist.R;
-import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
 import pt.ulisboa.tecnico.cmov.foodist.model.Campus;
 import pt.ulisboa.tecnico.cmov.foodist.model.Status;
 import pt.ulisboa.tecnico.cmov.foodist.viewmodel.CafeteriaListViewModel;
@@ -63,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ArrayAdapter<Campus> adapterCampus;
-    private List<CafeteriaEntity> currentCafeterias;
     private Spinner spinner;
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest mLocationRequest;
@@ -116,13 +112,6 @@ public class MainActivity extends AppCompatActivity {
         // Cafeteria ListView
         mCafeteriaListViewModel = new ViewModelProvider(this).get(CafeteriaListViewModel.class);
         mCafeteriaListViewModel.setStatus(sharedPref.getInt("status", Status.DEFAULT));
-        mCafeteriaListViewModel.getCafeterias().observe(this, cafeteriaEntities -> {
-            currentCafeterias = cafeteriaEntities;
-            if (!canRefresh.getValue() && mCurrentLocation != null) {
-                Log.i(TAG, "Toggling refresh button from observer");
-                canRefresh.setValue(true);
-            }
-        });
 
         // Refresh button
         canRefresh.observe(this, canRefresh -> {
@@ -179,18 +168,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateCafeterias() {
-        if (mCurrentLocation != null)
-            ((BasicApp) MainActivity.this.getApplication()).networkIO().execute(() -> {
+        if (mCafeteriaListViewModel.getCafeterias().getValue() != null) {
+            if (mCurrentLocation != null)
+                ((BasicApp) MainActivity.this.getApplication()).networkIO().execute(() -> {
+                    mCafeteriaListViewModel.setUpdating(true);
+                    mCafeteriaListViewModel.updateCafeteriasDistances(mCafeteriaListViewModel.getCafeterias().getValue(), mCurrentLocation, getString(R.string.google_maps_key));
+                    mCafeteriaListViewModel.updateCafeteriasWaitTimes();
+                    mCafeteriaListViewModel.setUpdating(false);
+                });
+            else {
                 mCafeteriaListViewModel.setUpdating(true);
-                mCafeteriaListViewModel.updateCafeteriasDistances(currentCafeterias, mCurrentLocation, getString(R.string.google_maps_key));
+                Toast.makeText(MainActivity.this, R.string.no_location_detected, Toast.LENGTH_LONG).show();
                 mCafeteriaListViewModel.updateCafeteriasWaitTimes();
                 mCafeteriaListViewModel.setUpdating(false);
-            });
-        else {
-            mCafeteriaListViewModel.setUpdating(true);
-            Toast.makeText(MainActivity.this, R.string.no_location_detected, Toast.LENGTH_LONG).show();
-            mCafeteriaListViewModel.updateCafeteriasWaitTimes();
-            mCafeteriaListViewModel.setUpdating(false);
+            }
         }
     }
 
@@ -276,8 +267,8 @@ public class MainActivity extends AppCompatActivity {
 
                 // We fetch the location once, it is not useful to keep tracking the user
                 stopLocationUpdates();
-                if (!canRefresh.getValue() && currentCafeterias != null) {
-                    Log.i(TAG, "Toggling refresh button from createLocationCallback");
+                if (!canRefresh.getValue()) {
+                    Log.d(TAG, "Toggling refresh button from createLocationCallback");
                     canRefresh.setValue(true);
                 }
             }
@@ -316,7 +307,7 @@ public class MainActivity extends AppCompatActivity {
                                 ResolvableApiException rae = (ResolvableApiException) e;
                                 rae.startResolutionForResult(MainActivity.this, REQUEST_CHECK_SETTINGS);
                             } catch (IntentSender.SendIntentException sie) {
-                                Log.i(TAG, "PendingIntent unable to execute request.");
+                                Log.e(TAG, "PendingIntent unable to execute request.");
                             }
                             break;
                         case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:

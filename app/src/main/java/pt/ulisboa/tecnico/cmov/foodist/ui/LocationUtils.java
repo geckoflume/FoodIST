@@ -47,7 +47,7 @@ public abstract class LocationUtils {
             int padding = (int) (height * 0.1);
             cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
 
-            map.moveCamera(cameraUpdate);  // or use animateCamera() for smooth animation
+            map.animateCamera(cameraUpdate);
         }
     }
 
@@ -71,7 +71,7 @@ public abstract class LocationUtils {
         cameraUpdate = CameraUpdateFactory.newLatLngZoom(
                 new LatLng(cafeteria.getLatitude(), cafeteria.getLongitude()), 17F);
 
-        map.moveCamera(cameraUpdate);  // or use animateCamera() for smooth animation
+        map.animateCamera(cameraUpdate);
         return marker;
     }
 }

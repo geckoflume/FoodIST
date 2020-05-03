@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.cmov.foodist.ui;
 
-import android.util.Log;
 import android.view.View;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -39,11 +38,15 @@ public abstract class UiUtils {
             return String.format(days, ceilIntDivision(time, 86400));
     }
 
-    public static String formatDistance(int distance) {
+    public static String formatDistance(int distance, String m, String km) {
         if (distance < 1000)
-            return String.format("%d m", distance);
+            return String.format(m, distance);
         else
-            return String.format("%d km", ceilIntDivision(distance, 1000));
+            return String.format(km, ceilIntDivision(distance, 1000));
+    }
+
+    public static String formatPrice(double price, String currency) {
+        return String.format(currency, price);
     }
 
     public static boolean isOpen(List<OpeningHoursEntity> openingHours, int status) {

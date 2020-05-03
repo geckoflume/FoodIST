@@ -13,7 +13,7 @@ import pt.ulisboa.tecnico.cmov.foodist.db.entity.DishEntity;
 @Dao
 public interface DishDao {
 
-    @Query("SELECT * FROM dishes WHERE cafet_id = :cafeteriaId")
+    @Query("SELECT * FROM dishes WHERE cafeteria_id = :cafeteriaId")
     LiveData<List<DishEntity>> getAllByCafeteria(int cafeteriaId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

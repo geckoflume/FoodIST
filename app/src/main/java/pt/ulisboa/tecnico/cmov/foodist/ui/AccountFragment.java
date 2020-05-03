@@ -108,12 +108,12 @@ public class AccountFragment extends Fragment {
             // fetch username and check if it is valid
             String newUsername = textInputEditText_username.getText().toString();
             if (!isValidUsername(newUsername))
-                textInputLayout_username.setError("Please enter a valid username");
+                textInputLayout_username.setError(getString(R.string.please_enter_valid_username));
 
             // fetch email and check if it is valid
             String newEmail = textInputEditText_email.getText().toString();
             if (!isValidEmail(newEmail))
-                textInputLayout_email.setError("Please enter a valid email address");
+                textInputLayout_email.setError(getString(R.string.please_enter_valid_email));
 
             // status already fetched in newStatus
 

@@ -54,4 +54,11 @@
     <string name="show_route">Show route</string>
     <string name="preference_file_key">settings</string>
     <string name="menu_dishes">Dishes</string>
+    <string name="please_enter_valid_username">Please enter a valid username</string>
+    <string name="please_enter_valid_email">Please enter a valid email address</string>
+    <string name="please_enter_valid_dish">Please enter a valid dish name</string>
+    <string name="please_enter_valid_price">Please enter a valid dish price</string>
+    <string name="distance_meters">%d m</string>
+    <string name="distance_km">%d km</string>
+    <string name="toast_added_dish">Successfully added dish \"%s\" at %.2f €</string>
 </resources>

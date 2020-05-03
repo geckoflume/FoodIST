@@ -101,7 +101,7 @@ public class CafeteriaListViewModel extends AndroidViewModel {
             cafeteria.setDistance(directionsParser.getDistance());
             cafeteria.setTimeWalk(directionsParser.getDuration());
 
-            Log.i(TAG, "Updating distance and walk time for cafeteria " + cafeteria.getName());
+            Log.d(TAG, "Updating distance and walk time for cafeteria " + cafeteria.getName());
         }
         mRepository.updateCafeterias(currentCafeterias);
     }

@@ -53,11 +53,11 @@ public class CafeteriaViewModel extends AndroidViewModel {
         return mObservableOpeningHours;
     }
 
-    public LiveData<String> getOpenHoursText(){
+    public LiveData<String> getOpenHoursText() {
         return openHoursText;
     }
 
-    public void updateOpenHoursText(String text){
+    public void updateOpenHoursText(String text) {
         openHoursText.postValue(text);
     }
 
@@ -67,7 +67,7 @@ public class CafeteriaViewModel extends AndroidViewModel {
         currentCafeteria.setDistance(directionsParser.getDistance());
         currentCafeteria.setTimeWalk(directionsParser.getDuration());
 
-        Log.i(TAG, "Updating distance and walk time for cafeteria " + currentCafeteria.getName());
+        Log.d(TAG, "Updating distance and walk time for cafeteria " + currentCafeteria.getName());
         mRepository.updateCafeteria(currentCafeteria);
 
         return directionsParser.getPath();

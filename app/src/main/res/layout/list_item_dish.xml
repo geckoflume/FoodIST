@@ -63,7 +63,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginBottom="16dp"
-                android:text="@{dish.price}"
+                android:text="@{UiUtils.formatPrice(dish.price, @string/currency)}"
                 android:textStyle="italic"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/imageView_thumbnail"

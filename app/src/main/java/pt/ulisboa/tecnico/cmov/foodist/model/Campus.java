@@ -79,7 +79,7 @@ public class Campus {
                 distanceNearest = LocationUtils.calculateDistance(location.getLatitude(), location.getLongitude(), nearest.getLatitude(), nearest.getLongitude());
             }
         }
-        Log.i(TAG, "Nearest campus is " + nearest + " at " + distanceNearest + "m.");
+        Log.d(TAG, "Nearest campus is " + nearest + " at " + distanceNearest + "m.");
         return nearest;
     }
 }
