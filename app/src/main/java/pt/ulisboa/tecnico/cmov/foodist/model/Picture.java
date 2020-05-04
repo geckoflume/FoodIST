@@ -1,16 +1,15 @@
 package pt.ulisboa.tecnico.cmov.foodist.model;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+public interface Picture {
+    int getId();
 
-public class Picture {
-    @Expose(serialize = false)
-    private int id;
+    void setId(int id);
 
-    @Expose
-    @SerializedName("dish_id")
-    private int dishId;
+    int getDishId();
 
-    @Expose
-    private String filename;
+    void setDishId(int dishId);
+
+    String getFilename();
+
+    void setFilename(String filename);
 }

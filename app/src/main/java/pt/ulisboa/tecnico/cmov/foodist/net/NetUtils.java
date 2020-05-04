@@ -31,7 +31,7 @@ public abstract class NetUtils {
     }
 
     private static String send(String method, String urlString, int expectedResponseCode) {
-        String response = "";
+        String response = null;
         HttpsURLConnection urlConnection = null;
         try {
             URL url = new URL(urlString);
@@ -60,7 +60,7 @@ public abstract class NetUtils {
     }
 
     private static String sendJson(String method, String urlString, String json, int expectedResponseCode) {
-        String response = "";
+        String response = null;
         HttpsURLConnection urlConnection = null;
 
         try {
@@ -98,7 +98,7 @@ public abstract class NetUtils {
     }
 
     public static String postMultipartPicture(String urlString, int dishId, File picture, int expectedResponseCode) {
-        String response = "";
+        String response = null;
         HttpsURLConnection urlConnection = null;
         String boundary = "---" + System.currentTimeMillis();
 

@@ -8,8 +8,8 @@ import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaPartialEntity;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.DishEntity;
+import pt.ulisboa.tecnico.cmov.foodist.db.entity.PictureEntity;
 import pt.ulisboa.tecnico.cmov.foodist.model.Beacon;
-import pt.ulisboa.tecnico.cmov.foodist.model.Picture;
 
 public class ServerParser {
     private static final String TAG = ServerParser.class.getSimpleName();
@@ -60,15 +60,22 @@ public class ServerParser {
         return beacon;
     }
 
-    public List<Picture> parsePictures(String response) {
-        List<Picture> pictures = null;
+    public List<PictureEntity> parsePictures(String response) {
+        List<PictureEntity> pictures = null;
 
         if (response != null) {
-            Type pictureListType = new TypeToken<List<Picture>>() {
+            Type pictureListType = new TypeToken<List<PictureEntity>>() {
             }.getType();
 
             pictures = new Gson().fromJson(response, pictureListType);
         }
         return pictures;
+    }
+
+    public PictureEntity parsePicture(String response) {
+        PictureEntity picture = null;
+        if (response != null)
+            picture = new Gson().fromJson(response, PictureEntity.class);
+        return picture;
     }
 }

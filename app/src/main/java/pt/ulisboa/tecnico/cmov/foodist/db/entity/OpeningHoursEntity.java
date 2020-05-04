@@ -37,12 +37,10 @@ public class OpeningHoursEntity implements OpeningHours {
     @ColumnInfo(name = "to_time")
     private LocalTime toTime;
 
-    @NonNull
     @SerializedName("cafeteria_id")
     @ColumnInfo(name = "cafeteria_id")
     private int cafeteriaId;
 
-    @NonNull
     private int status;
 
     @Override

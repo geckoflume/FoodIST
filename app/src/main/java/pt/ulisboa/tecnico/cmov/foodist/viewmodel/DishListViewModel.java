@@ -31,7 +31,7 @@ public class DishListViewModel extends AndroidViewModel {
         this.mCafeteriaId = cafeteriaId;
         mRepository = repository;
 
-        mDishes = mRepository.getDishesByCafeteria(cafeteriaId);
+        mDishes = mRepository.getDishesByCafeteriaId(cafeteriaId);
     }
 
     public LiveData<List<DishEntity>> getDishes() {
@@ -44,9 +44,9 @@ public class DishListViewModel extends AndroidViewModel {
 
         ServerFetcher serverFetcher = new ServerFetcher();
         String responseDishes = serverFetcher.fetchDishes(mCafeteriaId);
-        ServerParser serverParser = new ServerParser();
-        List<DishEntity> fetchedDishes = serverParser.parseDishes(responseDishes);
-        if (fetchedDishes != null) {
+        if (responseDishes != null) {
+            ServerParser serverParser = new ServerParser();
+            List<DishEntity> fetchedDishes = serverParser.parseDishes(responseDishes);
             mRepository.updateDishes(fetchedDishes);
         }
         Log.d(TAG, "Updated dishes for cafeteria " + mCafeteriaId);

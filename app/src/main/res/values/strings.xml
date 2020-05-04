@@ -62,4 +62,6 @@
     <string name="distance_km">%d km</string>
     <string name="toast_added_dish">Successfully added dish \"%s\" at %.2f €</string>
     <string name="edit_dish">Editing %s</string>
+    <string name="details">Details</string>
+    <string name="pictures">Pictures</string>
 </resources>

@@ -14,6 +14,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +23,6 @@ import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.databinding.ActivityDishBinding;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.DishEntity;
-import pt.ulisboa.tecnico.cmov.foodist.net.ServerFetcher;
 import pt.ulisboa.tecnico.cmov.foodist.viewmodel.DishViewModel;
 
 public class DishActivity extends AppCompatActivity {
@@ -33,7 +33,7 @@ public class DishActivity extends AppCompatActivity {
     private int dishId;
     private DishEntity currentDish;
     private DishViewModel dishViewModel;
-    private String currentPhotoPath;
+    private String picturePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +49,13 @@ public class DishActivity extends AppCompatActivity {
         binding.setDishViewModel(dishViewModel);
         initActionBar();
 
-        dishViewModel.getDish().observe(this, dishEntity -> {
-            currentDish = dishEntity;
+        RecyclerView recyclerViewDishes = this.findViewById(R.id.recyclerView_pictures);
+        PictureAdapter adapterPictures = new PictureAdapter();
+        recyclerViewDishes.setAdapter(adapterPictures);
+
+        dishViewModel.getDish().observe(this, dishWithPictures -> {
+            adapterPictures.setPicturesList(dishWithPictures.pictures);
+            currentDish = dishWithPictures.dish;
             String t = currentDish.getName();
             Toast.makeText(this, t, Toast.LENGTH_SHORT).show(); // to show if we have the good dish
         });
@@ -73,7 +78,7 @@ public class DishActivity extends AppCompatActivity {
         File image = File.createTempFile(imageFileName, ".jpg", storageDir);
 
         // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.getAbsolutePath();
+        picturePath = image.getAbsolutePath();
         return image;
     }
 
@@ -102,12 +107,9 @@ public class DishActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-            Log.d(TAG, "Successfully took picture, saved in " + currentPhotoPath);
-            ((BasicApp) getApplication()).networkIO().execute(() -> {
-                ServerFetcher serverFetcher = new ServerFetcher();
-                String response = serverFetcher.insertPicture(dishId, currentPhotoPath);
-                Log.d(TAG, response);
-            });
+            Log.d(TAG, "Successfully took picture, saved in " + picturePath);
+            ((BasicApp) getApplication()).networkIO().execute(() ->
+                    dishViewModel.insertPicture(picturePath));
         }
     }
 }

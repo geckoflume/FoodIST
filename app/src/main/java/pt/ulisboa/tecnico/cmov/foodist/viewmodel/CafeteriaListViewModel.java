@@ -53,14 +53,14 @@ public class CafeteriaListViewModel extends AndroidViewModel {
             if (value.first == Campus.ALL) {
                 return mRepository.getCafeterias();
             } else {
-                return mRepository.getCafeteriasByCampus(value.first - 1);
+                return mRepository.getCafeteriasByCampusId(value.first - 1);
             }
         });
         mCafeteriasWithOpeningHours = Transformations.switchMap(trigger, value -> {
             if (value.first == Campus.ALL) {
                 return mRepository.getCafeteriasWithOpeningHours(value.second);
             } else {
-                return mRepository.getCafeteriasWithOpeningHoursByCampus(value.second, value.first - 1);
+                return mRepository.getCafeteriasWithOpeningHoursByCampusId(value.second, value.first - 1);
             }
         });
     }
@@ -109,8 +109,10 @@ public class CafeteriaListViewModel extends AndroidViewModel {
     public void updateCafeteriasWaitTimes() {
         ServerFetcher serverFetcher = new ServerFetcher();
         String responseCafeterias = serverFetcher.fetchCafeterias();
-        ServerParser serverParser = new ServerParser();
-        mRepository.updateCafeteriasPartial(serverParser.parseCafeterias(responseCafeterias));
+        if (responseCafeterias != null) {
+            ServerParser serverParser = new ServerParser();
+            mRepository.updateCafeteriasPartial(serverParser.parseCafeterias(responseCafeterias));
+        }
     }
 
     public LiveData<Boolean> isUpdating() {

@@ -30,12 +30,13 @@ import pt.ulisboa.tecnico.cmov.foodist.AppExecutors;
 import pt.ulisboa.tecnico.cmov.foodist.db.dao.CafeteriaDao;
 import pt.ulisboa.tecnico.cmov.foodist.db.dao.DishDao;
 import pt.ulisboa.tecnico.cmov.foodist.db.dao.OpeningHoursDao;
+import pt.ulisboa.tecnico.cmov.foodist.db.dao.PictureDao;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.DishEntity;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.OpeningHoursEntity;
-import pt.ulisboa.tecnico.cmov.foodist.model.Dish;
+import pt.ulisboa.tecnico.cmov.foodist.db.entity.PictureEntity;
 
-@Database(entities = {CafeteriaEntity.class, OpeningHoursEntity.class, DishEntity.class}, version = 1, exportSchema = false)
+@Database(entities = {CafeteriaEntity.class, OpeningHoursEntity.class, DishEntity.class, PictureEntity.class}, version = 1, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
     @VisibleForTesting
@@ -126,6 +127,8 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract DishDao dishDao();
 
     public abstract OpeningHoursDao openingHoursDao();
+
+    public abstract PictureDao pictureDao();
 
     /**
      * Check whether the database already exists and expose it via {@link #getDatabaseCreated()}

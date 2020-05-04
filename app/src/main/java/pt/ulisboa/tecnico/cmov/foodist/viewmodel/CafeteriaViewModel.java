@@ -40,8 +40,8 @@ public class CafeteriaViewModel extends AndroidViewModel {
         this.mCafeteriaId = cafeteriaId;
         mRepository = repository;
 
-        mObservableCafeteria = mRepository.loadCafeteria(this.mCafeteriaId);
-        mObservableOpeningHours = mRepository.loadOpeningHours(this.mCafeteriaId, statusId);
+        mObservableCafeteria = mRepository.getCafeteria(this.mCafeteriaId);
+        mObservableOpeningHours = mRepository.getOpeningHours(this.mCafeteriaId, statusId);
     }
 
 
@@ -76,8 +76,10 @@ public class CafeteriaViewModel extends AndroidViewModel {
     public void updateCafeteriaWaitTime() {
         ServerFetcher serverFetcher = new ServerFetcher();
         String responseCafeteria = serverFetcher.fetchCafeteria(mCafeteriaId);
-        ServerParser serverParser = new ServerParser();
-        mRepository.updateCafeteriaPartial(serverParser.parseCafeteria(responseCafeteria));
+        if (responseCafeteria != null) {
+            ServerParser serverParser = new ServerParser();
+            mRepository.updateCafeteriaPartial(serverParser.parseCafeteria(responseCafeteria));
+        }
         Log.d(TAG, "Updating wait time for cafeteria " + mCafeteriaId);
     }
 
