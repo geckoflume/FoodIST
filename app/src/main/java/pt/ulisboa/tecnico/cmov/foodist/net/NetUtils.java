@@ -45,7 +45,7 @@ public abstract class NetUtils {
         return response;
     }
 
-    public static String postJson(String urlString, String json, int expectedResponseCode) {
+    private static String sendJson(String method, String urlString, String json, int expectedResponseCode) {
         String response = null;
         HttpsURLConnection urlConnection = null;
 
@@ -54,7 +54,7 @@ public abstract class NetUtils {
             URL url = new URL(urlString);
             urlConnection = (HttpsURLConnection) url.openConnection();
 
-            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestMethod(method);
             urlConnection.setRequestProperty("Content-Type", "application/json");
             urlConnection.setDoOutput(true);
 
@@ -74,8 +74,16 @@ public abstract class NetUtils {
             if (urlConnection != null)
                 urlConnection.disconnect();
         }
-
         return response;
+
+    }
+
+    public static String postJson(String urlString, String json, int expectedResponseCode) {
+        return sendJson("POST", urlString, json, expectedResponseCode);
+    }
+
+    public static String putJson(String urlString, String json, int expectedResponseCode) {
+        return sendJson("PUT", urlString, json, expectedResponseCode);
     }
 
     // convert UTF-8 to internal Java String format

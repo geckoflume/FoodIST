@@ -8,6 +8,7 @@ import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaPartialEntity;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.DishEntity;
+import pt.ulisboa.tecnico.cmov.foodist.model.Beacon;
 
 public class ServerParser {
     private static final String TAG = ServerParser.class.getSimpleName();
@@ -49,5 +50,12 @@ public class ServerParser {
             dishEntities = new Gson().fromJson(response, dishListType);
         }
         return dishEntities;
+    }
+
+    public Beacon parseBeacon(String response) {
+        Beacon ret = null;
+        if (response != null)
+            ret = new Gson().fromJson(response, Beacon.class);
+        return ret;
     }
 }
