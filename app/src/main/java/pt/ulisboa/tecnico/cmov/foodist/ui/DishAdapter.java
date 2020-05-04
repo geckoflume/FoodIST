@@ -55,9 +55,8 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.DishHolder> {
             super(listItemDishBinding.getRoot());
             this.listItemDishBinding = listItemDishBinding;
 
-            // TODO: onclick on a dish, display details, pictures
             itemView.setOnClickListener(view1 -> {
-                Intent intent = new Intent(view1.getContext(), DishActivity.class); //Wait what ? --> Do the Dish Acti for the next
+                Intent intent = new Intent(view1.getContext(), DishActivity.class);
                 intent.putExtra(EXTRA_MESSAGE, String.valueOf(listItemDishBinding.getDish().getId()));
                 listItemDishBinding.getRoot().getContext().startActivity(intent);
             });

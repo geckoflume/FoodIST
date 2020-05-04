@@ -22,7 +22,7 @@ public interface CafeteriaDao {
     @Query("SELECT * FROM cafeterias WHERE campus_id = :campusId ORDER BY distance")
     LiveData<List<CafeteriaEntity>> getAllByCampusId(int campusId);
 
-    @Query("SELECT * FROM cafeterias WHERE id LIKE :id LIMIT 1")
+    @Query("SELECT * FROM cafeterias WHERE id = :id")
     LiveData<CafeteriaEntity> findById(int id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

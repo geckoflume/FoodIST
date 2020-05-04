@@ -3,9 +3,14 @@ package pt.ulisboa.tecnico.cmov.foodist.net;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 
@@ -25,17 +30,18 @@ public abstract class NetUtils {
         return sb.toString();
     }
 
-    public static String get(String urlString, int expectedResponseCode) {
+    private static String send(String method, String urlString, int expectedResponseCode) {
         String response = "";
         HttpsURLConnection urlConnection = null;
         try {
             URL url = new URL(urlString);
             urlConnection = (HttpsURLConnection) url.openConnection();
-            InputStream in = urlConnection.getErrorStream();
-            if (in == null)
-                in = new BufferedInputStream(urlConnection.getInputStream());
-            if (urlConnection.getResponseCode() == expectedResponseCode)
+            urlConnection.setRequestMethod(method);
+
+            if (urlConnection.getResponseCode() == expectedResponseCode) {
+                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
                 response = readStream(in);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -45,15 +51,22 @@ public abstract class NetUtils {
         return response;
     }
 
+    public static String get(String urlString, int expectedResponseCode) {
+        return send("GET", urlString, expectedResponseCode);
+    }
+
+    public static String delete(String urlString, int expectedResponseCode) {
+        return send("DELETE", urlString, expectedResponseCode);
+    }
+
     private static String sendJson(String method, String urlString, String json, int expectedResponseCode) {
-        String response = null;
+        String response = "";
         HttpsURLConnection urlConnection = null;
 
         try {
             json = convertStringToUTF8(json);
             URL url = new URL(urlString);
             urlConnection = (HttpsURLConnection) url.openConnection();
-
             urlConnection.setRequestMethod(method);
             urlConnection.setRequestProperty("Content-Type", "application/json");
             urlConnection.setDoOutput(true);
@@ -63,11 +76,10 @@ public abstract class NetUtils {
             wr.flush();
             wr.close();
 
-            InputStream in = urlConnection.getErrorStream();
-            if (in == null)
-                in = new BufferedInputStream(urlConnection.getInputStream());
-            if (urlConnection.getResponseCode() == expectedResponseCode)
+            if (urlConnection.getResponseCode() == expectedResponseCode) {
+                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
                 response = readStream(in);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -75,7 +87,6 @@ public abstract class NetUtils {
                 urlConnection.disconnect();
         }
         return response;
-
     }
 
     public static String postJson(String urlString, String json, int expectedResponseCode) {
@@ -84,6 +95,63 @@ public abstract class NetUtils {
 
     public static String putJson(String urlString, String json, int expectedResponseCode) {
         return sendJson("PUT", urlString, json, expectedResponseCode);
+    }
+
+    public static String postMultipartPicture(String urlString, int dishId, File picture, int expectedResponseCode) {
+        String response = "";
+        HttpsURLConnection urlConnection = null;
+        String boundary = "---" + System.currentTimeMillis();
+
+        try {
+            // Create a unique boundary based on timestamp
+            URL url = new URL(urlString);
+            urlConnection = (HttpsURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setUseCaches(false);
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+
+            OutputStream outputStream = urlConnection.getOutputStream();
+            PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, "UTF-8"), true);
+
+            // Add a form field "dish_id" to the request
+            writer.append("--").append(boundary).append("\r\n");
+            writer.append("Content-Disposition: form-data; name=\"dish_id\"\r\n");
+            writer.append("Content-Type: text/plain; charset=UTF-8\r\n\r\n");
+            writer.append(Integer.toString(dishId)).append("\r\n");
+            writer.flush();
+
+            // Add a upload file section "picture", a JPEG file to the request
+            writer.append("--").append(boundary).append("\r\n");
+            writer.append("Content-Disposition: form-data; name=\"picture\"; filename=\"").append(picture.getName()).append("\"\r\n");
+            writer.append("Content-Type: image/jpeg\r\n\r\n");
+            writer.flush();
+            FileInputStream inputStream = new FileInputStream(picture);
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1)
+                outputStream.write(buffer, 0, bytesRead);
+            outputStream.flush();
+            inputStream.close();
+            writer.append("\r\n");
+            writer.flush();
+
+            // End of the multipart
+            writer.append("\r\n").flush();
+            writer.append("--" + boundary + "--\r\n");
+            writer.close();
+
+            if (urlConnection.getResponseCode() == expectedResponseCode) {
+                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+                response = readStream(in);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (urlConnection != null)
+                urlConnection.disconnect();
+        }
+        return response;
     }
 
     // convert UTF-8 to internal Java String format

@@ -18,14 +18,12 @@ More information: [https://fenix.tecnico.ulisboa.pt/disciplinas/CMov4/2019-2020/
 - Filter cafeterias by campus
 - Campus autoselection based on device location
 - Cafeteria details: name, opening hours, map, estimated walk time and itinerary
-- Mockup static dishes
+- Ability to add dishes and fetching menus from the server
 - User status selection and cafeterias/opening times displayed accordingly
 - Dark theme compatible
 
 ## TODO
 
-- Server data fetching
-- Ability to add dishes/meals
 - Beacons detection
 - Caching
 - Support pre-Lollipop devices (https://android.jlelse.eu/android-vector-drawables-on-pre-lollipop-crash-solution-45c0c34f0160)
@@ -104,3 +102,6 @@ Syntax :
 	- https://stackoverflow.com/a/38922755
 	- https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html
     - https://medium.com/androiddevelopers/room-time-2b4cf9672b98
+
+- HTTP multipart/form-data without Java libs:
+    - https://stackoverflow.com/a/34409142

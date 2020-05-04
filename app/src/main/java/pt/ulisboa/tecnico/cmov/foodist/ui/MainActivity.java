@@ -157,6 +157,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_refresh:
                 updateCafeterias();
                 break;
+            case R.id.action_test:
+                Log.d(TAG, "Test option selected");
+                break;
         }
         return NavigationUI.onNavDestinationSelected(item, navController) || super.onOptionsItemSelected(item);
     }

@@ -9,7 +9,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-
 import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
 import pt.ulisboa.tecnico.cmov.foodist.db.DataRepository;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.DishEntity;
@@ -37,8 +36,6 @@ public class DishViewModel extends AndroidViewModel {
     public LiveData<DishEntity> getDish() {
         return mObservableDish;
     }
-
-
 
     /**
      * A creator is used to inject the dishId and a statusId into the ViewModel

@@ -17,7 +17,7 @@ public interface DishDao {
     @Query("SELECT * FROM dishes WHERE cafeteria_id = :cafeteriaId")
     LiveData<List<DishEntity>> getAllByCafeteriaId(int cafeteriaId);
 
-    @Query("SELECT * FROM dishes WHERE id LIKE :id LIMIT 1")
+    @Query("SELECT * FROM dishes WHERE id = :id LIMIT 1")
     LiveData<DishEntity> findById(int id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -30,6 +30,5 @@ public interface DishDao {
     void deleteAllByCafeteriaId(int cafeteriaId);
 
     @Delete
-    void deleteOneDish(DishEntity dish);
-
+    void delete(DishEntity dish);
 }

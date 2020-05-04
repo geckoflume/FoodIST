@@ -9,6 +9,7 @@ import java.util.List;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaPartialEntity;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.DishEntity;
 import pt.ulisboa.tecnico.cmov.foodist.model.Beacon;
+import pt.ulisboa.tecnico.cmov.foodist.model.Picture;
 
 public class ServerParser {
     private static final String TAG = ServerParser.class.getSimpleName();
@@ -53,9 +54,21 @@ public class ServerParser {
     }
 
     public Beacon parseBeacon(String response) {
-        Beacon ret = null;
+        Beacon beacon = null;
         if (response != null)
-            ret = new Gson().fromJson(response, Beacon.class);
-        return ret;
+            beacon = new Gson().fromJson(response, Beacon.class);
+        return beacon;
+    }
+
+    public List<Picture> parsePictures(String response) {
+        List<Picture> pictures = null;
+
+        if (response != null) {
+            Type pictureListType = new TypeToken<List<Picture>>() {
+            }.getType();
+
+            pictures = new Gson().fromJson(response, pictureListType);
+        }
+        return pictures;
     }
 }

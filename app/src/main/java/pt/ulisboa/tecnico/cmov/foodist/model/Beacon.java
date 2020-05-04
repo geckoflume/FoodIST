@@ -27,8 +27,8 @@ public class Beacon {
         this.datetimeArrive = OffsetDateTime.now(ZoneOffset.UTC).toString();
     }
 
-    public void setDatetimeArriveNow() {
-        this.datetimeArrive = OffsetDateTime.now(ZoneOffset.UTC).toString();
+    public void setDatetimeLeaveNow() {
+        this.datetimeLeave = OffsetDateTime.now(ZoneOffset.UTC).toString();
     }
 
     public int getId() {
