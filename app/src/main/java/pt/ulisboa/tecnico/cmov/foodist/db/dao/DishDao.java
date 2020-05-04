@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.cmov.foodist.db.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -24,4 +25,8 @@ public interface DishDao {
 
     @Query("DELETE FROM dishes WHERE cafeteria_id = :cafeteriaId")
     void deleteAllByCafeteriaId(int cafeteriaId);
+
+    @Delete
+    void deleteOneDish(DishEntity dish);
+
 }

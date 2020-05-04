@@ -43,6 +43,8 @@ public class DataRepository {
     /**
      * Get the list of cafeterias from the database and get notified when the data changes.
      */
+
+    // Cafet
     public LiveData<List<CafeteriaEntity>> getCafeterias() {
         return mObservableCafeterias;
     }
@@ -72,7 +74,7 @@ public class DataRepository {
     }
 
     public LiveData<List<OpeningHoursEntity>> loadOpeningHours(final int cafeteriaId, final int status) {
-        return mDatabase.openingHoursDao().getAllByCafeteriaStatus(cafeteriaId, status);
+        return mDatabase.openingHoursDao().getAllByCafeteriaIdStatus(cafeteriaId, status);
     }
 
     public LiveData<List<CafeteriaWithOpeningHours>> getCafeteriasWithOpeningHours(int status) {
@@ -80,11 +82,11 @@ public class DataRepository {
     }
 
     public LiveData<List<CafeteriaWithOpeningHours>> getCafeteriasWithOpeningHoursByCampus(int status, int campus) {
-        return mDatabase.cafeteriaDao().getCafeteriasWithOpeningHoursByCampusId(status, campus);
+        return mDatabase.cafeteriaDao().getCafeteriasWithOpeningHoursByCampus(status, campus);
     }
 
     public LiveData<List<DishEntity>> getDishesByCafeteria(int cafeteriaId) {
-        return mDatabase.dishDao().getAllByCafeteriaId(cafeteriaId);
+        return mDatabase.dishDao().getAllByCafeteria(cafeteriaId);
     }
 
     public void insertDish(DishEntity dish) {
@@ -98,4 +100,6 @@ public class DataRepository {
     public void deleteDishes(int mCafeteriaId) {
         mDatabase.dishDao().deleteAllByCafeteriaId(mCafeteriaId);
     }
+
+    public void
 }
