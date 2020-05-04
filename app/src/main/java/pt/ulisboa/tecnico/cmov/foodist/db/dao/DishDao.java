@@ -17,6 +17,9 @@ public interface DishDao {
     @Query("SELECT * FROM dishes WHERE cafeteria_id = :cafeteriaId")
     LiveData<List<DishEntity>> getAllByCafeteriaId(int cafeteriaId);
 
+    @Query("SELECT * FROM dishes WHERE id LIKE :id LIMIT 1")
+    LiveData<DishEntity> findById(int id);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(List<DishEntity> cafeterias);
 

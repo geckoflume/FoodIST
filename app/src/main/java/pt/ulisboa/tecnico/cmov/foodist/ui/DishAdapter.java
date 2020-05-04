@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.cmov.foodist.ui;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -53,14 +54,14 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.DishHolder> {
         public DishHolder(@NonNull ListItemDishBinding listItemDishBinding) {
             super(listItemDishBinding.getRoot());
             this.listItemDishBinding = listItemDishBinding;
-            /*
+
             // TODO: onclick on a dish, display details, pictures
             itemView.setOnClickListener(view1 -> {
-                Intent intent = new Intent(view1.getContext(), CafeteriaActivity.class); //Wait what ? --> Do the Dish Acti for the next
+                Intent intent = new Intent(view1.getContext(), DishActivity.class); //Wait what ? --> Do the Dish Acti for the next
                 intent.putExtra(EXTRA_MESSAGE, String.valueOf(listItemDishBinding.getDish().getId()));
                 listItemDishBinding.getRoot().getContext().startActivity(intent);
             });
-            */
+
         }
     }
 }

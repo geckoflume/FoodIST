@@ -44,7 +44,7 @@ public class DataRepository {
      * Get the list of cafeterias from the database and get notified when the data changes.
      */
 
-    // Cafet
+    // Cafeterias
     public LiveData<List<CafeteriaEntity>> getCafeterias() {
         return mObservableCafeterias;
     }
@@ -74,7 +74,7 @@ public class DataRepository {
     }
 
     public LiveData<List<OpeningHoursEntity>> loadOpeningHours(final int cafeteriaId, final int status) {
-        return mDatabase.openingHoursDao().getAllByCafeteriaIdStatus(cafeteriaId, status);
+        return mDatabase.openingHoursDao().getAllByCafeteriaStatus(cafeteriaId, status);
     }
 
     public LiveData<List<CafeteriaWithOpeningHours>> getCafeteriasWithOpeningHours(int status) {
@@ -82,11 +82,14 @@ public class DataRepository {
     }
 
     public LiveData<List<CafeteriaWithOpeningHours>> getCafeteriasWithOpeningHoursByCampus(int status, int campus) {
-        return mDatabase.cafeteriaDao().getCafeteriasWithOpeningHoursByCampus(status, campus);
+        return mDatabase.cafeteriaDao().getCafeteriasWithOpeningHoursByCampusId(status, campus);
     }
 
+
+    //Dishes
+
     public LiveData<List<DishEntity>> getDishesByCafeteria(int cafeteriaId) {
-        return mDatabase.dishDao().getAllByCafeteria(cafeteriaId);
+        return mDatabase.dishDao().getAllByCafeteriaId(cafeteriaId);
     }
 
     public void insertDish(DishEntity dish) {
@@ -101,5 +104,7 @@ public class DataRepository {
         mDatabase.dishDao().deleteAllByCafeteriaId(mCafeteriaId);
     }
 
-    public void
+    public LiveData<DishEntity> loadDish(final int dishId) {
+        return mDatabase.dishDao().findById(dishId);
+    }
 }
