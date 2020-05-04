@@ -19,7 +19,7 @@ public class DirectionsFetcher {
         String urlString = baseUrl + origin.latitude + "," + origin.longitude
                 + "&destination=" + destination.latitude + "," + destination.longitude
                 + "&mode=walking&key=" + apiKey; // context.getString(R.string.google_maps_key);
-        this.response = NetUtils.get(urlString);
+        this.response = NetUtils.get(urlString, 200);
     }
 
     public DirectionsParser parse() {

@@ -72,7 +72,7 @@ public class DataRepository {
     }
 
     public LiveData<List<OpeningHoursEntity>> loadOpeningHours(final int cafeteriaId, final int status) {
-        return mDatabase.openingHoursDao().getAllByCafeteriaIdStatus(cafeteriaId, status);
+        return mDatabase.openingHoursDao().getAllByCafeteriaStatus(cafeteriaId, status);
     }
 
     public LiveData<List<CafeteriaWithOpeningHours>> getCafeteriasWithOpeningHours(int status) {
@@ -80,14 +80,22 @@ public class DataRepository {
     }
 
     public LiveData<List<CafeteriaWithOpeningHours>> getCafeteriasWithOpeningHoursByCampus(int status, int campus) {
-        return mDatabase.cafeteriaDao().getCafeteriasWithOpeningHoursByCampus(status, campus);
+        return mDatabase.cafeteriaDao().getCafeteriasWithOpeningHoursByCampusId(status, campus);
     }
 
     public LiveData<List<DishEntity>> getDishesByCafeteria(int cafeteriaId) {
-        return mDatabase.dishDao().getAllByCafeteria(cafeteriaId);
+        return mDatabase.dishDao().getAllByCafeteriaId(cafeteriaId);
     }
 
     public void insertDish(DishEntity dish) {
         mDatabase.dishDao().insert(dish);
+    }
+
+    public void updateDishes(List<DishEntity> dishes) {
+        mDatabase.dishDao().insert(dishes);
+    }
+
+    public void deleteDishes(int mCafeteriaId) {
+        mDatabase.dishDao().deleteAllByCafeteriaId(mCafeteriaId);
     }
 }

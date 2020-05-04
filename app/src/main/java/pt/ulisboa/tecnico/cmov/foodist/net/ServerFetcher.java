@@ -10,12 +10,12 @@ public class ServerFetcher {
 
     public String fetchCafeterias() {
         String urlString = baseUrl + "/cafeterias";
-        return NetUtils.get(urlString);
+        return NetUtils.get(urlString, 200);
     }
 
     public String fetchCafeteria(int cafeteriaId) {
         String urlString = baseUrl + "/cafeterias/" + cafeteriaId;
-        return NetUtils.get(urlString);
+        return NetUtils.get(urlString, 200);
     }
 
     public String insertDish(DishEntity dish) {
@@ -24,5 +24,10 @@ public class ServerFetcher {
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         String json = gson.toJson(dish);
         return NetUtils.postJson(urlString, json, 201);
+    }
+
+    public String fetchDishes(int cafeteriaId) {
+        String urlString = baseUrl + "/cafeterias/" + cafeteriaId + "/dishes";
+        return NetUtils.get(urlString, 200);
     }
 }

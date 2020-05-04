@@ -25,14 +25,17 @@ public abstract class NetUtils {
         return sb.toString();
     }
 
-    public static String get(String urlString) {
+    public static String get(String urlString, int expectedResponseCode) {
         String response = "";
         HttpsURLConnection urlConnection = null;
         try {
             URL url = new URL(urlString);
             urlConnection = (HttpsURLConnection) url.openConnection();
-            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-            response = readStream(in);
+            InputStream in = urlConnection.getErrorStream();
+            if (in == null)
+                in = new BufferedInputStream(urlConnection.getInputStream());
+            if (urlConnection.getResponseCode() == expectedResponseCode)
+                response = readStream(in);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -60,7 +63,9 @@ public abstract class NetUtils {
             wr.flush();
             wr.close();
 
-            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            InputStream in = urlConnection.getErrorStream();
+            if (in == null)
+                in = new BufferedInputStream(urlConnection.getInputStream());
             if (urlConnection.getResponseCode() == expectedResponseCode)
                 response = readStream(in);
         } catch (IOException e) {

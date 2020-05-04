@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.cmov.foodist.viewmodel;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -13,6 +14,8 @@ import java.util.List;
 import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
 import pt.ulisboa.tecnico.cmov.foodist.db.DataRepository;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.DishEntity;
+import pt.ulisboa.tecnico.cmov.foodist.net.ServerFetcher;
+import pt.ulisboa.tecnico.cmov.foodist.net.ServerParser;
 
 
 public class DishListViewModel extends AndroidViewModel {
@@ -35,8 +38,22 @@ public class DishListViewModel extends AndroidViewModel {
         return mDishes;
     }
 
+    public void updateDishes() {
+        mRepository.deleteDishes(mCafeteriaId);
+        Log.d(TAG, "Deleted dishes for cafeteria " + mCafeteriaId);
+
+        ServerFetcher serverFetcher = new ServerFetcher();
+        String responseDishes = serverFetcher.fetchDishes(mCafeteriaId);
+        ServerParser serverParser = new ServerParser();
+        List<DishEntity> fetchedDishes = serverParser.parseDishes(responseDishes);
+        if (fetchedDishes != null) {
+            mRepository.updateDishes(fetchedDishes);
+        }
+        Log.d(TAG, "Updated dishes for cafeteria " + mCafeteriaId);
+    }
+
     /**
-     * A creator is used to inject the cafeteriaId and a statusId into the ViewModel
+     * A creator is used to inject the cafeteriaId into the ViewModel
      */
     public static class Factory extends ViewModelProvider.NewInstanceFactory {
 

@@ -148,12 +148,14 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
                     cafeteriaViewModel.setUpdating(true);
                     mMap.clear();
                     LocationUtils.updateMap(mMap, currentCafeteria);
-                    ((BasicApp) getApplication()).networkIO().execute(() -> cafeteriaViewModel.updateCafeteriaWaitTime());
+                    ((BasicApp) getApplication()).networkIO().execute(() -> {
+                        cafeteriaViewModel.updateCafeteriaWaitTime();
+                        dishListViewModel.updateDishes();
+                    });
                     if (isCheckBoxRouteTicked) {
                         fusedLocationClient.getLastLocation().addOnSuccessListener(mCurrentLocation ->
                                 ((BasicApp) getApplication()).networkIO().execute(() -> {
-                                    List<LatLng> path = cafeteriaViewModel.updateCafeteriaDistance(currentCafeteria,
-                                            mCurrentLocation, getString(R.string.google_maps_key));
+                                    List<LatLng> path = cafeteriaViewModel.updateCafeteriaDistance(currentCafeteria, mCurrentLocation, getString(R.string.google_maps_key));
                                     if (path != null && !path.isEmpty()) { // ensures a route has been found and that the provided Google Maps api key is valid
                                         LatLngBounds.Builder builder = new LatLngBounds.Builder();
                                         for (LatLng point : path)

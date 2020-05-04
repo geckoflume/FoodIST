@@ -13,19 +13,22 @@ public class ServerParser {
     private static final String TAG = ServerParser.class.getSimpleName();
 
     public List<CafeteriaPartialEntity> parseCafeterias(String response) {
-        List<CafeteriaPartialEntity> cafeteriaEntities;
+        List<CafeteriaPartialEntity> cafeteriaEntities = null;
 
-        Type cafeteriaListType = new TypeToken<List<CafeteriaPartialEntity>>() {
-        }.getType();
+        if (response != null) {
+            Type cafeteriaListType = new TypeToken<List<CafeteriaPartialEntity>>() {
+            }.getType();
 
-        cafeteriaEntities = new Gson().fromJson(response, cafeteriaListType);
+            cafeteriaEntities = new Gson().fromJson(response, cafeteriaListType);
+        }
         return cafeteriaEntities;
     }
 
     public CafeteriaPartialEntity parseCafeteria(String response) {
-        CafeteriaPartialEntity cafeteriaEntity;
+        CafeteriaPartialEntity cafeteriaEntity = null;
 
-        cafeteriaEntity = new Gson().fromJson(response, CafeteriaPartialEntity.class);
+        if (response != null)
+            cafeteriaEntity = new Gson().fromJson(response, CafeteriaPartialEntity.class);
         return cafeteriaEntity;
     }
 
@@ -34,5 +37,17 @@ public class ServerParser {
         if (response != null)
             ret = new Gson().fromJson(response, DishEntity.class);
         return ret;
+    }
+
+    public List<DishEntity> parseDishes(String response) {
+        List<DishEntity> dishEntities = null;
+
+        if (response != null) {
+            Type dishListType = new TypeToken<List<DishEntity>>() {
+            }.getType();
+
+            dishEntities = new Gson().fromJson(response, dishListType);
+        }
+        return dishEntities;
     }
 }

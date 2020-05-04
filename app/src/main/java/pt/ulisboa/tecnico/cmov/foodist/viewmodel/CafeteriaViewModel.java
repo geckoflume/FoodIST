@@ -78,6 +78,7 @@ public class CafeteriaViewModel extends AndroidViewModel {
         String responseCafeteria = serverFetcher.fetchCafeteria(mCafeteriaId);
         ServerParser serverParser = new ServerParser();
         mRepository.updateCafeteriaPartial(serverParser.parseCafeteria(responseCafeteria));
+        Log.d(TAG, "Updating wait time for cafeteria " + mCafeteriaId);
     }
 
     public LiveData<Boolean> isUpdating() {
