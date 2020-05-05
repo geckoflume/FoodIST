@@ -13,10 +13,12 @@ import androidx.lifecycle.ViewModelProvider;
 import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
 import pt.ulisboa.tecnico.cmov.foodist.db.DataRepository;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
+import pt.ulisboa.tecnico.cmov.foodist.db.entity.DishEntity;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.DishWithPictures;
 import pt.ulisboa.tecnico.cmov.foodist.model.Cafeteria;
 import pt.ulisboa.tecnico.cmov.foodist.net.ServerFetcher;
 import pt.ulisboa.tecnico.cmov.foodist.net.ServerParser;
+
 
 
 public class DishViewModel extends AndroidViewModel {
@@ -46,6 +48,14 @@ public class DishViewModel extends AndroidViewModel {
 
     public LiveData<CafeteriaEntity> getCafeteriaOfDish() {
         return associatedCafeteria;
+    }
+
+    public void deleteDish(){
+        ((BasicApp)getApplication()).networkIO().execute(()-> {
+            if (ServerFetcher.deleteDish(mDishId) != null) {
+                mRepository.deleteDish(mDishId);
+            }
+        });
     }
 
     public void insertPicture(String pictureUri) {

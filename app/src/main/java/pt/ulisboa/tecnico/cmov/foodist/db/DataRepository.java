@@ -110,6 +110,10 @@ public class DataRepository {
         mDatabase.dishDao().deleteAllByCafeteriaId(mCafeteriaId);
     }
 
+    public void deleteDish(int dishId){
+        mDatabase.dishDao().delete(dishId);
+    }
+
     public LiveData<DishEntity> getDish(final int dishId) {
         return mDatabase.dishDao().findById(dishId);
     }

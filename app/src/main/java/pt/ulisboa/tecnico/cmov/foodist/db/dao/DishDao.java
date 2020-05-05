@@ -31,8 +31,8 @@ public interface DishDao {
     @Query("DELETE FROM dishes WHERE cafeteria_id = :cafeteriaId")
     void deleteAllByCafeteriaId(int cafeteriaId);
 
-    @Delete
-    void delete(DishEntity dish);
+    @Query("DELETE FROM dishes WHERE id = :dishId")
+    void delete(int dishId);
 
     @Transaction
     @Query("SELECT * FROM dishes WHERE cafeteria_id = :cafeteriaId")

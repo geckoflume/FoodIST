@@ -58,11 +58,15 @@ public class DishActivity extends AppCompatActivity {
         recyclerViewDishes.setAdapter(adapterPictures);
 
         dishViewModel.getDish().observe(this, dishWithPictures -> {
-            adapterPictures.setPicturesList(dishWithPictures.pictures);
-            currentDish = dishWithPictures.dish;
-            name = currentDish.getName();
-            price = currentDish.getPrice();
-            Toast.makeText(this, name, Toast.LENGTH_SHORT).show(); // to show if we have the good dish
+            if (dishWithPictures != null) {
+                adapterPictures.setPicturesList(dishWithPictures.pictures);
+                currentDish = dishWithPictures.dish;
+                name = currentDish.getName();
+                price = currentDish.getPrice();
+                Toast.makeText(this, name, Toast.LENGTH_SHORT).show(); // to show if we have the good dish
+            } else {
+                this.finish();
+            }
         });
 
 
@@ -119,5 +123,11 @@ public class DishActivity extends AppCompatActivity {
             ((BasicApp) getApplication()).networkIO().execute(() ->
                     dishViewModel.insertPicture(picturePath));
         }
+    }
+
+    public void deletDish(View view) {
+        Toast.makeText(this, dishViewModel.getDish().getValue().dish.getName() + " successfully deleted!", Toast.LENGTH_SHORT).show();
+        dishViewModel.deleteDish();
+        this.finish();
     }
 }

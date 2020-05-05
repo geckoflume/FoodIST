@@ -129,6 +129,18 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView_pictures"
                 app:spanCount="2" />
 
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/floatingActionButton"
+                android:layout_width="125dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:clickable="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/textView_details"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@android:drawable/btn_dialog"
+                android:onClick="deletDish"/>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
