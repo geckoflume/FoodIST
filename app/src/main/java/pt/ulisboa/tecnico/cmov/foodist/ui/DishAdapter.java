@@ -25,7 +25,7 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.DishHolder> {
     static final String EXTRA_MESSAGE = "pt.ulisboa.tecnico.cmov.foodist.DISHID";
 
     private final RequestManager glide;
-    private List<? extends DishWithPictures> dishList;
+    private List<DishWithPictures> dishList;
 
     DishAdapter(final RequestManager glide) {
         this.glide = glide;
@@ -37,7 +37,7 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.DishHolder> {
         ListItemDishBinding dishListItemBinding =
                 DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
                         R.layout.list_item_dish, parent, false);
-        return new DishHolder(dishListItemBinding);
+        return new DishHolder(dishListItemBinding, this.glide);
     }
 
     @Override
@@ -45,7 +45,9 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.DishHolder> {
         Dish dish = dishList.get(position).dish;
         holder.listItemDishBinding.setDish(dish);
         if (dishList.get(position).pictures.size() > 0)
-            holder.updateWithPicture(dishList.get(position).pictures.get(0), this.glide);
+            holder.updateWithPicture(dishList.get(position).pictures.get(0));
+        else
+            holder.updateNoPicture();
     }
 
     @Override
@@ -56,7 +58,7 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.DishHolder> {
     }
 
 
-    void setDishList(List<? extends DishWithPictures> dishesList) {
+    void setDishList(List<DishWithPictures> dishesList) {
         this.dishList = dishesList;
         notifyDataSetChanged();
     }
@@ -64,10 +66,14 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.DishHolder> {
 
     class DishHolder extends RecyclerView.ViewHolder {
         private ListItemDishBinding listItemDishBinding;
+        private RequestManager glide;
+        private ImageView imageView;
 
-        DishHolder(@NonNull ListItemDishBinding listItemDishBinding) {
+        DishHolder(@NonNull ListItemDishBinding listItemDishBinding, RequestManager glide) {
             super(listItemDishBinding.getRoot());
             this.listItemDishBinding = listItemDishBinding;
+            this.glide = glide;
+            imageView = itemView.findViewById(R.id.imageView_thumbnail);
 
             itemView.setOnClickListener(view1 -> {
                 Intent intent = new Intent(view1.getContext(), DishActivity.class);
@@ -77,10 +83,14 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.DishHolder> {
 
         }
 
-        void updateWithPicture(Picture picture, RequestManager requestManager) {
-            ImageView imageView = itemView.findViewById(R.id.imageView_thumbnail);
-            requestManager.load(ServerFetcher.getPictureUrl(picture.getFilename())).into(imageView);
+        void updateWithPicture(Picture picture) {
+            glide.load(ServerFetcher.getPictureUrl(picture.getFilename())).into(imageView);
             imageView.setVisibility(View.VISIBLE);
+        }
+
+        public void updateNoPicture() {
+            glide.clear(itemView);
+            imageView.setVisibility(View.INVISIBLE);
         }
     }
 }

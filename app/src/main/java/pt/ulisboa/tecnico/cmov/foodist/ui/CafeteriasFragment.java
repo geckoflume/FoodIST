@@ -54,7 +54,11 @@ public class CafeteriasFragment extends Fragment implements OnMapReadyCallback {
         // The onChanged() method fires when the observed data changes and the activity is
         // in the foreground.
         // Update the cached copy of the cafeterias in the adapter.
-        mCafeteriaListViewModel.getCafeteriasWithOpeningHours().observe(getViewLifecycleOwner(), adapterCafeterias::setCafeteriaList);
+        mCafeteriaListViewModel.getCafeteriasWithOpeningHours().observe(getViewLifecycleOwner(), cafeteriasList -> {
+            adapterCafeterias.setCafeteriaList(cafeteriasList);
+            if (mMap != null)
+                mCafeteriaListViewModel.updateMap(mMap, mapFragment);
+        });
         mCafeteriaListViewModel.getStatus().observe(getViewLifecycleOwner(), adapterCafeterias::setStatus);
         swipeRefreshLayout = root.findViewById(R.id.swipeRefresh);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
@@ -68,14 +72,13 @@ public class CafeteriasFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setIndoorEnabled(true);
-        if (PermissionsHelper.checkPermissions(getActivity())) {
+        if (PermissionsHelper.checkPermissionLocation(getActivity())) {
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
         }
         mMap.setOnMapLoadedCallback(() -> {
             // Set observer
-            mCafeteriaListViewModel.getCafeterias().observe(getViewLifecycleOwner(), cafeteriaEntities ->
-                    LocationUtils.updateMap(mMap, mapFragment, cafeteriaEntities));
+            mCafeteriaListViewModel.updateMap(mMap, mapFragment);
         });
     }
 }

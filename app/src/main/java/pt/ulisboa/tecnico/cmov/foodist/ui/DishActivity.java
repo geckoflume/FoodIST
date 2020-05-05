@@ -109,6 +109,7 @@ public class DishActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             Log.d(TAG, "Successfully took picture, saved in " + picturePath);
+            Toast.makeText(this, "Successfully took picture, sending it to the server...", Toast.LENGTH_SHORT).show();
             ((BasicApp) getApplication()).networkIO().execute(() ->
                     dishViewModel.insertPicture(picturePath));
         }

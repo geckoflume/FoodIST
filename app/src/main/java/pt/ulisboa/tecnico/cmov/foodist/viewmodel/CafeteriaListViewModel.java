@@ -13,6 +13,9 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.Transformations;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
@@ -25,6 +28,7 @@ import pt.ulisboa.tecnico.cmov.foodist.net.DirectionsFetcher;
 import pt.ulisboa.tecnico.cmov.foodist.net.DirectionsParser;
 import pt.ulisboa.tecnico.cmov.foodist.net.ServerFetcher;
 import pt.ulisboa.tecnico.cmov.foodist.net.ServerParser;
+import pt.ulisboa.tecnico.cmov.foodist.ui.LocationUtils;
 
 public class CafeteriaListViewModel extends AndroidViewModel {
     private static final String TAG = CafeteriaListViewModel.class.getSimpleName();
@@ -34,7 +38,6 @@ public class CafeteriaListViewModel extends AndroidViewModel {
     private final SavedStateHandle mSavedStateHandler;
     private final DataRepository mRepository;
     private final LiveData<List<CafeteriaWithOpeningHours>> mCafeteriasWithOpeningHours;
-    private final LiveData<List<CafeteriaEntity>> mCafeterias;
     private MutableLiveData<Boolean> updating = new MutableLiveData<>(false);
 
     public CafeteriaListViewModel(@NonNull Application application,
@@ -49,13 +52,7 @@ public class CafeteriaListViewModel extends AndroidViewModel {
         CustomLiveData trigger = new CustomLiveData(
                 mSavedStateHandler.getLiveData(CAMPUS_KEY, Campus.ALL),
                 mSavedStateHandler.getLiveData(STATUS_KEY, Status.DEFAULT));
-        mCafeterias = Transformations.switchMap(trigger, value -> {
-            if (value.first == Campus.ALL) {
-                return mRepository.getCafeterias();
-            } else {
-                return mRepository.getCafeteriasByCampusId(value.first - 1);
-            }
-        });
+
         mCafeteriasWithOpeningHours = Transformations.switchMap(trigger, value -> {
             if (value.first == Campus.ALL) {
                 return mRepository.getCafeteriasWithOpeningHours(value.second);
@@ -83,19 +80,24 @@ public class CafeteriaListViewModel extends AndroidViewModel {
         return mSavedStateHandler.getLiveData(STATUS_KEY, Status.DEFAULT);
     }
 
-    /**
-     * Expose the LiveData Cafeterias query so the UI can observe it.
-     */
-    public LiveData<List<CafeteriaEntity>> getCafeterias() {
-        return mCafeterias;
-    }
-
     public LiveData<List<CafeteriaWithOpeningHours>> getCafeteriasWithOpeningHours() {
         return mCafeteriasWithOpeningHours;
     }
 
-    public void updateCafeteriasDistances(List<CafeteriaEntity> currentCafeterias, final Location mCurrentLocation, final String apiKey) {
-        for (CafeteriaEntity cafeteria : currentCafeterias) {
+    private List<CafeteriaEntity> getCafeteriasEntities() {
+        List<CafeteriaEntity> mCafeterias;
+        Integer campus = mSavedStateHandler.get(CAMPUS_KEY);
+        if (campus == Campus.ALL)
+            mCafeterias = mRepository.getCafeteriasEntities();
+        else
+            mCafeterias = mRepository.getCafeteriasByCampusIdEntities(campus - 1);
+
+        return mCafeterias;
+    }
+
+    public void updateCafeteriasDistances(final Location mCurrentLocation, final String apiKey) {
+        List<CafeteriaEntity> mCafeterias = getCafeteriasEntities();
+        for (CafeteriaEntity cafeteria : mCafeterias) {
             DirectionsFetcher directionsFetcher = new DirectionsFetcher(apiKey, cafeteria, mCurrentLocation);
             DirectionsParser directionsParser = directionsFetcher.parse();
             cafeteria.setDistance(directionsParser.getDistance());
@@ -103,7 +105,7 @@ public class CafeteriaListViewModel extends AndroidViewModel {
 
             Log.d(TAG, "Updating distance and walk time for cafeteria " + cafeteria.getName());
         }
-        mRepository.updateCafeterias(currentCafeterias);
+        mRepository.updateCafeterias(mCafeterias);
     }
 
     public void updateCafeteriasWaitTimes() {
@@ -120,6 +122,13 @@ public class CafeteriaListViewModel extends AndroidViewModel {
 
     public void setUpdating(boolean b) {
         updating.postValue(b);
+    }
+
+    public void updateMap(GoogleMap mMap, SupportMapFragment mapFragment) {
+        ((BasicApp) getApplication()).networkIO().execute(() -> {
+            List<CafeteriaEntity> mCafeterias = getCafeteriasEntities();
+            mapFragment.getView().post(() -> LocationUtils.updateMap(mMap, mapFragment, mCafeterias));
+        });
     }
 }
 

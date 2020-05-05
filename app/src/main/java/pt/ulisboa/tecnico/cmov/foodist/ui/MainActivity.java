@@ -131,15 +131,15 @@ public class MainActivity extends AppCompatActivity {
         createLocationRequest();
         buildLocationSettingsRequest();
 
-        if (PermissionsHelper.checkPermissions(this))
+        if (PermissionsHelper.checkPermissionLocation(this))
             startLocationUpdates();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if (!PermissionsHelper.checkPermissions(this))
-            PermissionsHelper.requestPermissions(MainActivity.this);
+        if (!PermissionsHelper.checkPermissionLocation(this))
+            PermissionsHelper.requestPermissionLocation(MainActivity.this);
     }
 
     @Override
@@ -171,11 +171,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateCafeterias() {
-        if (mCafeteriaListViewModel.getCafeterias().getValue() != null) {
             if (mCurrentLocation != null)
                 ((BasicApp) MainActivity.this.getApplication()).networkIO().execute(() -> {
                     mCafeteriaListViewModel.setUpdating(true);
-                    mCafeteriaListViewModel.updateCafeteriasDistances(mCafeteriaListViewModel.getCafeterias().getValue(), mCurrentLocation, getString(R.string.google_maps_key));
+                    mCafeteriaListViewModel.updateCafeteriasDistances(mCurrentLocation, getString(R.string.google_maps_key));
                     mCafeteriaListViewModel.updateCafeteriasWaitTimes();
                     mCafeteriaListViewModel.setUpdating(false);
                 });
@@ -185,7 +184,6 @@ public class MainActivity extends AppCompatActivity {
                 mCafeteriaListViewModel.updateCafeteriasWaitTimes();
                 mCafeteriaListViewModel.setUpdating(false);
             }
-        }
     }
 
     private AdapterView.OnItemSelectedListener campusSelectedCallback() {
@@ -194,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == Campus.AUTODETECT) {
                     // "Find nearest campus" selected
-                    if (mCurrentLocation != null && PermissionsHelper.checkPermissions(MainActivity.this)) {
+                    if (mCurrentLocation != null && PermissionsHelper.checkPermissionLocation(MainActivity.this)) {
                         spinner.setEnabled(false);
                         Toast.makeText(MainActivity.this, R.string.autodetecting_campus_toast, Toast.LENGTH_LONG).show();
                         Campus nearest = Campus.findNearest(getApplicationContext(), mCurrentLocation);
@@ -202,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
                         spinner.setEnabled(true);
                     } else {
                         Toast.makeText(MainActivity.this, getString(R.string.need_location), Toast.LENGTH_LONG).show();
-                        PermissionsHelper.requestPermissions(MainActivity.this);
+                        PermissionsHelper.requestPermissionLocation(MainActivity.this);
                     }
                 } else {
                     // apply() to commit asynchronously
@@ -229,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
                 // Permission granted.
                 startLocationUpdates();
             } else {
-                UiUtils.showSnackbar(findViewById(android.R.id.content), R.string.permission_denied_explanation, R.string.action_settings, Snackbar.LENGTH_LONG, view -> {
+                UiUtils.showSnackbar(findViewById(android.R.id.content), R.string.permission_denied_explanation_location, R.string.action_settings, Snackbar.LENGTH_LONG, view -> {
                     // Build intent that displays the App settings screen.
                     Intent intent = new Intent();
                     intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);

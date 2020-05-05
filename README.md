@@ -105,3 +105,6 @@ Syntax :
 
 - HTTP multipart/form-data without Java libs:
     - https://stackoverflow.com/a/34409142
+
+- JPEG compression:
+    - https://stackoverflow.com/a/19596231

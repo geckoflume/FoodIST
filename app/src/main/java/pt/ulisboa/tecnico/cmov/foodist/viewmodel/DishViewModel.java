@@ -61,31 +61,29 @@ public class DishViewModel extends AndroidViewModel {
     }
 
     public void insertPicture(String pictureUri) {
+        Log.d(TAG, "Inserting picture " + pictureUri);
         String response = ServerFetcher.insertPicture(mDishId, pictureUri);
         if (response != null) {
             ServerParser serverParser = new ServerParser();
             mRepository.insertPicture(serverParser.parsePicture(response));
         }
-        Log.d(TAG, "Inserting picture " + pictureUri);
     }
 
     public void updatePictures() {
         ((BasicApp) getApplication()).networkIO().execute(() -> {
             List<PictureEntity> mPictures = mRepository.getPicturesByDishId(mDishId);
             String responsePictures = ServerFetcher.fetchPictures(mDishId);
-            if (responsePictures != null) {
-                ServerParser serverParser = new ServerParser();
-                List<PictureEntity> fetchedPictures = serverParser.parsePictures(responsePictures);
+            ServerParser serverParser = new ServerParser();
+            List<PictureEntity> fetchedPictures = serverParser.parsePictures(responsePictures);
 
-                // Check if the distant pictures are the same as the local pictures
-                mPictures.removeAll(fetchedPictures);
-                if (!mPictures.isEmpty()) {
-                    mRepository.deletePictures(mPictures);
-                    Log.d(TAG, "Deleted obsolete pictures for dish " + mDishId);
-                }
-
-                mRepository.insertPictures(fetchedPictures);
+            // Check if the distant pictures are the same as the local pictures
+            mPictures.removeAll(fetchedPictures);
+            if (!mPictures.isEmpty()) {
+                mRepository.deletePictures(mPictures);
+                Log.d(TAG, "Deleted obsolete pictures for dish " + mDishId);
             }
+
+            mRepository.insertPictures(fetchedPictures);
             Log.d(TAG, "Updated pictures for dish " + mDishId);
         });
     }

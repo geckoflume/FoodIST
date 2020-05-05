@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaPartialEntity;
@@ -61,7 +62,7 @@ public class ServerParser {
     }
 
     public List<PictureEntity> parsePictures(String response) {
-        List<PictureEntity> pictures = null;
+        List<PictureEntity> pictures = new ArrayList<>();
 
         if (response != null) {
             Type pictureListType = new TypeToken<List<PictureEntity>>() {

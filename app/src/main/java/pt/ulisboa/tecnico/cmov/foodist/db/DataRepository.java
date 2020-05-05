@@ -47,6 +47,14 @@ public class DataRepository {
      */
 
     // Cafeterias
+    public List<CafeteriaEntity> getCafeteriasEntities() {
+        return mDatabase.cafeteriaDao().getCafeteriasEntities();
+    }
+
+    public List<CafeteriaEntity> getCafeteriasByCampusIdEntities(final int campus) {
+        return mDatabase.cafeteriaDao().getAllByCampusIdEntities(campus);
+    }
+
     public LiveData<List<CafeteriaEntity>> getCafeterias() {
         return mObservableCafeterias;
     }

@@ -22,6 +22,12 @@ public interface CafeteriaDao {
     @Query("SELECT * FROM cafeterias WHERE campus_id = :campusId ORDER BY distance")
     LiveData<List<CafeteriaEntity>> getAllByCampusId(int campusId);
 
+    @Query("SELECT * FROM cafeterias ORDER BY distance")
+    List<CafeteriaEntity> getCafeteriasEntities();
+
+    @Query("SELECT * FROM cafeterias WHERE campus_id = :campusId ORDER BY distance")
+    List<CafeteriaEntity> getAllByCampusIdEntities(int campusId);
+
     @Query("SELECT * FROM cafeterias WHERE id = :id LIMIT 1")
     LiveData<CafeteriaEntity> getById(int id);
 

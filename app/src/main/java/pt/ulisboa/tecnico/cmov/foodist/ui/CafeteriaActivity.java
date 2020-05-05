@@ -138,7 +138,7 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setIndoorEnabled(true);
-        if (PermissionsHelper.checkPermissions(this)) {
+        if (PermissionsHelper.checkPermissionLocation(this)) {
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
@@ -152,6 +152,8 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
                         cafeteriaViewModel.updateCafeteriaWaitTime();
                         dishListViewModel.updateDishes();
                         dishListViewModel.updateFirstPicture();
+                        if (!isCheckBoxRouteTicked)
+                            cafeteriaViewModel.setUpdating(false);
                     });
                     if (isCheckBoxRouteTicked) {
                         fusedLocationClient.getLastLocation().addOnSuccessListener(mCurrentLocation ->
@@ -178,8 +180,6 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
                                         });
                                     }
                                 }));
-                    } else {
-                        cafeteriaViewModel.setUpdating(false);
                     }
                 }
             });

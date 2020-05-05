@@ -1,10 +1,15 @@
 package pt.ulisboa.tecnico.cmov.foodist.net;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -102,6 +107,20 @@ public abstract class NetUtils {
         HttpsURLConnection urlConnection = null;
         String boundary = "---" + System.currentTimeMillis();
 
+        //Compress picture to comply with php default "upload_max_filesize = 2M"
+        Bitmap bmp = BitmapFactory.decodeFile(picture.getAbsolutePath());
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        int quality = 70;
+        do {
+            bos.reset();
+            bmp.compress(Bitmap.CompressFormat.JPEG, quality, bos);
+            Log.d(TAG, "Compressed picture from " + (bmp.getByteCount() / 1024) + "KB to " + bos.size() / 1024 + "KB (" + quality + "% quality)");
+            if (quality >= 10)
+                quality -= 10;
+            else
+                break;
+        } while (bos.size() > 2 * 1024 * 1024);
+
         try {
             // Create a unique boundary based on timestamp
             URL url = new URL(urlString);
@@ -126,7 +145,8 @@ public abstract class NetUtils {
             writer.append("Content-Disposition: form-data; name=\"picture\"; filename=\"").append(picture.getName()).append("\"\r\n");
             writer.append("Content-Type: image/jpeg\r\n\r\n");
             writer.flush();
-            FileInputStream inputStream = new FileInputStream(picture);
+
+            InputStream inputStream = new ByteArrayInputStream(bos.toByteArray());
             byte[] buffer = new byte[4096];
             int bytesRead;
             while ((bytesRead = inputStream.read(buffer)) != -1)
