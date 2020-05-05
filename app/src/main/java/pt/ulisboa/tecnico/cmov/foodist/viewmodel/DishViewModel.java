@@ -12,7 +12,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
 import pt.ulisboa.tecnico.cmov.foodist.db.DataRepository;
+import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.DishWithPictures;
+import pt.ulisboa.tecnico.cmov.foodist.model.Cafeteria;
 import pt.ulisboa.tecnico.cmov.foodist.net.ServerFetcher;
 import pt.ulisboa.tecnico.cmov.foodist.net.ServerParser;
 
@@ -21,6 +23,7 @@ public class DishViewModel extends AndroidViewModel {
     private static final String TAG = DishViewModel.class.getSimpleName();
 
     private final LiveData<DishWithPictures> mObservableDish;
+    private final LiveData<CafeteriaEntity> associatedCafeteria;
     private MutableLiveData<Boolean> updating = new MutableLiveData<>(false);
     private final DataRepository mRepository;
     private final int mDishId;
@@ -33,11 +36,16 @@ public class DishViewModel extends AndroidViewModel {
         mRepository = repository;
 
         mObservableDish = mRepository.getDishWithPictures(this.mDishId);
+        associatedCafeteria = mRepository.getCafeteriaByIdDish(this.mDishId);
     }
 
 
     public LiveData<DishWithPictures> getDish() {
         return mObservableDish;
+    }
+
+    public LiveData<CafeteriaEntity> getCafeteriaOfDish() {
+        return associatedCafeteria;
     }
 
     public void insertPicture(String pictureUri) {

@@ -33,6 +33,8 @@ public class DishActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private int dishId;
+    private String name;
+    private double price;
     private DishEntity currentDish;
     private DishViewModel dishViewModel;
     private String picturePath;
@@ -58,9 +60,13 @@ public class DishActivity extends AppCompatActivity {
         dishViewModel.getDish().observe(this, dishWithPictures -> {
             adapterPictures.setPicturesList(dishWithPictures.pictures);
             currentDish = dishWithPictures.dish;
-            String t = currentDish.getName();
-            Toast.makeText(this, t, Toast.LENGTH_SHORT).show(); // to show if we have the good dish
+            name = currentDish.getName();
+            price = currentDish.getPrice();
+            Toast.makeText(this, name, Toast.LENGTH_SHORT).show(); // to show if we have the good dish
         });
+
+
+
     }
 
     private void initActionBar() {

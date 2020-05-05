@@ -47,4 +47,7 @@ public interface CafeteriaDao {
     @Transaction
     @Query("SELECT cafeterias.* FROM cafeterias JOIN openinghours ON openinghours.cafeteria_id = cafeterias.id WHERE cafeterias.campus_id = :campusId AND openinghours.status = :status GROUP BY cafeterias.id")
     LiveData<List<CafeteriaWithOpeningHours>> getCafeteriasWithOpeningHoursByCampusId(int status, int campusId);
+
+    @Query("SELECT cafeterias.* FROM cafeterias, dishes WHERE cafeterias.id=dishes.cafeteria_id AND dishes.id = :dishId")
+    LiveData<CafeteriaEntity> findByIdDish(int dishId);
 }

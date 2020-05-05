@@ -87,6 +87,12 @@ public class DataRepository {
         return mDatabase.cafeteriaDao().getCafeteriasWithOpeningHoursByCampusId(status, campus);
     }
 
+    //Cafeteria and Dish
+
+    public LiveData<CafeteriaEntity> getCafeteriaByIdDish(int idDish){
+        return mDatabase.cafeteriaDao().findByIdDish(idDish);
+    }
+
     //Dishes
     public LiveData<List<DishEntity>> getDishesByCafeteriaId(final int cafeteriaId) {
         return mDatabase.dishDao().getAllByCafeteriaId(cafeteriaId);
