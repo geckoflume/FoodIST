@@ -24,18 +24,12 @@ import java.io.IOException;
 import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.databinding.ActivityDishBinding;
-import pt.ulisboa.tecnico.cmov.foodist.db.entity.DishEntity;
 import pt.ulisboa.tecnico.cmov.foodist.viewmodel.DishViewModel;
 
 public class DishActivity extends AppCompatActivity {
     private static final String TAG = DishActivity.class.getSimpleName();
     private static final int REQUEST_TAKE_PHOTO = 1;
 
-    private Toolbar toolbar;
-    private int dishId;
-    private String name;
-    private double price;
-    private DishEntity currentDish;
     private DishViewModel dishViewModel;
     private String picturePath;
 
@@ -44,7 +38,7 @@ public class DishActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ActivityDishBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_dish);
 
-        dishId = Integer.parseInt(getIntent().getStringExtra(DishAdapter.EXTRA_MESSAGE));
+        int dishId = Integer.parseInt(getIntent().getStringExtra(DishAdapter.EXTRA_MESSAGE));
 
         DishViewModel.Factory factory = new DishViewModel.Factory(getApplication(), dishId);
         dishViewModel = new ViewModelProvider(this, factory).get(DishViewModel.class);
@@ -60,21 +54,16 @@ public class DishActivity extends AppCompatActivity {
         dishViewModel.getDish().observe(this, dishWithPictures -> {
             if (dishWithPictures != null) {
                 adapterPictures.setPicturesList(dishWithPictures.pictures);
-                currentDish = dishWithPictures.dish;
-                name = currentDish.getName();
-                price = currentDish.getPrice();
-                Toast.makeText(this, name, Toast.LENGTH_SHORT).show(); // to show if we have the good dish
             } else {
+                // In this case, the dish was deleted by deleteDish action
                 this.finish();
             }
         });
-
-
-
+        dishViewModel.updatePictures();
     }
 
     private void initActionBar() {
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(v -> {
@@ -125,9 +114,8 @@ public class DishActivity extends AppCompatActivity {
         }
     }
 
-    public void deletDish(View view) {
+    public void deleteDish(View view) {
         Toast.makeText(this, dishViewModel.getDish().getValue().dish.getName() + " successfully deleted!", Toast.LENGTH_SHORT).show();
         dishViewModel.deleteDish();
-        this.finish();
     }
 }

@@ -34,8 +34,8 @@ public class CafeteriaViewModel extends AndroidViewModel {
     private final int mCafeteriaId;
     private MutableLiveData<String> openHoursText = new MutableLiveData<>("");
 
-    public CafeteriaViewModel(@NonNull Application application, DataRepository repository,
-                              final int cafeteriaId, final int statusId) {
+    private CafeteriaViewModel(@NonNull Application application, DataRepository repository,
+                               final int cafeteriaId, final int statusId) {
         super(application);
         this.mCafeteriaId = cafeteriaId;
         mRepository = repository;
@@ -43,7 +43,6 @@ public class CafeteriaViewModel extends AndroidViewModel {
         mObservableCafeteria = mRepository.getCafeteria(this.mCafeteriaId);
         mObservableOpeningHours = mRepository.getOpeningHours(this.mCafeteriaId, statusId);
     }
-
 
     public LiveData<CafeteriaEntity> getCafeteria() {
         return mObservableCafeteria;

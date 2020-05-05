@@ -15,12 +15,8 @@ import pt.ulisboa.tecnico.cmov.foodist.db.entity.DishWithPictures;
 
 @Dao
 public interface DishDao {
-
     @Query("SELECT * FROM dishes WHERE cafeteria_id = :cafeteriaId")
-    LiveData<List<DishEntity>> getAllByCafeteriaId(int cafeteriaId);
-
-    @Query("SELECT * FROM dishes WHERE id = :id LIMIT 1")
-    LiveData<DishEntity> findById(int id);
+    List<DishEntity> getAllByCafeteriaIdEntities(int cafeteriaId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(List<DishEntity> cafeterias);
@@ -28,11 +24,11 @@ public interface DishDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(DishEntity dish);
 
-    @Query("DELETE FROM dishes WHERE cafeteria_id = :cafeteriaId")
-    void deleteAllByCafeteriaId(int cafeteriaId);
-
     @Query("DELETE FROM dishes WHERE id = :dishId")
-    void delete(int dishId);
+    void deleteById(int dishId);
+
+    @Delete
+    void deleteAll(List<DishEntity> dishes);
 
     @Transaction
     @Query("SELECT * FROM dishes WHERE cafeteria_id = :cafeteriaId")

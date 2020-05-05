@@ -22,18 +22,18 @@ import pt.ulisboa.tecnico.cmov.foodist.model.Picture;
 import pt.ulisboa.tecnico.cmov.foodist.net.ServerFetcher;
 
 public class DishAdapter extends RecyclerView.Adapter<DishAdapter.DishHolder> {
-    public static final String EXTRA_MESSAGE = "pt.ulisboa.tecnico.cmov.foodist.DISHID";
+    static final String EXTRA_MESSAGE = "pt.ulisboa.tecnico.cmov.foodist.DISHID";
 
     private final RequestManager glide;
     private List<? extends DishWithPictures> dishList;
 
-    public DishAdapter(final RequestManager glide) {
+    DishAdapter(final RequestManager glide) {
         this.glide = glide;
     }
 
     @NonNull
     @Override
-    public DishHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public DishHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ListItemDishBinding dishListItemBinding =
                 DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
                         R.layout.list_item_dish, parent, false);
@@ -56,7 +56,7 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.DishHolder> {
     }
 
 
-    public void setDishList(List<? extends DishWithPictures> dishesList) {
+    void setDishList(List<? extends DishWithPictures> dishesList) {
         this.dishList = dishesList;
         notifyDataSetChanged();
     }
@@ -65,7 +65,7 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.DishHolder> {
     class DishHolder extends RecyclerView.ViewHolder {
         private ListItemDishBinding listItemDishBinding;
 
-        public DishHolder(@NonNull ListItemDishBinding listItemDishBinding) {
+        DishHolder(@NonNull ListItemDishBinding listItemDishBinding) {
             super(listItemDishBinding.getRoot());
             this.listItemDishBinding = listItemDishBinding;
 
@@ -77,7 +77,7 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.DishHolder> {
 
         }
 
-        public void updateWithPicture(Picture picture, RequestManager requestManager) {
+        void updateWithPicture(Picture picture, RequestManager requestManager) {
             ImageView imageView = itemView.findViewById(R.id.imageView_thumbnail);
             requestManager.load(ServerFetcher.getPictureUrl(picture.getFilename())).into(imageView);
             imageView.setVisibility(View.VISIBLE);

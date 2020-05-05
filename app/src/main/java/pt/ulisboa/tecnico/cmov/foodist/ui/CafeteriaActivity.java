@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.cmov.foodist.ui;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -122,7 +121,7 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
         RecyclerView recyclerViewDishes = this.findViewById(R.id.recyclerView_dishes);
         DishAdapter adapterDishes = new DishAdapter(Glide.with(this));
         recyclerViewDishes.setAdapter(adapterDishes);
-        dishListViewModel.getDishes().observe(this, adapterDishes::setDishList);
+        dishListViewModel.getDishesWithPictures().observe(this, adapterDishes::setDishList);
     }
 
     private void initActionBar() {
@@ -152,6 +151,7 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
                     ((BasicApp) getApplication()).networkIO().execute(() -> {
                         cafeteriaViewModel.updateCafeteriaWaitTime();
                         dishListViewModel.updateDishes();
+                        dishListViewModel.updateFirstPicture();
                     });
                     if (isCheckBoxRouteTicked) {
                         fusedLocationClient.getLastLocation().addOnSuccessListener(mCurrentLocation ->
@@ -166,7 +166,6 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
                                         // offset from edges of the map 10% of screen height
                                         int padding = (int) (height * 0.1);
 
-                                        @SuppressLint("ResourceType")
                                         PolylineOptions polyline = new PolylineOptions()
                                                 .addAll(path)
                                                 .width(20)

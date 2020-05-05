@@ -22,8 +22,8 @@ public interface CafeteriaDao {
     @Query("SELECT * FROM cafeterias WHERE campus_id = :campusId ORDER BY distance")
     LiveData<List<CafeteriaEntity>> getAllByCampusId(int campusId);
 
-    @Query("SELECT * FROM cafeterias WHERE id = :id")
-    LiveData<CafeteriaEntity> findById(int id);
+    @Query("SELECT * FROM cafeterias WHERE id = :id LIMIT 1")
+    LiveData<CafeteriaEntity> getById(int id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<CafeteriaEntity> cafeterias);
@@ -48,6 +48,6 @@ public interface CafeteriaDao {
     @Query("SELECT cafeterias.* FROM cafeterias JOIN openinghours ON openinghours.cafeteria_id = cafeterias.id WHERE cafeterias.campus_id = :campusId AND openinghours.status = :status GROUP BY cafeterias.id")
     LiveData<List<CafeteriaWithOpeningHours>> getCafeteriasWithOpeningHoursByCampusId(int status, int campusId);
 
-    @Query("SELECT cafeterias.* FROM cafeterias, dishes WHERE cafeterias.id=dishes.cafeteria_id AND dishes.id = :dishId")
-    LiveData<CafeteriaEntity> findByIdDish(int dishId);
+    @Query("SELECT cafeterias.* FROM cafeterias, dishes WHERE cafeterias.id=dishes.cafeteria_id AND dishes.id = :dishId LIMIT 1")
+    LiveData<CafeteriaEntity> getByIdDish(int dishId);
 }

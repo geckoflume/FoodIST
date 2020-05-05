@@ -4,11 +4,10 @@
 
     <data>
 
-        <import type="pt.ulisboa.tecnico.cmov.foodist.ui.UiUtils" />
-
         <variable
             name="dish"
             type="pt.ulisboa.tecnico.cmov.foodist.model.Dish" />
+
     </data>
 
 
@@ -63,7 +62,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginBottom="16dp"
-                android:text="@{UiUtils.formatPrice(dish.price, @string/currency)}"
+                android:text="@{@string/currency(dish.price)}"
                 android:textStyle="italic"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/imageView_thumbnail"

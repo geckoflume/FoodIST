@@ -10,15 +10,15 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.util.List;
+
 import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
 import pt.ulisboa.tecnico.cmov.foodist.db.DataRepository;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
-import pt.ulisboa.tecnico.cmov.foodist.db.entity.DishEntity;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.DishWithPictures;
-import pt.ulisboa.tecnico.cmov.foodist.model.Cafeteria;
+import pt.ulisboa.tecnico.cmov.foodist.db.entity.PictureEntity;
 import pt.ulisboa.tecnico.cmov.foodist.net.ServerFetcher;
 import pt.ulisboa.tecnico.cmov.foodist.net.ServerParser;
-
 
 
 public class DishViewModel extends AndroidViewModel {
@@ -31,8 +31,8 @@ public class DishViewModel extends AndroidViewModel {
     private final int mDishId;
 
 
-    public DishViewModel(@NonNull Application application, DataRepository repository,
-                         final int dishId) {
+    private DishViewModel(@NonNull Application application, DataRepository repository,
+                          final int dishId) {
         super(application);
         this.mDishId = dishId;
         mRepository = repository;
@@ -50,10 +50,12 @@ public class DishViewModel extends AndroidViewModel {
         return associatedCafeteria;
     }
 
-    public void deleteDish(){
-        ((BasicApp)getApplication()).networkIO().execute(()-> {
+    public void deleteDish() {
+        ((BasicApp) getApplication()).networkIO().execute(() -> {
             if (ServerFetcher.deleteDish(mDishId) != null) {
-                mRepository.deleteDish(mDishId);
+                List<PictureEntity> mPictures = mRepository.getPicturesByDishId(mDishId);
+                mRepository.deleteDishById(mDishId);
+                mRepository.deletePictures(mPictures);
             }
         });
     }
@@ -65,6 +67,27 @@ public class DishViewModel extends AndroidViewModel {
             mRepository.insertPicture(serverParser.parsePicture(response));
         }
         Log.d(TAG, "Inserting picture " + pictureUri);
+    }
+
+    public void updatePictures() {
+        ((BasicApp) getApplication()).networkIO().execute(() -> {
+            List<PictureEntity> mPictures = mRepository.getPicturesByDishId(mDishId);
+            String responsePictures = ServerFetcher.fetchPictures(mDishId);
+            if (responsePictures != null) {
+                ServerParser serverParser = new ServerParser();
+                List<PictureEntity> fetchedPictures = serverParser.parsePictures(responsePictures);
+
+                // Check if the distant pictures are the same as the local pictures
+                mPictures.removeAll(fetchedPictures);
+                if (!mPictures.isEmpty()) {
+                    mRepository.deletePictures(mPictures);
+                    Log.d(TAG, "Deleted obsolete pictures for dish " + mDishId);
+                }
+
+                mRepository.insertPictures(fetchedPictures);
+            }
+            Log.d(TAG, "Updated pictures for dish " + mDishId);
+        });
     }
 
     /**

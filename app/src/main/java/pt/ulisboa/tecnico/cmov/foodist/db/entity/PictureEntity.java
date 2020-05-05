@@ -29,28 +29,52 @@ public class PictureEntity implements Picture {
     public PictureEntity() {
     }
 
+    @Override
     public int getId() {
         return id;
     }
 
+    @Override
     public void setId(int id) {
         this.id = id;
     }
 
+    @Override
     public int getDishId() {
         return dishId;
     }
 
+    @Override
     public void setDishId(int dishId) {
         this.dishId = dishId;
     }
 
     @NonNull
+    @Override
     public String getFilename() {
         return filename;
     }
 
+    @Override
     public void setFilename(@NonNull String filename) {
         this.filename = filename;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || !(o instanceof Picture)) return false;
+        PictureEntity that = (PictureEntity) o;
+        return id == that.id &&
+                dishId == that.dishId &&
+                filename.equals(that.filename);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + dishId;
+        result = 31 * result + filename.hashCode();
+        return result;
     }
 }

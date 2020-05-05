@@ -45,10 +45,6 @@ public abstract class UiUtils {
             return String.format(km, ceilIntDivision(distance, 1000));
     }
 
-    public static String formatPrice(double price, String currency) {
-        return String.format(currency, price);
-    }
-
     public static boolean isOpen(List<OpeningHoursEntity> openingHours, int status) {
         for (OpeningHoursEntity hour : openingHours) {
             if (hour.getStatus() == status && hour.isOpen()) {

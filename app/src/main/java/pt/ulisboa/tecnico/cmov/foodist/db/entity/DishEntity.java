@@ -79,5 +79,28 @@ public class DishEntity implements Dish {
     public void setId(int i) {
         id = i;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || !(o instanceof Dish)) return false;
+        DishEntity that = (DishEntity) o;
+        return id == that.id &&
+                Double.compare(that.price, price) == 0 &&
+                cafeteriaId == that.cafeteriaId &&
+                name.equals(that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = id;
+        result = 31 * result + name.hashCode();
+        temp = Double.doubleToLongBits(price);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + cafeteriaId;
+        return result;
+    }
 }
 

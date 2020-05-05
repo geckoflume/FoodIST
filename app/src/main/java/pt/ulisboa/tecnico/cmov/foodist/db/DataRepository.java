@@ -56,7 +56,7 @@ public class DataRepository {
     }
 
     public LiveData<CafeteriaEntity> getCafeteria(final int cafeteriaId) {
-        return mDatabase.cafeteriaDao().findById(cafeteriaId);
+        return mDatabase.cafeteriaDao().getById(cafeteriaId);
     }
 
     public void updateCafeterias(List<CafeteriaEntity> currentCafeterias) {
@@ -88,34 +88,29 @@ public class DataRepository {
     }
 
     //Cafeteria and Dish
-
-    public LiveData<CafeteriaEntity> getCafeteriaByIdDish(int idDish){
-        return mDatabase.cafeteriaDao().findByIdDish(idDish);
+    public LiveData<CafeteriaEntity> getCafeteriaByIdDish(int idDish) {
+        return mDatabase.cafeteriaDao().getByIdDish(idDish);
     }
 
     //Dishes
-    public LiveData<List<DishEntity>> getDishesByCafeteriaId(final int cafeteriaId) {
-        return mDatabase.dishDao().getAllByCafeteriaId(cafeteriaId);
+    public List<DishEntity> getDishesByCafeteriaIdEntities(int cafeteriaId) {
+        return mDatabase.dishDao().getAllByCafeteriaIdEntities(cafeteriaId);
     }
 
     public void insertDish(DishEntity dish) {
         mDatabase.dishDao().insert(dish);
     }
 
-    public void updateDishes(List<DishEntity> dishes) {
+    public void insertDishes(List<DishEntity> dishes) {
         mDatabase.dishDao().insert(dishes);
     }
 
-    public void deleteDishes(final int mCafeteriaId) {
-        mDatabase.dishDao().deleteAllByCafeteriaId(mCafeteriaId);
+    public void deleteDishes(List<DishEntity> dishes) {
+        mDatabase.dishDao().deleteAll(dishes);
     }
 
-    public void deleteDish(int dishId){
-        mDatabase.dishDao().delete(dishId);
-    }
-
-    public LiveData<DishEntity> getDish(final int dishId) {
-        return mDatabase.dishDao().findById(dishId);
+    public void deleteDishById(int dishId) {
+        mDatabase.dishDao().deleteById(dishId);
     }
 
     //Pictures
@@ -129,5 +124,21 @@ public class DataRepository {
 
     public void insertPicture(PictureEntity picture) {
         mDatabase.pictureDao().insert(picture);
+    }
+
+    public void deletePictures(List<PictureEntity> pictures) {
+        mDatabase.pictureDao().deleteAll(pictures);
+    }
+
+    public void deletePicture(PictureEntity picture) {
+        mDatabase.pictureDao().delete(picture);
+    }
+
+    public void insertPictures(List<PictureEntity> pictures) {
+        mDatabase.pictureDao().insertAll(pictures);
+    }
+
+    public List<PictureEntity> getPicturesByDishId(int dishId) {
+        return mDatabase.pictureDao().getAllByDishIdEntities(dishId);
     }
 }
