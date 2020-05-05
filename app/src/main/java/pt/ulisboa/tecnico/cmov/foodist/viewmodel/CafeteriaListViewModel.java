@@ -107,8 +107,7 @@ public class CafeteriaListViewModel extends AndroidViewModel {
     }
 
     public void updateCafeteriasWaitTimes() {
-        ServerFetcher serverFetcher = new ServerFetcher();
-        String responseCafeterias = serverFetcher.fetchCafeterias();
+        String responseCafeterias = ServerFetcher.fetchCafeterias();
         if (responseCafeterias != null) {
             ServerParser serverParser = new ServerParser();
             mRepository.updateCafeteriasPartial(serverParser.parseCafeterias(responseCafeterias));

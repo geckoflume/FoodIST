@@ -98,10 +98,9 @@ public class NewDishActivity extends AppCompatActivity {
             int id = getIntent().getIntExtra("cafeteriaId", 0);
 
             DishEntity dish = new DishEntity(name, Double.parseDouble(priceStr), id);
-            ServerFetcher serverFetcher = new ServerFetcher();
             ServerParser serverParser = new ServerParser();
             ((BasicApp) getApplication()).networkIO().execute(() -> {
-                String responseDish = serverFetcher.insertDish(dish);
+                String responseDish = ServerFetcher.insertDish(dish);
                 DishEntity completeDish = serverParser.parseDish(responseDish);
                 if (completeDish != null) {
                     mRepository.insertDish(completeDish);

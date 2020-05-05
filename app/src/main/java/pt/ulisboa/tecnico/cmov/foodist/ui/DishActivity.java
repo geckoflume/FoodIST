@@ -16,6 +16,8 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -50,7 +52,7 @@ public class DishActivity extends AppCompatActivity {
         initActionBar();
 
         RecyclerView recyclerViewDishes = this.findViewById(R.id.recyclerView_pictures);
-        PictureAdapter adapterPictures = new PictureAdapter();
+        PictureAdapter adapterPictures = new PictureAdapter(Glide.with(this));
         recyclerViewDishes.setAdapter(adapterPictures);
 
         dishViewModel.getDish().observe(this, dishWithPictures -> {

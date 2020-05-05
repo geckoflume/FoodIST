@@ -14,6 +14,7 @@ import java.util.List;
 import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
 import pt.ulisboa.tecnico.cmov.foodist.db.DataRepository;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.DishEntity;
+import pt.ulisboa.tecnico.cmov.foodist.db.entity.DishWithPictures;
 import pt.ulisboa.tecnico.cmov.foodist.net.ServerFetcher;
 import pt.ulisboa.tecnico.cmov.foodist.net.ServerParser;
 
@@ -22,7 +23,7 @@ public class DishListViewModel extends AndroidViewModel {
     private static final String TAG = DishListViewModel.class.getSimpleName();
 
     private final DataRepository mRepository;
-    private final LiveData<List<DishEntity>> mDishes;
+    private final LiveData<List<DishWithPictures>> mDishes;
     private final int mCafeteriaId;
 
     public DishListViewModel(@NonNull Application application, DataRepository repository,
@@ -31,10 +32,10 @@ public class DishListViewModel extends AndroidViewModel {
         this.mCafeteriaId = cafeteriaId;
         mRepository = repository;
 
-        mDishes = mRepository.getDishesByCafeteriaId(cafeteriaId);
+        mDishes = mRepository.getDishesWithPicturesByCafeteriaId(cafeteriaId);
     }
 
-    public LiveData<List<DishEntity>> getDishes() {
+    public LiveData<List<DishWithPictures>> getDishes() {
         return mDishes;
     }
 
@@ -42,8 +43,7 @@ public class DishListViewModel extends AndroidViewModel {
         mRepository.deleteDishes(mCafeteriaId);
         Log.d(TAG, "Deleted dishes for cafeteria " + mCafeteriaId);
 
-        ServerFetcher serverFetcher = new ServerFetcher();
-        String responseDishes = serverFetcher.fetchDishes(mCafeteriaId);
+        String responseDishes = ServerFetcher.fetchDishes(mCafeteriaId);
         if (responseDishes != null) {
             ServerParser serverParser = new ServerParser();
             List<DishEntity> fetchedDishes = serverParser.parseDishes(responseDishes);

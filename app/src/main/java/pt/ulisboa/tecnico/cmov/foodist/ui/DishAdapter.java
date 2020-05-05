@@ -2,22 +2,34 @@ package pt.ulisboa.tecnico.cmov.foodist.ui;
 
 import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.RequestManager;
+
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.databinding.ListItemDishBinding;
+import pt.ulisboa.tecnico.cmov.foodist.db.entity.DishWithPictures;
 import pt.ulisboa.tecnico.cmov.foodist.model.Dish;
+import pt.ulisboa.tecnico.cmov.foodist.model.Picture;
+import pt.ulisboa.tecnico.cmov.foodist.net.ServerFetcher;
 
 public class DishAdapter extends RecyclerView.Adapter<DishAdapter.DishHolder> {
     public static final String EXTRA_MESSAGE = "pt.ulisboa.tecnico.cmov.foodist.DISHID";
 
-    private List<? extends Dish> dishList;
+    private final RequestManager glide;
+    private List<? extends DishWithPictures> dishList;
+
+    public DishAdapter(final RequestManager glide) {
+        this.glide = glide;
+    }
 
     @NonNull
     @Override
@@ -30,8 +42,10 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.DishHolder> {
 
     @Override
     public void onBindViewHolder(final DishHolder holder, int position) {
-        Dish dish = dishList.get(position);
+        Dish dish = dishList.get(position).dish;
         holder.listItemDishBinding.setDish(dish);
+        if (dishList.get(position).pictures.size() > 0)
+            holder.updateWithPicture(dishList.get(position).pictures.get(0), this.glide);
     }
 
     @Override
@@ -42,7 +56,7 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.DishHolder> {
     }
 
 
-    public void setDishList(List<? extends Dish> dishesList) {
+    public void setDishList(List<? extends DishWithPictures> dishesList) {
         this.dishList = dishesList;
         notifyDataSetChanged();
     }
@@ -61,6 +75,12 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.DishHolder> {
                 listItemDishBinding.getRoot().getContext().startActivity(intent);
             });
 
+        }
+
+        public void updateWithPicture(Picture picture, RequestManager requestManager) {
+            ImageView imageView = itemView.findViewById(R.id.imageView_thumbnail);
+            requestManager.load(ServerFetcher.getPictureUrl(picture.getFilename())).into(imageView);
+            imageView.setVisibility(View.VISIBLE);
         }
     }
 }

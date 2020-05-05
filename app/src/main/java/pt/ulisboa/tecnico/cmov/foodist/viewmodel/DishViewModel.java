@@ -41,8 +41,7 @@ public class DishViewModel extends AndroidViewModel {
     }
 
     public void insertPicture(String pictureUri) {
-        ServerFetcher serverFetcher = new ServerFetcher();
-        String response = serverFetcher.insertPicture(mDishId, pictureUri);
+        String response = ServerFetcher.insertPicture(mDishId, pictureUri);
         if (response != null) {
             ServerParser serverParser = new ServerParser();
             mRepository.insertPicture(serverParser.parsePicture(response));

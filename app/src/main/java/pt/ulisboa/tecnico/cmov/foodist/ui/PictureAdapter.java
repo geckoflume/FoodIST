@@ -8,16 +8,24 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.RequestManager;
+
 import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.databinding.ListItemPictureBinding;
 import pt.ulisboa.tecnico.cmov.foodist.model.Picture;
+import pt.ulisboa.tecnico.cmov.foodist.net.ServerFetcher;
 
 public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.PictureHolder> {
     public static final String EXTRA_MESSAGE = "pt.ulisboa.tecnico.cmov.foodist.PICTUREID";
 
+    private final RequestManager glide;
     private List<? extends Picture> picturesList;
+
+    public PictureAdapter(final RequestManager glide) {
+        this.glide = glide;
+    }
 
     @NonNull
     @Override
@@ -32,6 +40,7 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.PictureH
     public void onBindViewHolder(final PictureHolder holder, int position) {
         Picture picture = picturesList.get(position);
         holder.listItemPictureBinding.setPicture(picture);
+        holder.updateWithPicture(picturesList.get(position), this.glide);
     }
 
     @Override
@@ -41,12 +50,10 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.PictureH
         else return 0;
     }
 
-
     public void setPicturesList(List<? extends Picture> picturesList) {
         this.picturesList = picturesList;
         notifyDataSetChanged();
     }
-
 
     class PictureHolder extends RecyclerView.ViewHolder {
         private ListItemPictureBinding listItemPictureBinding;
@@ -54,18 +61,12 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.PictureH
         public PictureHolder(@NonNull ListItemPictureBinding listItemPictureBinding) {
             super(listItemPictureBinding.getRoot());
             this.listItemPictureBinding = listItemPictureBinding;
-            ImageView image = itemView.findViewById(R.id.imageView_thumbnail);
+        }
 
-            //image.setImageURI(FileProvider.getUriForFile(itemView.getContext(), "pt.ulisboa.tecnico.cmov.foodist.fileprovider", new File("dish_1005243876705297712.jpg")));
-
-            /*
-            itemView.setOnClickListener(view1 -> {
-                Intent intent = new Intent(view1.getContext(), DishActivity.class);
-                intent.putExtra(EXTRA_MESSAGE, String.valueOf(listItemDishBinding.getDish().getId()));
-                listItemDishBinding.getRoot().getContext().startActivity(intent);
-            });
-             */
-
+        public void updateWithPicture(Picture picture, RequestManager requestManager) {
+            requestManager
+                    .load(ServerFetcher.getPictureUrl(picture.getFilename()))
+                    .into((ImageView) itemView.findViewById(R.id.imageView_thumbnail));
         }
     }
 }

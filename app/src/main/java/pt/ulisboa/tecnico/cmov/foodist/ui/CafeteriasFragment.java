@@ -72,8 +72,10 @@ public class CafeteriasFragment extends Fragment implements OnMapReadyCallback {
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
         }
-        // Set observer
-        mCafeteriaListViewModel.getCafeterias().observe(getViewLifecycleOwner(), cafeteriaEntities ->
-                LocationUtils.updateMap(this.mMap, this.mapFragment, cafeteriaEntities));
+        mMap.setOnMapLoadedCallback(() -> {
+            // Set observer
+            mCafeteriaListViewModel.getCafeterias().observe(getViewLifecycleOwner(), cafeteriaEntities ->
+                    LocationUtils.updateMap(mMap, mapFragment, cafeteriaEntities));
+        });
     }
 }
