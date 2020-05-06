@@ -66,6 +66,14 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView_price" />
 
+            <CheckBox
+                android:id="@+id/checkBox_translation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/translate"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView_details" />
+
             <TextView
                 android:id="@+id/textView_pictures"
                 style="@style/TextAppearance.MaterialComponents.Headline5"

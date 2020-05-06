@@ -108,3 +108,8 @@ Syntax :
 
 - JPEG compression:
     - https://stackoverflow.com/a/19596231
+
+- Set locale at runtime:
+    - https://proandroiddev.com/change-language-programmatically-at-runtime-on-android-5e6bc15c758
+    - https://medium.com/ironsource-tech-blog/conversion-by-translation-changing-your-android-app-language-at-runtime-5c9daebf9771
+    - https://stackoverflow.com/a/9173571

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -67,6 +68,9 @@ public class DishActivity extends AppCompatActivity {
             }
         });
         dishViewModel.updatePictures();
+
+        CheckBox translate = findViewById(R.id.checkBox_translation);
+        translate.setOnCheckedChangeListener((buttonView, isChecked) -> Log.d(TAG, "checked translation"));
     }
 
     private void initActionBar() {

@@ -51,4 +51,6 @@
     <string name="price">Preço: %s</string>
     <string name="cafeteria_name">Refeitório: %s</string>
     <string name="delete_dish">Apagar prato</string>
+    <string name="lang">Idioma</string>
+    <string name="translate">Traduzir</string>
 </resources>

@@ -22,6 +22,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.ArrayList;
 
 import pt.ulisboa.tecnico.cmov.foodist.R;
+import pt.ulisboa.tecnico.cmov.foodist.model.Language;
 import pt.ulisboa.tecnico.cmov.foodist.model.Status;
 
 /**
@@ -29,7 +30,8 @@ import pt.ulisboa.tecnico.cmov.foodist.model.Status;
  */
 public class AccountFragment extends Fragment {
     private Button saveButton;
-    private int newStatus = Status.DEFAULT;
+    private int newStatus;
+    private int newLang;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,6 +40,7 @@ public class AccountFragment extends Fragment {
 
         // Statuses
         ArrayList<String> statuses = Status.getInstance(getContext());
+        ArrayList<Language> languages = Language.getInstance(getContext());
 
         // Set to the defined values
         SharedPreferences sharedPref = getActivity().getSharedPreferences(
@@ -48,18 +51,24 @@ public class AccountFragment extends Fragment {
         TextInputLayout textInputLayout_email = root.findViewById(R.id.textInputLayout_email);
         TextInputEditText textInputEditText_email = root.findViewById(R.id.textInputEditText_email);
         AutoCompleteTextView dropdownStatus = root.findViewById(R.id.dropdown_status);
+        AutoCompleteTextView dropdownLang = root.findViewById(R.id.dropdown_lang);
         saveButton = root.findViewById(R.id.button_saveAccount);
 
         String username = sharedPref.getString("username", "");
         String email = sharedPref.getString("email", "");
         int status = sharedPref.getInt("status", Status.DEFAULT);
+        newStatus = status;
+        int lang = sharedPref.getInt("lang", Language.DEFAULT);
+        newLang = lang;
 
         textInputEditText_username.setText(username);
         textInputEditText_email.setText(email);
         dropdownStatus.setText(statuses.get(status));
 
+        dropdownLang.setText(languages.get(lang).toString());
+
         // Status dropdown
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.layout_drop_status, statuses);
+        ArrayAdapter<String> adapterStatus = new ArrayAdapter<>(getContext(), R.layout.layout_drop_status, statuses);
         // To fix inputmethod showing up (https://github.com/material-components/material-components-android/issues/1143)
         dropdownStatus.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
@@ -67,7 +76,18 @@ public class AccountFragment extends Fragment {
                 imm.hideSoftInputFromWindow(root.getWindowToken(), 0);
             }
         });
-        dropdownStatus.setAdapter(adapter);
+        dropdownStatus.setAdapter(adapterStatus);
+
+        // Language dropdown
+        LanguageAdapter adapterLang = new LanguageAdapter(getContext(), languages);
+        // To fix inputmethod showing up (https://github.com/material-components/material-components-android/issues/1143)
+        dropdownLang.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(root.getWindowToken(), 0);
+            }
+        });
+        dropdownLang.setAdapter(adapterLang);
 
         // Form validation
         textInputEditText_username.addTextChangedListener(new TextWatcher() {
@@ -84,7 +104,6 @@ public class AccountFragment extends Fragment {
             }
         });
 
-        // Listeners
         textInputEditText_email.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
                 if (textInputLayout_email.getError() != null)
@@ -104,6 +123,11 @@ public class AccountFragment extends Fragment {
             resetSaveButton();
         });
 
+        dropdownLang.setOnItemClickListener((parent, arg1, pos, id) -> {
+            newLang = pos;
+            resetSaveButton();
+        });
+
         saveButton.setOnClickListener(v -> {
             // fetch username and check if it is valid
             String newUsername = textInputEditText_username.getText().toString();
@@ -120,10 +144,14 @@ public class AccountFragment extends Fragment {
             // save the new values if they are valid
             if (isValidUsername(newUsername) && isValidEmail(newEmail)) {
                 // if user data has changed
-                if (!newUsername.equals(username) || !newEmail.equals(email) || newStatus != status) {
+                if (!newUsername.equals(username) || !newEmail.equals(email) || newStatus != status || newLang != lang) {
                     sharedPref.edit().putString("username", newUsername).apply();
                     sharedPref.edit().putString("email", newEmail).apply();
                     sharedPref.edit().putInt("status", newStatus).apply();
+                    if (newLang != lang) {
+                        sharedPref.edit().putInt("lang", newLang).apply();
+                        ((MainActivity) getActivity()).restart();
+                    }
                     ((MainActivity) getActivity()).updateUser();
                     ((MainActivity) getActivity()).updateStatus();
                 }

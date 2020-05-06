@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
@@ -44,11 +47,14 @@ import com.google.android.gms.location.SettingsClient;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.Locale;
+
 import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
 import pt.ulisboa.tecnico.cmov.foodist.BuildConfig;
 import pt.ulisboa.tecnico.cmov.foodist.PermissionsHelper;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.model.Campus;
+import pt.ulisboa.tecnico.cmov.foodist.model.Language;
 import pt.ulisboa.tecnico.cmov.foodist.model.Status;
 import pt.ulisboa.tecnico.cmov.foodist.viewmodel.CafeteriaListViewModel;
 
@@ -73,13 +79,15 @@ public class MainActivity extends AppCompatActivity {
     private MenuItem refreshMenuItem;
     private TextView textView_username;
     private TextView textView_email;
+    private Locale mCurrentLocale;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         sharedPref = getSharedPreferences(
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        updateLocale();
+        setContentView(R.layout.activity_main);
 
         // Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -140,6 +148,8 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         if (!PermissionsHelper.checkPermissionLocation(this))
             PermissionsHelper.requestPermissionLocation(MainActivity.this);
+        mCurrentLocale = getResources().getConfiguration().locale;
+
     }
 
     @Override
@@ -326,5 +336,24 @@ public class MainActivity extends AppCompatActivity {
 
     public void updateStatus() {
         mCafeteriaListViewModel.setStatus(sharedPref.getInt("status", Status.DEFAULT));
+    }
+
+    public void updateLocale() {
+        Locale locale = Language.getInstance(this).get(sharedPref.getInt("lang", Language.DEFAULT)).getLocale();
+        Locale.setDefault(locale);
+        Resources res = getResources();
+        Configuration conf = res.getConfiguration();
+        if (Build.VERSION.SDK_INT >= 17) {
+            conf.setLocale(locale);
+        } else {
+            conf.locale = locale;
+        }
+        res.updateConfiguration(conf, res.getDisplayMetrics());
+    }
+
+    public void restart() {
+        Intent refresh = new Intent(this, MainActivity.class);
+        finish();
+        startActivity(refresh);
     }
 }

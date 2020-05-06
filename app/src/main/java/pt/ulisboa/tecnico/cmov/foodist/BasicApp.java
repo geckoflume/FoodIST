@@ -1,9 +1,15 @@
 package pt.ulisboa.tecnico.cmov.foodist;
 
 import android.app.Application;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.os.Build;
+
+import androidx.annotation.NonNull;
 
 import com.jakewharton.threetenabp.AndroidThreeTen;
 
+import java.util.Locale;
 import java.util.concurrent.Executor;
 
 import pt.ulisboa.tecnico.cmov.foodist.db.AppDatabase;
@@ -30,9 +36,7 @@ public class BasicApp extends Application {
         return DataRepository.getInstance(getDatabase());
     }
 
-    public Executor networkIO(){
+    public Executor networkIO() {
         return mAppExecutors.networkIO();
     }
-
-    public Executor diskIO() { return mAppExecutors.diskIO(); }
 }

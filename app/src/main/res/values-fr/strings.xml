@@ -3,7 +3,7 @@
     <string name="select_campus">Sélectionnez le campus :</string>
     <string name="available_cafeterias">Cafétérias disponibles :</string>
     <string name="action_settings">Paramètres</string>
-    <string name="action_refresh">Rafraîchir</string>
+    <string name="action_refresh">Actualiser</string>
     <string name="permission_denied_explanation_location">La permission de localisation a été refusée, mais elle est nécessaire pour des fonctionnalités essentielles.</string>
     <string name="permission_rationale_location">La permission de localisation est nécessaire pour la sélection du campus et la distance des cafétérias.</string>
     <string name="no_location_detected">Aucun emplacement n\&apos;a été détecté. Assurez-vous que la localisation est activée sur l\&apos;appareil.</string>
@@ -25,7 +25,7 @@
     <string name="set_name_dish">Nom</string>
     <string name="set_price_dish">Prix</string>
     <string name="save_button">Sauvegarder</string>
-    <string name="title_add_dish">Ajouter un nouveau repas</string>
+    <string name="title_add_dish">Ajouter un plat</string>
     <string name="directions">Itinéraire</string>
     <string name="find_nearest">Trouver le campus le plus proche</string>
     <string name="all_cafeterias">Toutes les cafétérias</string>
@@ -37,7 +37,7 @@
     <string name="professor">Professeur</string>
     <string name="researcher">Chercheur</string>
     <string name="staff">Personnel</string>
-    <string name="general_public">Grand public</string>
+    <string name="general_public">Public</string>
     <string name="saved">Enregistré !</string>
     <string name="show_route">Afficher l\&apos;itinéraire</string>
     <string name="menu_dishes">Plats</string>
@@ -51,4 +51,6 @@
     <string name="price">Prix : %s</string>
     <string name="cafeteria_name">Cafétéria : %s</string>
     <string name="delete_dish">Supprimer le plat</string>
+    <string name="lang">Langue</string>
+    <string name="translate">Traduire</string>
 </resources>
