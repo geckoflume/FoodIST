@@ -100,12 +100,15 @@ public class CafeteriaListViewModel extends AndroidViewModel {
         for (CafeteriaEntity cafeteria : mCafeterias) {
             DirectionsFetcher directionsFetcher = new DirectionsFetcher(apiKey, cafeteria, mCurrentLocation);
             DirectionsParser directionsParser = directionsFetcher.parse();
-            cafeteria.setDistance(directionsParser.getDistance());
-            cafeteria.setTimeWalk(directionsParser.getDuration());
+            if (directionsParser != null) {
+                cafeteria.setDistance(directionsParser.getDistance());
+                cafeteria.setTimeWalk(directionsParser.getDuration());
+                mRepository.updateCafeterias(mCafeterias);
+                Log.d(TAG, "Updated distance and walk time for cafeteria " + cafeteria.getName());
+            } else
+                Log.e(TAG, "Unable to update distance and walk time for cafeteria " + cafeteria.getName());
 
-            Log.d(TAG, "Updating distance and walk time for cafeteria " + cafeteria.getName());
         }
-        mRepository.updateCafeterias(mCafeterias);
     }
 
     public void updateCafeteriasWaitTimes() {

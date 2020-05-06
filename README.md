@@ -61,11 +61,11 @@ To build it, use the `gradlew build` command or use "Import Project" in Android 
 By default, the opening times are the following:
 | Status         | Days            | Times         |
 |----------------|-----------------|---------------|
-| Student        | MONDAY - FRIDAY | 11:30 - 15:00 |
-| Professor      | MONDAY - FRIDAY | 11:30 - 18:00 |
-| Researcher     | MONDAY - FRIDAY | 11:30 - 18:00 |
-| Staff          | MONDAY - FRIDAY | 00:00 - 23:59 |
-| General Public | MONDAY - FRIDAY | 12:00 - 14:00 |
+| Student        | MONDAY - SUNDAY | 09:00 - 17:00 |
+| Professor      | MONDAY - SUNDAY | 09:00 - 17:00 |
+| Researcher     | MONDAY - SUNDAY | 09:00 - 17:00 |
+| Staff          | MONDAY - SUNDAY | 09:00 - 17:00 |
+| General Public | MONDAY - SUNDAY | 09:00 - 17:00 |
 
 To quickly generate a new JSON file containing different data, you can use the [generate_openingtimes.sh](generate_openingtimes.sh) script, which provides a basic yet useful assistant to help you do that painful task.
 Syntax :

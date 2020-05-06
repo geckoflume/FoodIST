@@ -73,18 +73,21 @@ public class DishViewModel extends AndroidViewModel {
         ((BasicApp) getApplication()).networkIO().execute(() -> {
             List<PictureEntity> mPictures = mRepository.getPicturesByDishId(mDishId);
             String responsePictures = ServerFetcher.fetchPictures(mDishId);
-            ServerParser serverParser = new ServerParser();
-            List<PictureEntity> fetchedPictures = serverParser.parsePictures(responsePictures);
+            if (responsePictures != null) {
+                ServerParser serverParser = new ServerParser();
+                List<PictureEntity> fetchedPictures = serverParser.parsePictures(responsePictures);
 
-            // Check if the distant pictures are the same as the local pictures
-            mPictures.removeAll(fetchedPictures);
-            if (!mPictures.isEmpty()) {
-                mRepository.deletePictures(mPictures);
-                Log.d(TAG, "Deleted obsolete pictures for dish " + mDishId);
-            }
+                // Check if the distant pictures are the same as the local pictures
+                mPictures.removeAll(fetchedPictures);
+                if (!mPictures.isEmpty()) {
+                    mRepository.deletePictures(mPictures);
+                    Log.d(TAG, "Deleted obsolete pictures for dish " + mDishId);
+                }
 
-            mRepository.insertPictures(fetchedPictures);
-            Log.d(TAG, "Updated pictures for dish " + mDishId);
+                mRepository.insertPictures(fetchedPictures);
+                Log.d(TAG, "Updated pictures for dish " + mDishId);
+            } else
+                Log.e(TAG, "Unable to update pictures for dish " + mDishId);
         });
     }
 

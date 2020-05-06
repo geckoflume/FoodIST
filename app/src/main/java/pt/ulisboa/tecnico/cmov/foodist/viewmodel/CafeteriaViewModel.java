@@ -62,14 +62,19 @@ public class CafeteriaViewModel extends AndroidViewModel {
 
     public List<LatLng> updateCafeteriaDistance(CafeteriaEntity currentCafeteria, final Location mCurrentLocation, final String apiKey) {
         DirectionsFetcher directionsFetcher = new DirectionsFetcher(apiKey, currentCafeteria, mCurrentLocation);
-        DirectionsParser directionsParser = directionsFetcher.parse();
-        currentCafeteria.setDistance(directionsParser.getDistance());
-        currentCafeteria.setTimeWalk(directionsParser.getDuration());
+        if (directionsFetcher.getResponse() != null && !directionsFetcher.getResponse().isEmpty()) {
+            DirectionsParser directionsParser = directionsFetcher.parse();
+            currentCafeteria.setDistance(directionsParser.getDistance());
+            currentCafeteria.setTimeWalk(directionsParser.getDuration());
 
-        Log.d(TAG, "Updating distance and walk time for cafeteria " + currentCafeteria.getName());
-        mRepository.updateCafeteria(currentCafeteria);
+            mRepository.updateCafeteria(currentCafeteria);
+            Log.d(TAG, "Updated distance and walk time for cafeteria " + currentCafeteria.getName());
 
-        return directionsParser.getPath();
+            return directionsParser.getPath();
+        } else {
+            Log.e(TAG, "Unable to update distance and walk time for cafeteria " + currentCafeteria.getName());
+            return null;
+        }
     }
 
     public void updateCafeteriaWaitTime() {
@@ -77,8 +82,10 @@ public class CafeteriaViewModel extends AndroidViewModel {
         if (responseCafeteria != null) {
             ServerParser serverParser = new ServerParser();
             mRepository.updateCafeteriaPartial(serverParser.parseCafeteria(responseCafeteria));
+            Log.d(TAG, "Updated wait time for cafeteria " + mCafeteriaId);
+        } else {
+            Log.e(TAG, "Unable to update time for cafeteria " + mCafeteriaId);
         }
-        Log.d(TAG, "Updating wait time for cafeteria " + mCafeteriaId);
     }
 
     public LiveData<Boolean> isUpdating() {

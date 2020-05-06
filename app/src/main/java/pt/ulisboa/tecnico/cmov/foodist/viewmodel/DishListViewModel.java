@@ -55,8 +55,9 @@ public class DishListViewModel extends AndroidViewModel {
             }
 
             mRepository.insertDishes(fetchedDishes);
-        }
-        Log.d(TAG, "Updated dishes for cafeteria " + mCafeteriaId);
+            Log.d(TAG, "Updated dishes for cafeteria " + mCafeteriaId);
+        } else
+            Log.e(TAG, "Unable to update dishes for cafeteria " + mCafeteriaId);
     }
 
     public void updateFirstPicture() {
@@ -66,27 +67,30 @@ public class DishListViewModel extends AndroidViewModel {
             for (DishEntity d : mDishes) {
                 List<PictureEntity> pictures = mRepository.getPicturesByDishId(d.getId());
                 String responsePictures = ServerFetcher.fetchPictures(d.getId());
-                ServerParser serverParser = new ServerParser();
-                List<PictureEntity> fetchedPictures = serverParser.parsePictures(responsePictures);
+                if (responsePictures != null) {
+                    ServerParser serverParser = new ServerParser();
+                    List<PictureEntity> fetchedPictures = serverParser.parsePictures(responsePictures);
 
-                if (!fetchedPictures.isEmpty()) {
-                    PictureEntity fetchedPicture = fetchedPictures.get(0);
-                    if (!pictures.isEmpty()) {
-                        PictureEntity mPicture = pictures.get(0);
-                        if (!mPicture.equals(fetchedPicture)) {
-                            mRepository.deletePicture(mPicture);
-                            Log.d(TAG, "Deleted obsolete first picture for dish " + d.getId());
+                    if (!fetchedPictures.isEmpty()) {
+                        PictureEntity fetchedPicture = fetchedPictures.get(0);
+                        if (!pictures.isEmpty()) {
+                            PictureEntity mPicture = pictures.get(0);
+                            if (!mPicture.equals(fetchedPicture)) {
+                                mRepository.deletePicture(mPicture);
+                                Log.d(TAG, "Deleted obsolete first picture for dish " + d.getId());
+                                mRepository.insertPicture(fetchedPicture);
+                                Log.d(TAG, "Updated first picture for dish " + d.getId());
+                            }
+                        } else {
                             mRepository.insertPicture(fetchedPicture);
                             Log.d(TAG, "Updated first picture for dish " + d.getId());
                         }
                     } else {
-                        mRepository.insertPicture(fetchedPicture);
-                        Log.d(TAG, "Updated first picture for dish " + d.getId());
+                        mRepository.deletePictures(pictures);
+                        Log.d(TAG, "Deleted all obsolete pictures for dish " + d.getId());
                     }
-                } else {
-                    mRepository.deletePictures(pictures);
-                    Log.d(TAG, "Deleted all obsolete pictures for dish " + d.getId());
-                }
+                } else
+                    Log.e(TAG, "Unable to update first picture for dish " + d.getId());
             }
         });
     }

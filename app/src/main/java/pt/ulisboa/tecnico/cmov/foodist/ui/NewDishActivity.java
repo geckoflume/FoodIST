@@ -109,7 +109,7 @@ public class NewDishActivity extends AppCompatActivity {
                     });
                     setResult(RESULT_OK);
                 } else {
-                    Log.e(TAG, "Could not add the dish");
+                    Log.e(TAG, "Unable to add the dish");
                     setResult(RESULT_CANCELED);
                 }
             });

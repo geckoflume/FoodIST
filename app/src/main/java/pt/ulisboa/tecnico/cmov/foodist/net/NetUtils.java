@@ -18,6 +18,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.UnknownHostException;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -42,11 +43,14 @@ public abstract class NetUtils {
             URL url = new URL(urlString);
             urlConnection = (HttpsURLConnection) url.openConnection();
             urlConnection.setRequestMethod(method);
+            urlConnection.setConnectTimeout(5000); //set timeout to 5 seconds
 
             if (urlConnection.getResponseCode() == expectedResponseCode) {
                 InputStream in = new BufferedInputStream(urlConnection.getInputStream());
                 response = readStream(in);
             }
+        } catch (UnknownHostException e) {
+            Log.e(TAG, "UnknownHostException, cannot reach " + urlString);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -73,6 +77,7 @@ public abstract class NetUtils {
             URL url = new URL(urlString);
             urlConnection = (HttpsURLConnection) url.openConnection();
             urlConnection.setRequestMethod(method);
+            urlConnection.setConnectTimeout(5000); //set timeout to 5 seconds
             urlConnection.setRequestProperty("Content-Type", "application/json");
             urlConnection.setDoOutput(true);
 
@@ -85,6 +90,8 @@ public abstract class NetUtils {
                 InputStream in = new BufferedInputStream(urlConnection.getInputStream());
                 response = readStream(in);
             }
+        } catch (UnknownHostException e) {
+            Log.e(TAG, "UnknownHostException, cannot reach " + urlString);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -165,6 +172,8 @@ public abstract class NetUtils {
                 InputStream in = new BufferedInputStream(urlConnection.getInputStream());
                 response = readStream(in);
             }
+        } catch (UnknownHostException e) {
+            Log.e(TAG, "UnknownHostException, cannot reach " + urlString);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

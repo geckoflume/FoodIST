@@ -186,7 +186,8 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
                                             mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));  // or use animateCamera() for smooth animation
                                             cafeteriaViewModel.setUpdating(false);
                                         });
-                                    }
+                                    } else
+                                        mapFragment.getView().post(() -> cafeteriaViewModel.setUpdating(false));
                                 }));
                     }
                 }

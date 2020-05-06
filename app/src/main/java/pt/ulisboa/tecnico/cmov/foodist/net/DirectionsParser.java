@@ -47,7 +47,7 @@ public class DirectionsParser {
                     this.distance += jStep.getJSONObject("distance").getInt("value");
                 }
             } else
-                Log.e(TAG, "Could not find a route, wrong location or API key?");
+                Log.e(TAG, "Unable to find a route, wrong location or API key?");
         } catch (JSONException e) {
             e.printStackTrace();
         }

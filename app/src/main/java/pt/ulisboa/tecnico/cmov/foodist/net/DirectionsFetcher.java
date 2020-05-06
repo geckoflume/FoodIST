@@ -8,7 +8,7 @@ import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
 
 public class DirectionsFetcher {
     private final String baseUrl = "https://maps.googleapis.com/maps/api/directions/json?origin=";
-    private String response;
+    public String response;
     private final LatLng origin;
     private final LatLng destination;
 
@@ -22,7 +22,13 @@ public class DirectionsFetcher {
         this.response = NetUtils.get(urlString, 200);
     }
 
+    public String getResponse() {
+        return response;
+    }
+
     public DirectionsParser parse() {
-        return new DirectionsParser(response, origin, destination);
+        if (response != null && !response.isEmpty())
+            return new DirectionsParser(response, origin, destination);
+        else return null;
     }
 }
