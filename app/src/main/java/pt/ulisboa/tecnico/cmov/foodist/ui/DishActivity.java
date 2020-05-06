@@ -16,6 +16,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -52,6 +53,8 @@ public class DishActivity extends AppCompatActivity {
 
         RecyclerView recyclerViewDishes = this.findViewById(R.id.recyclerView_pictures);
         PictureAdapter adapterPictures = new PictureAdapter(Glide.with(this));
+        recyclerViewDishes.setHasFixedSize(true);
+        recyclerViewDishes.addItemDecoration(new GridSpacingItemDecoration(((GridLayoutManager) recyclerViewDishes.getLayoutManager()).getSpanCount(), 50));
         recyclerViewDishes.setAdapter(adapterPictures);
 
         dishViewModel.getDish().observe(this, dishWithPictures -> {

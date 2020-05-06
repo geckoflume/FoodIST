@@ -57,7 +57,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView_details" />
 
             <TextView
-                android:id="@+id/textView_cafet"
+                android:id="@+id/textView_cafeteria"
                 style="@style/TextAppearance.MaterialComponents.Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -74,7 +74,7 @@
                 android:layout_marginTop="16dp"
                 android:text="@string/pictures"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView_cafet" />
+                app:layout_constraintTop_toBottomOf="@+id/textView_cafeteria" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView_pictures"

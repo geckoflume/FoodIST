@@ -47,7 +47,7 @@ public abstract class LocationUtils {
             int padding = (int) (height * 0.1);
             cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding);
 
-            map.animateCamera(cameraUpdate);
+            map.moveCamera(cameraUpdate);
         }
     }
 
