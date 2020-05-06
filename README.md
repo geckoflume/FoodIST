@@ -18,14 +18,14 @@ More information: [https://fenix.tecnico.ulisboa.pt/disciplinas/CMov4/2019-2020/
 - Filter cafeterias by campus
 - Campus autoselection based on device location
 - Cafeteria details: name, opening hours, map, estimated walk time and itinerary
-- Ability to add dishes and fetching menus from the server
+- Ability to add, remove dishes and to fetch menus from the server
+- Ability to add pictures to dishes (compressed before being sent)
 - User status selection and cafeterias/opening times displayed accordingly
 - Dark theme compatible
 
 ## TODO
 
 - Beacons detection
-- Caching
 - Support pre-Lollipop devices (https://android.jlelse.eu/android-vector-drawables-on-pre-lollipop-crash-solution-45c0c34f0160)
 
 ## Specifications

@@ -87,7 +87,7 @@ public class CafeteriaListViewModel extends AndroidViewModel {
     private List<CafeteriaEntity> getCafeteriasEntities() {
         List<CafeteriaEntity> mCafeterias;
         Integer campus = mSavedStateHandler.get(CAMPUS_KEY);
-        if (campus == Campus.ALL)
+        if (campus == null || campus == Campus.ALL)
             mCafeterias = mRepository.getCafeteriasEntities();
         else
             mCafeterias = mRepository.getCafeteriasByCampusIdEntities(campus - 1);

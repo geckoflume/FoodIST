@@ -4,7 +4,7 @@ command -v jq >/dev/null 2>&1 || {
   exit 1
 }
 
-days=("MONDAY" "TUESDAY" "WEDNESDAY" "THURSDAY" "FRIDAY")
+days=("MONDAY" "TUESDAY" "WEDNESDAY" "THURSDAY" "FRIDAY" "SATURDAY" "SUNDAY")
 statuses=("Student" "Professor" "Researcher" "Staff" "General Public")
 
 gen_weekdays() {
@@ -31,17 +31,17 @@ printf "Welcome to the FoodIST default opening times generator.\nThis will gener
 read -r -p "Please enter the output file path (the existing file will be overwritten): [opening_hours.json] " file
 file=${file:-opening_hours.json}
 
-read -r -p "Please enter the cafeteria total count: [15] " cafeterias_count
-cafeterias_count=${cafeterias_count:-15}
+read -r -p "Please enter the cafeteria total count: [16] " cafeterias_count
+cafeterias_count=${cafeterias_count:-16}
 
 echo
 json="["
 for status in ${!statuses[*]}; do
-  read -r -p "Please enter the opening time for ${statuses[status]}: [11:30] " opening_time
-  opening_time=${opening_time:-11:30}
+  read -r -p "Please enter the opening time for ${statuses[status]}: [09:00] " opening_time
+  opening_time=${opening_time:-09:00}
 
-  read -r -p "Please enter the closing time for ${statuses[status]}: [15:00] " closing_time
-  closing_time=${closing_time:-15:00}
+  read -r -p "Please enter the closing time for ${statuses[status]}: [17:00] " closing_time
+  closing_time=${closing_time:-17:00}
 
   gen_cafeterias "$cafeterias_count" "$opening_time" "$closing_time" "$status"
 done
