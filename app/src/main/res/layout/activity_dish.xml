@@ -46,62 +46,25 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <!-- TODO -->
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintLayout"
-                android:layout_width="376dp"
-                android:layout_height="83dp"
+            <TextView
+                android:id="@+id/textView_price"
+                style="@style/TextAppearance.MaterialComponents.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
+                android:text="@{@string/price(@string/currency(dishViewModel.dish.dish.price))}"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView_details">
+                app:layout_constraintTop_toBottomOf="@+id/textView_details" />
 
-                <TextView
-                    android:id="@+id/textView_price"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="28dp"
-                    android:layout_marginLeft="28dp"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/price"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/textView_the_price"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginLeft="16dp"
-                    android:text="@{@string/currency(dishViewModel.dish.dish.price)}"
-                    app:layout_constraintStart_toEndOf="@+id/textView_price"
-                    app:layout_constraintTop_toTopOf="@+id/textView_price" />
-
-                <TextView
-                    android:id="@+id/textView_cafet"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="28dp"
-                    android:layout_marginLeft="28dp"
-                    android:layout_marginTop="12dp"
-                    android:text="@string/cafeteria_name"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView_price" />
-
-                <TextView
-                    android:id="@+id/textView_the_cafet"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginLeft="16dp"
-                    android:text="@{dishViewModel.cafeteriaOfDish.name}"
-                    app:layout_constraintStart_toEndOf="@+id/textView_cafet"
-                    app:layout_constraintTop_toTopOf="@+id/textView_cafet" />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/textView_cafet"
+                style="@style/TextAppearance.MaterialComponents.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@{@string/cafeteria_name(dishViewModel.cafeteriaOfDish.name)}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView_price" />
 
             <TextView
                 android:id="@+id/textView_pictures"
@@ -111,7 +74,7 @@
                 android:layout_marginTop="16dp"
                 android:text="@string/pictures"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+                app:layout_constraintTop_toBottomOf="@+id/textView_cafet" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView_pictures"
@@ -126,16 +89,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView_pictures"
                 app:spanCount="2" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/floatingActionButton"
-                android:layout_width="125dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:onClick="deleteDish"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@android:drawable/btn_dialog" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

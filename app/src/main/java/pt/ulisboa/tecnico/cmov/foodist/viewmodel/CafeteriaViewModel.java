@@ -32,7 +32,8 @@ public class CafeteriaViewModel extends AndroidViewModel {
     private MutableLiveData<Boolean> updating = new MutableLiveData<>(false);
     private final DataRepository mRepository;
     private final int mCafeteriaId;
-    private MutableLiveData<String> openHoursText = new MutableLiveData<>("");
+    private MutableLiveData<String> openHoursTextDays = new MutableLiveData<>("");
+    private MutableLiveData<String> openHoursTextHours = new MutableLiveData<>("");
 
     private CafeteriaViewModel(@NonNull Application application, DataRepository repository,
                                final int cafeteriaId, final int statusId) {
@@ -52,12 +53,20 @@ public class CafeteriaViewModel extends AndroidViewModel {
         return mObservableOpeningHours;
     }
 
-    public LiveData<String> getOpenHoursText() {
-        return openHoursText;
+    public LiveData<String> getOpenHoursTextDays() {
+        return openHoursTextDays;
     }
 
-    public void updateOpenHoursText(String text) {
-        openHoursText.postValue(text);
+    public LiveData<String> getOpenHoursTextHours() {
+        return openHoursTextHours;
+    }
+
+    public void updateOpenHoursTextDays(String text) {
+        openHoursTextDays.postValue(text);
+    }
+
+    public void updateOpenHoursTextHours(String text) {
+        openHoursTextHours.postValue(text);
     }
 
     public List<LatLng> updateCafeteriaDistance(CafeteriaEntity currentCafeteria, final Location mCurrentLocation, final String apiKey) {

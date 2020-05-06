@@ -80,7 +80,6 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.DishHolder> {
                 intent.putExtra(EXTRA_MESSAGE, String.valueOf(listItemDishBinding.getDish().getId()));
                 listItemDishBinding.getRoot().getContext().startActivity(intent);
             });
-
         }
 
         void updateWithPicture(Picture picture) {

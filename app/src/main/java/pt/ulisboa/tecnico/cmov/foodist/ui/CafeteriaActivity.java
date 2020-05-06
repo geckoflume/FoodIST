@@ -80,19 +80,21 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
         });
 
         cafeteriaViewModel.getOpeningHours().observe(this, openingHoursEntities -> {
-            StringBuilder s = new StringBuilder();
+            StringBuilder days = new StringBuilder();
+            StringBuilder hours = new StringBuilder();
             OpeningHoursEntity current;
             for (int i = 0; i < openingHoursEntities.size(); i++) {
                 current = openingHoursEntities.get(i);
                 if (i == 0 || current.getDayOfWeek() != openingHoursEntities.get(i - 1).getDayOfWeek())
-                    s.append(current.toString());
-                else
-                    s.append("\t\t\t\t\t").append(current.times());
+                    days.append(current.dayToString());
+                hours.append(current.timesToString());
                 if (openingHoursEntities.size() != i + 1) {
-                    s.append("\n");
+                    days.append("\n");
+                    hours.append("\n");
                 }
             }
-            cafeteriaViewModel.updateOpenHoursText(s.toString());
+            cafeteriaViewModel.updateOpenHoursTextDays(days.toString());
+            cafeteriaViewModel.updateOpenHoursTextHours(hours.toString());
         });
 
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapDetail);

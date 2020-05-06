@@ -56,7 +56,9 @@ public class DishViewModel extends AndroidViewModel {
                 List<PictureEntity> mPictures = mRepository.getPicturesByDishId(mDishId);
                 mRepository.deleteDishById(mDishId);
                 mRepository.deletePictures(mPictures);
-            }
+                Log.d(TAG, "Deleted dish " + mDishId);
+            } else
+                Log.d(TAG, "Unable to delete dish " + mDishId);
         });
     }
 
@@ -88,6 +90,16 @@ public class DishViewModel extends AndroidViewModel {
                 Log.d(TAG, "Updated pictures for dish " + mDishId);
             } else
                 Log.e(TAG, "Unable to update pictures for dish " + mDishId);
+        });
+    }
+
+    public void deletePicture(PictureEntity picture) {
+        ((BasicApp) getApplication()).networkIO().execute(() -> {
+            if (ServerFetcher.deletePicture(picture.getId()) != null) {
+                mRepository.deletePicture(picture);
+                Log.d(TAG, "Deleted picture " + picture.getId());
+            } else
+                Log.d(TAG, "Unable to delete picture " + picture.getId());
         });
     }
 

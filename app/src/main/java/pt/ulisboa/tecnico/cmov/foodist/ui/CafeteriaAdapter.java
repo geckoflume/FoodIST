@@ -1,7 +1,6 @@
 package pt.ulisboa.tecnico.cmov.foodist.ui;
 
 import android.content.Intent;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -66,15 +65,6 @@ public class CafeteriaAdapter extends RecyclerView.Adapter<CafeteriaAdapter.Cafe
                 Intent intent = new Intent(view1.getContext(), CafeteriaActivity.class);
                 intent.putExtra(EXTRA_MESSAGE, String.valueOf(listItemCafeteriaBinding.getCafeteriaWithOpeningHours().cafeteria.getId()));
                 listItemCafeteriaBinding.getRoot().getContext().startActivity(intent);
-                /*
-                // Check if we're running on Android 5.0 or higher
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    // Apply activity transition
-                    // TODO: https://developer.android.com/training/transitions/start-activity https://medium.com/@jim.zack.hu/android-inbox-material-transitions-for-recyclerview-71fc7326bcb5
-                } else {
-                    // Swap without transition
-                }
-                 */
             });
         }
     }

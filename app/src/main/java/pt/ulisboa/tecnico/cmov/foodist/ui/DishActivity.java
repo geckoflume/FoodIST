@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -24,6 +26,7 @@ import java.io.IOException;
 import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.databinding.ActivityDishBinding;
+import pt.ulisboa.tecnico.cmov.foodist.db.entity.PictureEntity;
 import pt.ulisboa.tecnico.cmov.foodist.viewmodel.DishViewModel;
 
 public class DishActivity extends AppCompatActivity {
@@ -56,6 +59,7 @@ public class DishActivity extends AppCompatActivity {
                 adapterPictures.setPicturesList(dishWithPictures.pictures);
             } else {
                 // In this case, the dish was deleted by deleteDish action
+                Toast.makeText(this, dishViewModel.getDish().getValue().dish.getName() + " successfully deleted!", Toast.LENGTH_SHORT).show();
                 this.finish();
             }
         });
@@ -115,8 +119,26 @@ public class DishActivity extends AppCompatActivity {
         }
     }
 
-    public void deleteDish(View view) {
-        Toast.makeText(this, dishViewModel.getDish().getValue().dish.getName() + " successfully deleted!", Toast.LENGTH_SHORT).show();
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.dish_app_bar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.delete_dish) {
+            deleteDish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void deleteDish() {
         dishViewModel.deleteDish();
+    }
+
+    public void deletePicture(PictureEntity picture) {
+        dishViewModel.deletePicture(picture);
     }
 }

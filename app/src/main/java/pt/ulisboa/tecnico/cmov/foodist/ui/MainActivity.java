@@ -157,9 +157,6 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_refresh:
                 updateCafeterias();
                 break;
-            case R.id.action_test:
-                Log.d(TAG, "Test option selected");
-                break;
         }
         return NavigationUI.onNavDestinationSelected(item, navController) || super.onOptionsItemSelected(item);
     }
@@ -171,19 +168,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateCafeterias() {
-            if (mCurrentLocation != null)
-                ((BasicApp) MainActivity.this.getApplication()).networkIO().execute(() -> {
-                    mCafeteriaListViewModel.setUpdating(true);
-                    mCafeteriaListViewModel.updateCafeteriasDistances(mCurrentLocation, getString(R.string.google_maps_key));
-                    mCafeteriaListViewModel.updateCafeteriasWaitTimes();
-                    mCafeteriaListViewModel.setUpdating(false);
-                });
-            else {
+        if (mCurrentLocation != null)
+            ((BasicApp) MainActivity.this.getApplication()).networkIO().execute(() -> {
                 mCafeteriaListViewModel.setUpdating(true);
-                Toast.makeText(MainActivity.this, R.string.no_location_detected, Toast.LENGTH_LONG).show();
+                mCafeteriaListViewModel.updateCafeteriasDistances(mCurrentLocation, getString(R.string.google_maps_key));
                 mCafeteriaListViewModel.updateCafeteriasWaitTimes();
                 mCafeteriaListViewModel.setUpdating(false);
-            }
+            });
+        else {
+            mCafeteriaListViewModel.setUpdating(true);
+            Toast.makeText(MainActivity.this, R.string.no_location_detected, Toast.LENGTH_LONG).show();
+            mCafeteriaListViewModel.updateCafeteriasWaitTimes();
+            mCafeteriaListViewModel.setUpdating(false);
+        }
     }
 
     private AdapterView.OnItemSelectedListener campusSelectedCallback() {

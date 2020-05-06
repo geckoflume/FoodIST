@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -10,13 +11,31 @@
             type="pt.ulisboa.tecnico.cmov.foodist.model.Picture" />
     </data>
 
-    <ImageView
-        android:id="@+id/imageView_thumbnail"
-        android:layout_width="128dp"
-        android:layout_height="128dp"
-        android:layout_marginBottom="12dp"
-        android:adjustViewBounds="false"
-        android:contentDescription="@string/desc_dish_picture"
-        android:scaleType="centerCrop" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
+        <ImageView
+            android:id="@+id/imageView_thumbnail"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:adjustViewBounds="false"
+            android:contentDescription="@string/desc_dish_picture"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/button_delete_picture"
+            style="@style/IconButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_delete_24dp"
+            app:iconPadding="0dp"
+            app:iconTint="@color/colorOnPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

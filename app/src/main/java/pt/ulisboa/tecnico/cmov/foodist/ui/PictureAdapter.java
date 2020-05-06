@@ -14,6 +14,7 @@ import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.databinding.ListItemPictureBinding;
+import pt.ulisboa.tecnico.cmov.foodist.db.entity.PictureEntity;
 import pt.ulisboa.tecnico.cmov.foodist.model.Picture;
 import pt.ulisboa.tecnico.cmov.foodist.net.ServerFetcher;
 
@@ -29,7 +30,7 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.PictureH
 
     @NonNull
     @Override
-    public PictureHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PictureHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ListItemPictureBinding pictureListItemBinding =
                 DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
                         R.layout.list_item_picture, parent, false);
@@ -61,6 +62,11 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.PictureH
         public PictureHolder(@NonNull ListItemPictureBinding listItemPictureBinding) {
             super(listItemPictureBinding.getRoot());
             this.listItemPictureBinding = listItemPictureBinding;
+
+            itemView.findViewById(R.id.button_delete_picture).setOnClickListener(view1 -> {
+                DishActivity host = (DishActivity) itemView.getContext();
+                host.deletePicture((PictureEntity) listItemPictureBinding.getPicture());
+            });
         }
 
         public void updateWithPicture(Picture picture, RequestManager requestManager) {

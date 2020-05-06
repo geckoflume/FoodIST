@@ -64,6 +64,7 @@
     <string name="edit_dish">Editing %s</string>
     <string name="details">Details</string>
     <string name="pictures">Pictures</string>
-    <string name="price">Price</string>
-    <string name="cafeteria_name">Cafeteria</string>
+    <string name="price">Price: %s</string>
+    <string name="cafeteria_name">Cafeteria: %s</string>
+    <string name="delete_dish">Delete dish</string>
 </resources>

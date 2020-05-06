@@ -109,12 +109,11 @@ public class OpeningHoursEntity implements OpeningHours {
         return today.equals(dayOfWeek) && now.isAfter(fromTime) && now.isBefore(toTime);
     }
 
-    public String times() {
+    public String timesToString() {
         return fromTime + " - " + toTime;
     }
 
-    @Override
-    public String toString() {
-        return dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()) + "\t\t " + times();
+    public String dayToString() {
+        return dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault());
     }
 }
