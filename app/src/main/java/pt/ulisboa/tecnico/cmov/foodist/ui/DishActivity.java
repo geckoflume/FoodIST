@@ -19,6 +19,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 
@@ -26,7 +27,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 
-import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
 import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.databinding.ActivityDishBinding;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.PictureEntity;
@@ -80,6 +80,11 @@ public class DishActivity extends AppCompatActivity {
             else
                 dishViewModel.resetDishName();
         });
+
+        SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipeRefresh_dishes);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+        dishViewModel.isUpdating().observe(this, swipeRefreshLayout::setRefreshing);
+        swipeRefreshLayout.setOnRefreshListener(() -> dishViewModel.updatePictures());
     }
 
     private void initActionBar() {
@@ -130,8 +135,7 @@ public class DishActivity extends AppCompatActivity {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             Log.d(TAG, "Successfully took picture, saved in " + picturePath);
             Toast.makeText(this, "Successfully took picture, sending it to the server...", Toast.LENGTH_SHORT).show();
-            ((BasicApp) getApplication()).networkIO().execute(() ->
-                    dishViewModel.insertPicture(picturePath));
+            dishViewModel.insertPicture(picturePath);
         }
     }
 
@@ -144,14 +148,37 @@ public class DishActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.delete_dish) {
-            deleteDish();
+        switch (item.getItemId()) {
+            case R.id.delete_dish:
+                deleteDish();
+                break;
+            case R.id.share_dish:
+                shareDish();
+                break;
+            case R.id.action_refresh:
+                dishViewModel.updatePictures();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
 
     public void deleteDish() {
         dishViewModel.deleteDish();
+    }
+
+    private void shareDish() {
+        String shareText = UiUtils.formatShareDish(
+                dishViewModel.getDish().getValue().dish,
+                dishViewModel.getCafeteriaOfDish().getValue().getName(),
+                getString(R.string.currency),
+                getString(R.string.share_dish_text));
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, shareText);
+        sendIntent.setType("text/plain");
+
+        Intent shareIntent = Intent.createChooser(sendIntent, null);
+        startActivity(shareIntent);
     }
 
     public void deletePicture(PictureEntity picture) {

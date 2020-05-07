@@ -6,10 +6,11 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
+import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.OpeningHoursEntity;
+import pt.ulisboa.tecnico.cmov.foodist.model.Dish;
 
 public abstract class UiUtils {
-
     /**
      * Shows a {@link Snackbar}.
      *
@@ -52,5 +53,21 @@ public abstract class UiUtils {
             }
         }
         return false;
+    }
+
+    public static String formatPrice(double price, String currencyFormat) {
+        return String.format(currencyFormat, price);
+    }
+
+    public static String formatShareDish(Dish dish, String cafeteriaName, String currencyFormat, String shareFormat) {
+        String formattedPrice = formatPrice(dish.getPrice(), currencyFormat);
+        return String.format(shareFormat, dish.getName(), formattedPrice, cafeteriaName);
+    }
+
+    public static String formatShareCafeteria(CafeteriaEntity cafeteria, String shareFormat) {
+        String mapsUrl = "http://maps.google.com/maps?&daddr="
+                + cafeteria.getLatitude() + ","
+                + cafeteria.getLongitude();
+        return String.format(shareFormat, cafeteria.getName(), mapsUrl);
     }
 }

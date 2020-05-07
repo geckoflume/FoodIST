@@ -45,7 +45,7 @@
     <string name="please_enter_valid_email">Por favor, introduza um endereço de e-mail válido</string>
     <string name="please_enter_valid_dish">Por favor, introduza um nome válido para o prato</string>
     <string name="please_enter_valid_price">Por favor, introduza um preço de prato válido</string>
-    <string name="toast_added_dish">Prato \&quot;%s\&quot; a %,2f € adicionado com sucesso</string>
+    <string name="toast_added_dish">Prato \&quot;%1$s\&quot; a %2$s adicionado com sucesso</string>
     <string name="details">Detalhes</string>
     <string name="pictures">Fotos</string>
     <string name="price">Preço: %s</string>
@@ -54,4 +54,8 @@
     <string name="lang">Idioma</string>
     <string name="translate">Traduzir</string>
     <string name="name_dish">Nome: %s</string>
+    <string name="share_dish">Partilhar este prato</string>
+    <string name="share_dish_text">Estou a pensar em ir buscar o \&quot;%1$s\&quot; (%2$s) ao %3$s do IST, queres juntar-te a mim?</string>
+    <string name="share_cafeteria">Partilhar este refeitório</string>
+    <string name="share_cafeteria_text">Junta-te a mim no %1$s do IST! %2$s</string>
 </resources>

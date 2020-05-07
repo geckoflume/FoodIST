@@ -2,16 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/delete_dish"
-        android:contentDescription="@string/delete_dish"
-        android:icon="@drawable/ic_delete_24dp"
-        android:title="@string/delete_dish"
-        app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/share_dish"
-        android:contentDescription="@string/share_dish"
+        android:id="@+id/share_cafeteria"
+        android:contentDescription="@string/share_cafeteria"
         android:icon="@drawable/ic_share_24dp"
-        android:title="@string/share_dish"
+        android:title="@string/share_cafeteria"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_refresh"

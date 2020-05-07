@@ -14,7 +14,7 @@ More information: [https://fenix.tecnico.ulisboa.pt/disciplinas/CMov4/2019-2020/
 
 ## Features
 
-- List of all dining options (cafeterias, canteens and bars) of IST
+- List and map of all dining options (cafeterias, canteens and bars) of IST
 - Filter cafeterias by campus
 - Campus autoselection based on device location
 - Cafeteria details: name, opening hours, map, estimated walk time and itinerary
@@ -22,6 +22,8 @@ More information: [https://fenix.tecnico.ulisboa.pt/disciplinas/CMov4/2019-2020/
 - Ability to add pictures to dishes (compressed before being sent)
 - User status selection and cafeterias/opening times displayed accordingly
 - Dark theme compatible
+- Localization in English, French and Portuguese, Google translations for user provided data
+- Dish, cafeteria sharing
 
 ## TODO
 
@@ -50,7 +52,7 @@ The multi-threading are managed by `java.util.concurrent` Executors, to support 
 ## How to build
 
 This project use the Gradle build system.
-In order to benefit from Google Maps services (itineraries, times), please set your key in [debug/res/values/google_cloud_api.xml](app/src/debug/res/values/google_cloud_api.xml) or in [release/res/values/google_cloud_api.xml](app/src/release/res/values/google_cloud_api.xml) by replacing the `google_cloud_key` string:
+In order to benefit from Google Maps services (itineraries, times) and Google Translate, please set your API key in [debug/res/values/google_cloud_api.xml](app/src/debug/res/values/google_cloud_api.xml) or in [release/res/values/google_cloud_api.xml](app/src/release/res/values/google_cloud_api.xml) by replacing the `google_cloud_key` string:
 ```xml
 <string name="google_cloud_key" templateMergeStrategy="preserve" translatable="false">YOUR_KEY_HERE</string>
 ```

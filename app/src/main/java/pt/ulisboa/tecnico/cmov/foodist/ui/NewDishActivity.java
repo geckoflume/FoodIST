@@ -105,7 +105,8 @@ public class NewDishActivity extends AppCompatActivity {
                 if (completeDish != null) {
                     mRepository.insertDish(completeDish);
                     view.post(() -> { // run this on main thread
-                        Toast.makeText(this, String.format(getString(R.string.toast_added_dish), dish.getName(), dish.getPrice()), Toast.LENGTH_SHORT).show();
+                        String formattedPrice = UiUtils.formatPrice(dish.getPrice(), getString(R.string.currency));
+                        Toast.makeText(this, String.format(getString(R.string.toast_added_dish), dish.getName(), formattedPrice), Toast.LENGTH_SHORT).show();
                     });
                     setResult(RESULT_OK);
                 } else {

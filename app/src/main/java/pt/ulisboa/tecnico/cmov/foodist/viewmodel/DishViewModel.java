@@ -29,6 +29,7 @@ public class DishViewModel extends AndroidViewModel {
     private final DataRepository mRepository;
     private final int mDishId;
     private MutableLiveData<String> dishName = new MutableLiveData<>("");
+    private MutableLiveData<Boolean> updating = new MutableLiveData<>(false);
 
     private DishViewModel(@NonNull Application application, DataRepository repository,
                           final int dishId) {
@@ -67,16 +68,21 @@ public class DishViewModel extends AndroidViewModel {
     }
 
     public void insertPicture(String pictureUri) {
-        Log.d(TAG, "Inserting picture " + pictureUri);
-        String response = ServerFetcher.insertPicture(mDishId, pictureUri);
-        if (response != null) {
-            ServerParser serverParser = new ServerParser();
-            mRepository.insertPicture(serverParser.parsePicture(response));
-        }
+        ((BasicApp) getApplication()).networkIO().execute(() -> {
+            setUpdating(true);
+            Log.d(TAG, "Inserting picture " + pictureUri);
+            String response = ServerFetcher.insertPicture(mDishId, pictureUri);
+            if (response != null) {
+                ServerParser serverParser = new ServerParser();
+                mRepository.insertPicture(serverParser.parsePicture(response));
+            }
+            setUpdating(false);
+        });
     }
 
     public void updatePictures() {
         ((BasicApp) getApplication()).networkIO().execute(() -> {
+            setUpdating(true);
             List<PictureEntity> mPictures = mRepository.getPicturesByDishId(mDishId);
             String responsePictures = ServerFetcher.fetchPictures(mDishId);
             if (responsePictures != null) {
@@ -94,6 +100,7 @@ public class DishViewModel extends AndroidViewModel {
                 Log.d(TAG, "Updated pictures for dish " + mDishId);
             } else
                 Log.e(TAG, "Unable to update pictures for dish " + mDishId);
+            setUpdating(false);
         });
     }
 
@@ -109,6 +116,7 @@ public class DishViewModel extends AndroidViewModel {
 
     public void translate(String locale, String apiKey) {
         ((BasicApp) getApplication()).networkIO().execute(() -> {
+            setUpdating(true);
             String response = ServerFetcher.fetchTranslation(dishName.getValue(), locale, apiKey);
             if (response != null && !response.isEmpty()) {
                 ServerParser serverParser = new ServerParser();
@@ -117,11 +125,20 @@ public class DishViewModel extends AndroidViewModel {
                 Log.d(TAG, "Translated dish " + mDishId + " to " + locale);
             } else
                 Log.d(TAG, "Unable to translate dish " + mDishId + " to " + locale);
+            setUpdating(false);
         });
     }
 
     public MutableLiveData<String> getName() {
         return dishName;
+    }
+
+    public LiveData<Boolean> isUpdating() {
+        return updating;
+    }
+
+    public void setUpdating(boolean b) {
+        updating.postValue(b);
     }
 
     /**

@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 
@@ -115,16 +117,12 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
         SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipeRefresh_cafeteria);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         cafeteriaViewModel.isUpdating().observe(this, swipeRefreshLayout::setRefreshing);
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            updateRequest.setValue(false);
-            updateRequest.setValue(true);
-        });
+        swipeRefreshLayout.setOnRefreshListener(() -> updateRequest.setValue(true));
 
 
         CheckBox repeatChkBx = findViewById(R.id.checkBox_route);
         repeatChkBx.setOnCheckedChangeListener((buttonView, isChecked) -> {
             isCheckBoxRouteTicked = isChecked;
-            updateRequest.setValue(false);
             updateRequest.setValue(true);
         });
 
@@ -136,6 +134,39 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
         DishAdapter adapterDishes = new DishAdapter(Glide.with(this));
         recyclerViewDishes.setAdapter(adapterDishes);
         dishListViewModel.getDishesWithPictures().observe(this, adapterDishes::setDishList);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.cafeteria_app_bar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.share_cafeteria:
+                shareCafeteria();
+                break;
+            case R.id.action_refresh:
+                updateRequest.setValue(true);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void shareCafeteria() {
+        String shareText = UiUtils.formatShareCafeteria(
+                cafeteriaViewModel.getCafeteria().getValue(),
+                getString(R.string.share_cafeteria_text));
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, shareText);
+        sendIntent.setType("text/plain");
+
+        Intent shareIntent = Intent.createChooser(sendIntent, null);
+        startActivity(shareIntent);
     }
 
     private void initActionBar() {

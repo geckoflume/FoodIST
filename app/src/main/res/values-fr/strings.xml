@@ -45,7 +45,7 @@
     <string name="please_enter_valid_email">Veuillez entrer une adresse électronique valide</string>
     <string name="please_enter_valid_dish">Veuillez entrer un nom de plat valide</string>
     <string name="please_enter_valid_price">Veuillez entrer un prix de plat valide</string>
-    <string name="toast_added_dish">Plat \&quot;%s\&quot; à %.2f € ajouté</string>
+    <string name="toast_added_dish">Plat \&quot;%1$s\&quot; à %2$s ajouté</string>
     <string name="details">Détails</string>
     <string name="pictures">Photos</string>
     <string name="price">Prix : %s</string>
@@ -54,4 +54,8 @@
     <string name="lang">Langue</string>
     <string name="translate">Traduire</string>
     <string name="name_dish">Nom : %s</string>
+    <string name="share_dish">Partager ce plat</string>
+    <string name="share_dish_text">Je pense prendre le \&quot;%1$s\&quot; (%2$s) au %3$s de l\&apos;IST, veux-tu te joindre à moi ?</string>
+    <string name="share_cafeteria">Partager cette cafétéria</string>
+    <string name="share_cafeteria_text">Rejoins-moi au %1$s de l\&apos;IST ! %2$s</string>
 </resources>
