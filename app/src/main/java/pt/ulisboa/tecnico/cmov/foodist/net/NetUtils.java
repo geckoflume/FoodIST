@@ -19,7 +19,6 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.UnknownHostException;
-import java.nio.charset.StandardCharsets;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -143,7 +142,7 @@ public abstract class NetUtils {
             urlConnection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
 
             OutputStream outputStream = urlConnection.getOutputStream();
-            PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8), true);
+            PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, "UTF-8"), true);
 
             // Add a form field "dish_id" to the request
             writer.append("--").append(boundary).append("\r\n");
@@ -207,13 +206,8 @@ public abstract class NetUtils {
         return response;
     }
 
-    // convert UTF-8 to internal Java String format
-    public static String convertUTF8ToString(String s) throws UnsupportedEncodingException {
-        return new String(s.getBytes("ISO-8859-1"), "UTF-8");
-    }
-
     // convert internal Java String format to UTF-8
-    public static String convertStringToUTF8(String s) throws UnsupportedEncodingException {
+    private static String convertStringToUTF8(String s) throws UnsupportedEncodingException {
         return new String(s.getBytes("UTF-8"), "ISO-8859-1");
     }
 }
