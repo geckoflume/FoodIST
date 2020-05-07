@@ -26,10 +26,9 @@ public class DishViewModel extends AndroidViewModel {
 
     private final LiveData<DishWithPictures> mObservableDish;
     private final LiveData<CafeteriaEntity> associatedCafeteria;
-    private MutableLiveData<Boolean> updating = new MutableLiveData<>(false);
     private final DataRepository mRepository;
     private final int mDishId;
-
+    private MutableLiveData<String> dishName = new MutableLiveData<>("");
 
     private DishViewModel(@NonNull Application application, DataRepository repository,
                           final int dishId) {
@@ -39,8 +38,13 @@ public class DishViewModel extends AndroidViewModel {
 
         mObservableDish = mRepository.getDishWithPictures(this.mDishId);
         associatedCafeteria = mRepository.getCafeteriaByIdDish(this.mDishId);
+        resetDishName();
     }
 
+    public void resetDishName() {
+        ((BasicApp) getApplication()).networkIO().execute(() ->
+                dishName.postValue(mRepository.getDishByIdEntity(this.mDishId).getName()));
+    }
 
     public LiveData<DishWithPictures> getDish() {
         return mObservableDish;
@@ -101,6 +105,23 @@ public class DishViewModel extends AndroidViewModel {
             } else
                 Log.d(TAG, "Unable to delete picture " + picture.getId());
         });
+    }
+
+    public void translate(String locale, String apiKey) {
+        ((BasicApp) getApplication()).networkIO().execute(() -> {
+            String response = ServerFetcher.fetchTranslation(dishName.getValue(), locale, apiKey);
+            if (response != null && !response.isEmpty()) {
+                ServerParser serverParser = new ServerParser();
+                String translatedName = serverParser.parseTranslation(response);
+                dishName.postValue(translatedName);
+                Log.d(TAG, "Translated dish " + mDishId + " to " + locale);
+            } else
+                Log.d(TAG, "Unable to translate dish " + mDishId + " to " + locale);
+        });
+    }
+
+    public MutableLiveData<String> getName() {
+        return dishName;
     }
 
     /**

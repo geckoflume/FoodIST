@@ -26,7 +26,6 @@
                 android:layout_height="?attr/actionBarSize"
                 app:title="@{dishViewModel.dish.dish.name}" />
 
-
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -47,14 +46,24 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView_price"
+                android:id="@+id/textView_name"
                 style="@style/TextAppearance.MaterialComponents.Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="@{@string/price(@string/currency(dishViewModel.dish.dish.price))}"
+                android:text="@{@string/name_dish(dishViewModel.name)}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView_details" />
+
+            <TextView
+                android:id="@+id/textView_price"
+                style="@style/TextAppearance.MaterialComponents.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="@{@string/price(@string/currency(dishViewModel.dish.dish.price))}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/textView_name" />
 
             <TextView
                 android:id="@+id/textView_cafeteria"
@@ -71,8 +80,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/translate"
+                app:layout_constraintBottom_toBottomOf="@+id/textView_name"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView_details" />
+                app:layout_constraintTop_toTopOf="@+id/textView_name" />
 
             <TextView
                 android:id="@+id/textView_pictures"

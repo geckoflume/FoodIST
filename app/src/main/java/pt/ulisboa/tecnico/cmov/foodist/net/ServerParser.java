@@ -3,6 +3,10 @@ package pt.ulisboa.tecnico.cmov.foodist.net;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -78,5 +82,17 @@ public class ServerParser {
         if (response != null)
             picture = new Gson().fromJson(response, PictureEntity.class);
         return picture;
+    }
+
+    public String parseTranslation(String response) {
+        String translation = "";
+        try {
+            JSONArray jsonArray = new JSONObject(response).getJSONObject("data").getJSONArray("translations");
+            if (jsonArray.length() > 0)
+                translation = jsonArray.getJSONObject(0).getString("translatedText");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return translation;
     }
 }

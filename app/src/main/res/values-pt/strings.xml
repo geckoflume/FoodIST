@@ -53,4 +53,5 @@
     <string name="delete_dish">Apagar prato</string>
     <string name="lang">Idioma</string>
     <string name="translate">Traduzir</string>
+    <string name="name_dish">Nome: %s</string>
 </resources>

@@ -32,6 +32,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.List;
+import java.util.Locale;
 
 import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
 import pt.ulisboa.tecnico.cmov.foodist.PermissionsHelper;
@@ -54,6 +55,7 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
     private MutableLiveData<Boolean> updateRequest = new MutableLiveData<>(false);
     private DishListViewModel dishListViewModel;
     private boolean isCheckBoxRouteTicked = false;
+    private Locale currentLocale;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +75,8 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
         binding.setCafeteriaViewModel(cafeteriaViewModel);
         initActionBar();
 
+        currentLocale = getResources().getConfiguration().locale;
+
         cafeteriaViewModel.getCafeteria().observe(this, cafeteriaEntity -> {
             currentCafeteria = cafeteriaEntity;
             if (!updateRequest.getValue())
@@ -86,7 +90,7 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
             for (int i = 0; i < openingHoursEntities.size(); i++) {
                 current = openingHoursEntities.get(i);
                 if (i == 0 || current.getDayOfWeek() != openingHoursEntities.get(i - 1).getDayOfWeek())
-                    days.append(current.dayToString());
+                    days.append(current.dayToString(currentLocale));
                 hours.append(current.timesToString());
                 if (openingHoursEntities.size() != i + 1) {
                     days.append("\n");
@@ -168,7 +172,7 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
                     if (isCheckBoxRouteTicked) {
                         fusedLocationClient.getLastLocation().addOnSuccessListener(mCurrentLocation ->
                                 ((BasicApp) getApplication()).networkIO().execute(() -> {
-                                    List<LatLng> path = cafeteriaViewModel.updateCafeteriaDistance(currentCafeteria, mCurrentLocation, getString(R.string.google_maps_key));
+                                    List<LatLng> path = cafeteriaViewModel.updateCafeteriaDistance(currentCafeteria, mCurrentLocation, getString(R.string.google_cloud_key));
                                     if (path != null && !path.isEmpty()) { // ensures a route has been found and that the provided Google Maps api key is valid
                                         LatLngBounds.Builder builder = new LatLngBounds.Builder();
                                         for (LatLng point : path)

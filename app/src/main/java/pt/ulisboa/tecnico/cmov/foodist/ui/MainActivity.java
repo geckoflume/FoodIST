@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
         ((BasicApp) MainActivity.this.getApplication()).networkIO().execute(() -> {
             mCafeteriaListViewModel.setUpdating(true);
             if (mCurrentLocation != null)
-                mCafeteriaListViewModel.updateCafeteriasDistances(mCurrentLocation, getString(R.string.google_maps_key));
+                mCafeteriaListViewModel.updateCafeteriasDistances(mCurrentLocation, getString(R.string.google_cloud_key));
             else
                 Toast.makeText(MainActivity.this, R.string.no_location_detected, Toast.LENGTH_LONG).show();
             mCafeteriaListViewModel.updateCafeteriasWaitTimes();

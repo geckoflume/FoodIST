@@ -37,4 +37,7 @@ public interface DishDao {
     @Transaction
     @Query("SELECT * FROM dishes WHERE id = :id LIMIT 1")
     LiveData<DishWithPictures> getDishWithPictures(int id);
+
+    @Query("SELECT * FROM dishes WHERE id = :id LIMIT 1")
+    DishEntity getDishByIdEntity(int id);
 }

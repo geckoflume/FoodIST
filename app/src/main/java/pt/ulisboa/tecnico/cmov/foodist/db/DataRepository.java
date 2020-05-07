@@ -121,6 +121,10 @@ public class DataRepository {
         mDatabase.dishDao().deleteById(dishId);
     }
 
+    public DishEntity getDishByIdEntity(int dishId) {
+        return mDatabase.dishDao().getDishByIdEntity(dishId);
+    }
+
     //Pictures
     public LiveData<List<DishWithPictures>> getDishesWithPicturesByCafeteriaId(final int cafeteriaId) {
         return mDatabase.dishDao().getDishesWithPicturesByCafeteriaId(cafeteriaId);

@@ -50,9 +50,9 @@ The multi-threading are managed by `java.util.concurrent` Executors, to support 
 ## How to build
 
 This project use the Gradle build system.
-In order to benefit from Google Maps services (itineraries, times), please set your key in [debug/res/values/google_maps_api.xml](app/src/debug/res/values/google_maps_api.xml) or in [release/res/values/google_maps_api.xml](app/src/release/res/values/google_maps_api.xml) by replacing the `google_maps_key` string:
+In order to benefit from Google Maps services (itineraries, times), please set your key in [debug/res/values/google_cloud_api.xml](app/src/debug/res/values/google_cloud_api.xml) or in [release/res/values/google_cloud_api.xml](app/src/release/res/values/google_cloud_api.xml) by replacing the `google_cloud_key` string:
 ```xml
-<string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">YOUR_KEY_HERE</string>
+<string name="google_cloud_key" templateMergeStrategy="preserve" translatable="false">YOUR_KEY_HERE</string>
 ```
 To build it, use the `gradlew build` command or use "Import Project" in Android Studio. 
 

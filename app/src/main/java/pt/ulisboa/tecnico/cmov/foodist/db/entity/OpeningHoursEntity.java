@@ -113,7 +113,7 @@ public class OpeningHoursEntity implements OpeningHours {
         return fromTime + " - " + toTime;
     }
 
-    public String dayToString() {
-        return dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault());
+    public String dayToString(Locale locale) {
+        return dayOfWeek.getDisplayName(TextStyle.SHORT, locale);
     }
 }

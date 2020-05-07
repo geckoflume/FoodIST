@@ -53,4 +53,5 @@
     <string name="delete_dish">Supprimer le plat</string>
     <string name="lang">Langue</string>
     <string name="translate">Traduire</string>
+    <string name="name_dish">Nom : %s</string>
 </resources>

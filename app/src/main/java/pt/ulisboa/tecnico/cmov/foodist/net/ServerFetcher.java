@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.cmov.foodist.net;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 
 import java.io.File;
 
@@ -25,6 +26,8 @@ public abstract class ServerFetcher {
     private static final String DISH_ENDPOINT = DISHES_ENDPOINT + "/%d";
     private static final String DISH_PICTURES_ENDPOINT = DISHES_ENDPOINT + "/%d/pictures";
     private static final String PICTURE_ENDPOINT = PICTURES_ENDPOINT + "/%d";
+
+    private static final String GOOGLE_TRANSLATE_URL = "https://translation.googleapis.com/language/translate/v2?key=%s";
 
     public static String fetchCafeterias() {
         return NetUtils.get(CAFETERIAS_ENDPOINT, HttpsURLConnection.HTTP_OK);
@@ -82,5 +85,14 @@ public abstract class ServerFetcher {
 
     public static String getPictureUrl(String filename) {
         return String.format(PICTURES_LOCATION, filename);
+    }
+
+    public static String fetchTranslation(String value, String locale, String apiKey) {
+        String urlString = String.format(GOOGLE_TRANSLATE_URL, apiKey);
+
+        JsonObject object = new JsonObject();
+        object.addProperty("q", value);
+        object.addProperty("target", locale);
+        return NetUtils.postJson(urlString, object.toString(), HttpsURLConnection.HTTP_OK);
     }
 }

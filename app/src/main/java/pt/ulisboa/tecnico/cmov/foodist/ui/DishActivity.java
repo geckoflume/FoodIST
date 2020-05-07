@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 
 import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
 import pt.ulisboa.tecnico.cmov.foodist.R;
@@ -37,11 +38,14 @@ public class DishActivity extends AppCompatActivity {
 
     private DishViewModel dishViewModel;
     private String picturePath;
+    private Locale currentLocale;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityDishBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_dish);
+
+        currentLocale = getResources().getConfiguration().locale;
 
         int dishId = Integer.parseInt(getIntent().getStringExtra(DishAdapter.EXTRA_MESSAGE));
 
@@ -70,7 +74,12 @@ public class DishActivity extends AppCompatActivity {
         dishViewModel.updatePictures();
 
         CheckBox translate = findViewById(R.id.checkBox_translation);
-        translate.setOnCheckedChangeListener((buttonView, isChecked) -> Log.d(TAG, "checked translation"));
+        translate.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked)
+                dishViewModel.translate(currentLocale.toString(), getString(R.string.google_cloud_key));
+            else
+                dishViewModel.resetDishName();
+        });
     }
 
     private void initActionBar() {
