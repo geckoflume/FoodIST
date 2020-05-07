@@ -61,13 +61,24 @@ To build it, use the `gradlew build` command or use "Import Project" in Android 
 ### Generate opening_hours.json
 
 By default, the opening times are the following:
-| Status         | Days            | Times         |
-|----------------|-----------------|---------------|
-| Student        | MONDAY - SUNDAY | 09:00 - 17:00 |
-| Professor      | MONDAY - SUNDAY | 09:00 - 17:00 |
-| Researcher     | MONDAY - SUNDAY | 09:00 - 17:00 |
-| Staff          | MONDAY - SUNDAY | 09:00 - 17:00 |
-| General Public | MONDAY - SUNDAY | 09:00 - 17:00 |
+| Campus    | Name             | Geo Coordinates      | Hours                                                                                                 |
+|-----------|------------------|----------------------|-------------------------------------------------------------------------------------------------------|
+| Alameda   | Central Bar      | 38.736606, -9.139532 | 9:00-17:00                                                                                            |
+| Alameda   | Civil Bar        | 38.736988, -9.139955 | 9:00-17:00                                                                                            |
+| Alameda   | Civil Cafeteria  | 38.737650, -9.140384 | 12:00-15:00                                                                                           |
+| Alameda   | Sena Pastry Shop | 38.737677, -9.138672 | 8:00-19:00                                                                                            |
+| Alameda   | Mechy Bar        | 38.737247, -9.137434 | 9:00-17:00                                                                                            |
+| Alameda   | AEIST Bar        | 38.736542, -9.137226 | 9:00-17:00                                                                                            |
+| Alameda   | AEIST Esplanade  | 38.736318, -9.137820 | 9:00-17:00                                                                                            |
+| Alameda   | Chemy Bar        | 38.736240, -9.138302 | 9:00-17:00                                                                                            |
+| Alameda   | SAS Cafeteria    | 38.736571, -9.137036 | 9:00-21:00                                                                                            |
+| Alameda   | Math Cafeteria   | 38.735508, -9.139645 | 13:30-15:00 for Students and the Public 12:00-15:00 for Professors, Researchers, and Staff            |
+| Alameda   | Complex Bar      | 38.736050, -9.140156 | 9:00-12:00, 14:00-17:00 for Students and the Public 9:00-17:00 for Professors, Researchers, and Staff |
+| Taguspark | Tagus Cafeteria  | 38.737802, -9.303223 | 12:00-15:00                                                                                           |
+| Taguspark | Red Bar          | 38.736546, -9.302207 | 8:00-22:00                                                                                            |
+| Taguspark | Green Bar        | 38.738004, -9.303058 | 7:00-19:00                                                                                            |
+| CTN       | CTN Cafeteria    | 38.812522, -9.093773 | 12:00-14:00                                                                                           |
+| CTN       | CTN Bar          | 38.812522, -9.093773 | 8:30-12:00, 15:30-16:30                                                                               |
 
 To quickly generate a new JSON file containing different data, you can use the [generate_openingtimes.sh](generate_openingtimes.sh) script, which provides a basic yet useful assistant to help you do that painful task.
 Syntax :

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="pt.ulisboa.tecnico.cmov.foodist.ui.UiUtils" />
+
+        <variable
+            name="cafeteriaViewModel"
+            type="pt.ulisboa.tecnico.cmov.foodist.viewmodel.CafeteriaViewModel" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="192dp"
+            android:fitsSystemWindows="true"
+            app:liftOnScroll="true">
+
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/collapsingToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                app:collapsedTitleTextAppearance="@style/TextAppearance.App.CollapsingToolbar.Collapsed"
+                app:contentScrim="?attr/colorPrimarySurface"
+                app:expandedTitleMarginBottom="28dp"
+                app:expandedTitleMarginStart="72dp"
+                app:expandedTitleTextAppearance="@style/TextAppearance.App.CollapsingToolbar.Expanded"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+                app:title="@{cafeteriaViewModel.cafeteria.name}">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/desc_cafeteria_banner"
+                    android:fitsSystemWindows="true"
+                    android:scaleType="centerCrop"
+                    app:layout_collapseMode="parallax"
+                    app:layout_collapseParallaxMultiplier="0.5"
+                    app:srcCompat="@drawable/cafeteria_1" />
+
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/toolbar"
+                    style="@style/Widget.MaterialComponents.Toolbar.PrimarySurface"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="@android:color/transparent"
+                    android:elevation="0dp"
+                    app:layout_collapseMode="pin"
+                    app:layout_scrollFlags="scroll|enterAlways|snap" />
+
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefresh_cafeteria"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/nestedScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_vertical_margin">
+
+                    <androidx.constraintlayout.widget.Barrier
+                        android:id="@+id/barrier"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:barrierDirection="bottom"
+                        app:constraint_referenced_ids="textView_openinghoursTitle,textView_walkTime,textView_days,textView_hours,textView_walkDistance,textView_waitTime"
+                        tools:layout_editor_absoluteY="600dp" />
+
+                    <TextView
+                        android:id="@+id/textView_waitTime"
+                        style="@style/TextAppearance.CafeteriaInfo.Time.Wait"
+                        android:layout_marginTop="24dp"
+                        android:text="@{UiUtils.formatTime(cafeteriaViewModel.cafeteria.timeWait, @string/duration_seconds, @string/duration_minutes, @string/duration_hours, @string/duration_days)}"
+                        app:layout_constraintEnd_toEndOf="@+id/mapDetail"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/textView_walkTime"
+                        style="@style/TextAppearance.CafeteriaInfo.Time.Walk"
+                        android:layout_marginTop="8dp"
+                        android:text="@{UiUtils.formatTime(cafeteriaViewModel.cafeteria.timeWalk, @string/duration_seconds, @string/duration_minutes, @string/duration_hours, @string/duration_days)}"
+                        app:layout_constraintEnd_toEndOf="@+id/mapDetail"
+                        app:layout_constraintTop_toBottomOf="@+id/textView_waitTime" />
+
+                    <TextView
+                        android:id="@+id/textView_walkDistance"
+                        style="@style/TextAppearance.CafeteriaInfo.Distance"
+                        android:layout_marginTop="8dp"
+                        android:text="@{UiUtils.formatDistance(cafeteriaViewModel.cafeteria.distance, @string/distance_meters, @string/distance_km)}"
+                        app:layout_constraintEnd_toEndOf="@+id/mapDetail"
+                        app:layout_constraintTop_toBottomOf="@+id/textView_walkTime" />
+
+                    <TextView
+                        android:id="@+id/textView_openinghoursTitle"
+                        style="@style/TextAppearance.MaterialComponents.Headline5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:text="@string/opening_times"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/textView_days"
+                        style="@style/TextAppearance.MaterialComponents.Body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@{cafeteriaViewModel.openHoursTextDays}"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView_openinghoursTitle" />
+
+                    <TextView
+                        android:id="@+id/textView_hours"
+                        style="@style/TextAppearance.MaterialComponents.Body1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:text="@{cafeteriaViewModel.openHoursTextHours}"
+                        app:layout_constraintBottom_toBottomOf="@+id/textView_days"
+                        app:layout_constraintEnd_toStartOf="@+id/textView_walkTime"
+                        app:layout_constraintStart_toEndOf="@+id/textView_days"
+                        app:layout_constraintTop_toTopOf="@+id/textView_days" />
+
+                    <FrameLayout
+                        android:id="@+id/mapDetail"
+                        android:name="com.google.android.gms.maps.SupportMapFragment"
+                        android:layout_width="@dimen/map_width_landscape"
+                        android:layout_height="@dimen/map_detail_height_portrait"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/barrier">
+
+                    </FrameLayout>
+
+                    <CheckBox
+                        android:id="@+id/checkBox_route"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/show_route"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/mapDetail" />
+
+                    <Button
+                        android:id="@+id/button_directions"
+                        style="@style/Widget.MaterialComponents.Button.Icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="openDirections"
+                        android:text="@string/directions"
+                        app:backgroundTint="@color/colorBlueGoogleMaps"
+                        app:icon="@drawable/ic_directions_24dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/checkBox_route"
+                        app:layout_constraintEnd_toEndOf="@+id/mapDetail"
+                        app:layout_constraintTop_toTopOf="@+id/checkBox_route" />
+
+                    <TextView
+                        android:id="@+id/textView_menuTitle"
+                        style="@style/TextAppearance.MaterialComponents.Headline5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:text="@string/menu"
+                        app:layout_constraintStart_toEndOf="@+id/mapDetail"
+                        app:layout_constraintTop_toTopOf="@+id/textView_openinghoursTitle" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerView_dishes"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="8dp"
+                        android:scrollbars="vertical"
+                        app:layoutManager="LinearLayoutManager"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/textView_menuTitle"
+                        app:layout_constraintTop_toBottomOf="@+id/textView_menuTitle" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.core.widget.NestedScrollView>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floating_action_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:onClick="addDish"
+            app:srcCompat="@drawable/ic_add_24dp" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>
+

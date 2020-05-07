@@ -19,7 +19,6 @@ import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
 import pt.ulisboa.tecnico.cmov.foodist.db.DataRepository;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.OpeningHoursEntity;
-import pt.ulisboa.tecnico.cmov.foodist.net.DirectionsFetcher;
 import pt.ulisboa.tecnico.cmov.foodist.net.DirectionsParser;
 import pt.ulisboa.tecnico.cmov.foodist.net.ServerFetcher;
 import pt.ulisboa.tecnico.cmov.foodist.net.ServerParser;
@@ -70,9 +69,9 @@ public class CafeteriaViewModel extends AndroidViewModel {
     }
 
     public List<LatLng> updateCafeteriaDistance(CafeteriaEntity currentCafeteria, final Location mCurrentLocation, final String apiKey) {
-        DirectionsFetcher directionsFetcher = new DirectionsFetcher(apiKey, currentCafeteria, mCurrentLocation);
-        if (directionsFetcher.getResponse() != null && !directionsFetcher.getResponse().isEmpty()) {
-            DirectionsParser directionsParser = directionsFetcher.parse();
+        String response = ServerFetcher.fetchDirections(apiKey, currentCafeteria, mCurrentLocation);
+        if (response != null && !response.isEmpty()) {
+            DirectionsParser directionsParser = new DirectionsParser(response, mCurrentLocation, currentCafeteria);
             currentCafeteria.setDistance(directionsParser.getDistance());
             currentCafeteria.setTimeWalk(directionsParser.getDuration());
 

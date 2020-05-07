@@ -24,7 +24,6 @@ import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaWithOpeningHours;
 import pt.ulisboa.tecnico.cmov.foodist.model.Campus;
 import pt.ulisboa.tecnico.cmov.foodist.model.Status;
-import pt.ulisboa.tecnico.cmov.foodist.net.DirectionsFetcher;
 import pt.ulisboa.tecnico.cmov.foodist.net.DirectionsParser;
 import pt.ulisboa.tecnico.cmov.foodist.net.ServerFetcher;
 import pt.ulisboa.tecnico.cmov.foodist.net.ServerParser;
@@ -98,16 +97,15 @@ public class CafeteriaListViewModel extends AndroidViewModel {
     public void updateCafeteriasDistances(final Location mCurrentLocation, final String apiKey) {
         List<CafeteriaEntity> mCafeterias = getCafeteriasEntities();
         for (CafeteriaEntity cafeteria : mCafeterias) {
-            DirectionsFetcher directionsFetcher = new DirectionsFetcher(apiKey, cafeteria, mCurrentLocation);
-            DirectionsParser directionsParser = directionsFetcher.parse();
-            if (directionsParser != null) {
+            String response = ServerFetcher.fetchDirections(apiKey, cafeteria, mCurrentLocation);
+            if (response != null && !response.isEmpty()) {
+                DirectionsParser directionsParser = new DirectionsParser(response, mCurrentLocation, cafeteria);
                 cafeteria.setDistance(directionsParser.getDistance());
                 cafeteria.setTimeWalk(directionsParser.getDuration());
                 mRepository.updateCafeterias(mCafeterias);
                 Log.d(TAG, "Updated distance and walk time for cafeteria " + cafeteria.getName());
             } else
                 Log.e(TAG, "Unable to update distance and walk time for cafeteria " + cafeteria.getName());
-
         }
     }
 

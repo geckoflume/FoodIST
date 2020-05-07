@@ -55,9 +55,11 @@ public class CafeteriasFragment extends Fragment implements OnMapReadyCallback {
         // in the foreground.
         // Update the cached copy of the cafeterias in the adapter.
         mCafeteriaListViewModel.getCafeteriasWithOpeningHours().observe(getViewLifecycleOwner(), cafeteriasList -> {
-            adapterCafeterias.setCafeteriaList(cafeteriasList);
-            if (mMap != null)
-                mCafeteriaListViewModel.updateMap(mMap, mapFragment);
+            if (adapterCafeterias.getItemCount() == 0 || !mCafeteriaListViewModel.isUpdating().getValue()) {
+                adapterCafeterias.setCafeteriaList(cafeteriasList);
+                if (mMap != null)
+                    mCafeteriaListViewModel.updateMap(mMap, mapFragment);
+            }
         });
         mCafeteriaListViewModel.getStatus().observe(getViewLifecycleOwner(), adapterCafeterias::setStatus);
         swipeRefreshLayout = root.findViewById(R.id.swipeRefresh);
@@ -76,9 +78,6 @@ public class CafeteriasFragment extends Fragment implements OnMapReadyCallback {
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
         }
-        mMap.setOnMapLoadedCallback(() -> {
-            // Set observer
-            mCafeteriaListViewModel.updateMap(mMap, mapFragment);
-        });
+        mMap.setOnMapLoadedCallback(() -> mCafeteriaListViewModel.updateMap(mMap, mapFragment));
     }
 }

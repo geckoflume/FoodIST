@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.cmov.foodist.net;
 
+import android.location.Location;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -11,6 +12,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
+
 /**
  * Parses the Directions API response, according to
  * https://developers.google.com/maps/documentation/directions/intro
@@ -21,14 +24,14 @@ public class DirectionsParser {
     private int distance;
     private int duration;
 
-    public DirectionsParser(String jsonStr, LatLng origin, LatLng dest) {
+    public DirectionsParser(String jsonStr, Location origin, CafeteriaEntity dest) {
         this.path = new ArrayList<>();
         this.duration = 0;
         this.distance = 0;
         JSONObject jStep;
         String polyline;
 
-        this.path.add(origin);
+        this.path.add(new LatLng(origin.getLatitude(), origin.getLongitude()));
 
         try {
             JSONObject jObject = new JSONObject(jsonStr);
@@ -51,12 +54,12 @@ public class DirectionsParser {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        this.path.add(dest);
+        this.path.add(new LatLng(dest.getLatitude(), dest.getLongitude()));
     }
 
     /**
      * Method to decode polyline points
-     *
+     * <p>
      * Courtesy of Jeffrey Sambells:
      * http://jeffreysambells.com/2010/05/27/decoding-polylines-from-google-maps-direction-api-with-java
      */
@@ -85,8 +88,7 @@ public class DirectionsParser {
             int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
             lng += dlng;
 
-            LatLng p = new LatLng((((double) lat / 1E5)),
-                    (((double) lng / 1E5)));
+            LatLng p = new LatLng((((double) lat / 1E5)), (((double) lng / 1E5)));
             poly.add(p);
         }
         return poly;

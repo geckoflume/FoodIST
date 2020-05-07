@@ -24,6 +24,8 @@ import javax.net.ssl.HttpsURLConnection;
 
 public abstract class NetUtils {
     private static final String TAG = NetUtils.class.getSimpleName();
+    private static final int TIMEOUT = 5000;            // 5 seconds
+    private static final int FILESIZE_LIMIT_MB = 2;     // 2 MB
 
     private static String readStream(InputStream is) throws IOException {
         StringBuilder sb = new StringBuilder();
@@ -43,7 +45,8 @@ public abstract class NetUtils {
             URL url = new URL(urlString);
             urlConnection = (HttpsURLConnection) url.openConnection();
             urlConnection.setRequestMethod(method);
-            urlConnection.setConnectTimeout(5000); //set timeout to 5 seconds
+            urlConnection.setUseCaches(false);
+            urlConnection.setConnectTimeout(TIMEOUT);
 
             if (urlConnection.getResponseCode() == expectedResponseCode) {
                 InputStream in = new BufferedInputStream(urlConnection.getInputStream());
@@ -77,7 +80,8 @@ public abstract class NetUtils {
             URL url = new URL(urlString);
             urlConnection = (HttpsURLConnection) url.openConnection();
             urlConnection.setRequestMethod(method);
-            urlConnection.setConnectTimeout(5000); //set timeout to 5 seconds
+            urlConnection.setUseCaches(false);
+            urlConnection.setConnectTimeout(TIMEOUT);
             urlConnection.setRequestProperty("Content-Type", "application/json");
             urlConnection.setDoOutput(true);
 
@@ -114,7 +118,7 @@ public abstract class NetUtils {
         HttpsURLConnection urlConnection = null;
         String boundary = "---" + System.currentTimeMillis();
 
-        //Compress picture to comply with php default "upload_max_filesize = 2M"
+        // Compress picture to comply with php default "upload_max_filesize = 2M" (defined in FILESIZE_LIMIT_MB)
         Bitmap bmp = BitmapFactory.decodeFile(picture.getAbsolutePath());
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         int quality = 70;
@@ -126,7 +130,7 @@ public abstract class NetUtils {
                 quality -= 10;
             else
                 break;
-        } while (bos.size() > 2 * 1024 * 1024);
+        } while (bos.size() > FILESIZE_LIMIT_MB * 1024 * 1024); // while the size of the bitmap is more than FILESIZE_LIMIT_MB
 
         try {
             // Create a unique boundary based on timestamp
