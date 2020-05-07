@@ -14,7 +14,7 @@ import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
 import pt.ulisboa.tecnico.cmov.foodist.R;
-import pt.ulisboa.tecnico.cmov.foodist.cache.Cache;
+import pt.ulisboa.tecnico.cmov.foodist.cache.DualCache;
 import pt.ulisboa.tecnico.cmov.foodist.databinding.ListItemPictureBinding;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.PictureEntity;
 import pt.ulisboa.tecnico.cmov.foodist.model.Picture;
@@ -70,7 +70,7 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.PictureH
             Context context = imageView.getContext();
 
             ((BasicApp) context.getApplicationContext()).networkIO().execute(() -> {
-                Bitmap bitmap = Cache.getInstance(context).downloadPictureIfNeeded(picture.getFilename());
+                Bitmap bitmap = DualCache.getInstance(context).downloadPictureIfNeeded(picture.getFilename());
                 imageView.post(() -> imageView.setImageBitmap(bitmap));
             });
         }

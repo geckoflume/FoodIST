@@ -16,7 +16,7 @@ import java.util.List;
 
 import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
 import pt.ulisboa.tecnico.cmov.foodist.R;
-import pt.ulisboa.tecnico.cmov.foodist.cache.Cache;
+import pt.ulisboa.tecnico.cmov.foodist.cache.DualCache;
 import pt.ulisboa.tecnico.cmov.foodist.databinding.ListItemDishBinding;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.DishWithPictures;
 import pt.ulisboa.tecnico.cmov.foodist.model.Dish;
@@ -78,7 +78,7 @@ public class DishAdapter extends RecyclerView.Adapter<DishAdapter.DishHolder> {
         void updateWithPicture(Picture picture) {
             Context context = imageView.getContext();
             ((BasicApp) context.getApplicationContext()).networkIO().execute(() -> {
-                Bitmap bitmap = Cache.getInstance(context).downloadPictureIfNeeded(picture.getFilename());
+                Bitmap bitmap = DualCache.getInstance(context).downloadPictureIfNeeded(picture.getFilename());
                 imageView.post(() -> {
                     imageView.setImageBitmap(bitmap);
                     imageView.setVisibility(View.VISIBLE);
