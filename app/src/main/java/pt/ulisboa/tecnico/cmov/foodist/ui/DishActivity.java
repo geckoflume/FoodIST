@@ -21,8 +21,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.bumptech.glide.Glide;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
@@ -57,7 +55,7 @@ public class DishActivity extends AppCompatActivity {
         initActionBar();
 
         RecyclerView recyclerViewDishes = this.findViewById(R.id.recyclerView_pictures);
-        PictureAdapter adapterPictures = new PictureAdapter(Glide.with(this));
+        PictureAdapter adapterPictures = new PictureAdapter();
         recyclerViewDishes.setHasFixedSize(true);
         recyclerViewDishes.addItemDecoration(new GridSpacingItemDecoration(((GridLayoutManager) recyclerViewDishes.getLayoutManager()).getSpanCount(), 50));
         recyclerViewDishes.setAdapter(adapterPictures);

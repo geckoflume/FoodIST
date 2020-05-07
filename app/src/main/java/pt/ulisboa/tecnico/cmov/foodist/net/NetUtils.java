@@ -19,13 +19,14 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 
 import javax.net.ssl.HttpsURLConnection;
 
 public abstract class NetUtils {
     private static final String TAG = NetUtils.class.getSimpleName();
-    private static final int TIMEOUT = 5000;            // 5 seconds
-    private static final int FILESIZE_LIMIT_MB = 2;     // 2 MB
+    private static final int TIMEOUT = 5000;                        // 5 seconds
+    private static final int FILESIZE_LIMIT = 1024 * 1024 * 2;      // 2 MB
 
     private static String readStream(InputStream is) throws IOException {
         StringBuilder sb = new StringBuilder();
@@ -130,7 +131,7 @@ public abstract class NetUtils {
                 quality -= 10;
             else
                 break;
-        } while (bos.size() > FILESIZE_LIMIT_MB * 1024 * 1024); // while the size of the bitmap is more than FILESIZE_LIMIT_MB
+        } while (bos.size() > FILESIZE_LIMIT); // while the size of the bitmap is more than FILESIZE_LIMIT_MB
 
         try {
             // Create a unique boundary based on timestamp
@@ -142,7 +143,7 @@ public abstract class NetUtils {
             urlConnection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
 
             OutputStream outputStream = urlConnection.getOutputStream();
-            PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, "UTF-8"), true);
+            PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8), true);
 
             // Add a form field "dish_id" to the request
             writer.append("--").append(boundary).append("\r\n");
@@ -183,6 +184,25 @@ public abstract class NetUtils {
         } finally {
             if (urlConnection != null)
                 urlConnection.disconnect();
+        }
+        return response;
+    }
+
+    public static Bitmap downloadBitmap(String urlString, int expectedResponseCode) {
+        Bitmap response = null;
+        try {
+            URL url = new URL(urlString);
+            HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setDoInput(true);
+            urlConnection.connect();
+
+            if (urlConnection.getResponseCode() == expectedResponseCode) {
+                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+                response = BitmapFactory.decodeStream(in);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return response;
     }

@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.cmov.foodist.net;
 
+import android.graphics.Bitmap;
 import android.location.Location;
 
 import com.google.gson.Gson;
@@ -105,5 +106,11 @@ public abstract class ServerFetcher {
         String urlString = String.format(Locale.US, MAPS_DIRECTIONS_URL, location.getLatitude(), location.getLongitude(), cafeteria.getLatitude(), cafeteria.getLongitude(), apiKey);
 
         return NetUtils.get(urlString, HttpsURLConnection.HTTP_OK);
+    }
+
+    public static Bitmap downloadPicture(String filename) {
+        String urlString = getPictureUrl(filename);
+
+        return NetUtils.downloadBitmap(urlString, HttpsURLConnection.HTTP_OK);
     }
 }

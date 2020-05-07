@@ -41,18 +41,13 @@ public class DishEntity implements Dish {
     }
 
     @Override
-    public void setCafeteriaId(int cafeteriaId) {
-        this.cafeteriaId = cafeteriaId;
-    }
-
-    @Override
     public int getCafeteriaId() {
         return cafeteriaId;
     }
 
     @Override
-    public void setName(@NonNull String name) {
-        this.name = name;
+    public void setCafeteriaId(int cafeteriaId) {
+        this.cafeteriaId = cafeteriaId;
     }
 
     @Override
@@ -61,13 +56,18 @@ public class DishEntity implements Dish {
     }
 
     @Override
-    public void setPrice(double price) {
-        this.price = price;
+    public void setName(@NonNull String name) {
+        this.name = name;
     }
 
     @Override
     public double getPrice() {
         return price;
+    }
+
+    @Override
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     @Override

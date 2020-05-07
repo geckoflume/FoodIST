@@ -68,15 +68,15 @@ public class CafeteriaListViewModel extends AndroidViewModel {
         mSavedStateHandler.set(CAMPUS_KEY, campus);
     }
 
+    public LiveData<Integer> getStatus() {
+        return mSavedStateHandler.getLiveData(STATUS_KEY, Status.DEFAULT);
+    }
+
     public void setStatus(Integer status) {
         // Save the user's status into the SavedStateHandle.
         // This ensures that we retain the value across process death
         // and is used as the input into the Transformations.switchMap above
         mSavedStateHandler.set(STATUS_KEY, status);
-    }
-
-    public LiveData<Integer> getStatus() {
-        return mSavedStateHandler.getLiveData(STATUS_KEY, Status.DEFAULT);
     }
 
     public LiveData<List<CafeteriaWithOpeningHours>> getCafeteriasWithOpeningHours() {

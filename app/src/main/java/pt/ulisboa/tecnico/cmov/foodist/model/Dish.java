@@ -2,17 +2,21 @@ package pt.ulisboa.tecnico.cmov.foodist.model;
 
 public interface Dish {
 
-    void setCafeteriaId(int i);
-    int getCafeteriaId() ;
+    int getCafeteriaId();
 
-    void setName (String name);
-    String getName() ;
+    void setCafeteriaId(int i);
+
+    String getName();
+
+    void setName(String name);
+
+    double getPrice();
 
     void setPrice(double price);
-    double getPrice() ;
+
+    int getId();
 
     void setId(int id);
-    int getId();
 
 }
 

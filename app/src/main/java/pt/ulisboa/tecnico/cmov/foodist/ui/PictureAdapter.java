@@ -1,5 +1,7 @@
 package pt.ulisboa.tecnico.cmov.foodist.ui;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -8,25 +10,19 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.RequestManager;
-
 import java.util.List;
 
+import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
 import pt.ulisboa.tecnico.cmov.foodist.R;
+import pt.ulisboa.tecnico.cmov.foodist.cache.Cache;
 import pt.ulisboa.tecnico.cmov.foodist.databinding.ListItemPictureBinding;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.PictureEntity;
 import pt.ulisboa.tecnico.cmov.foodist.model.Picture;
-import pt.ulisboa.tecnico.cmov.foodist.net.ServerFetcher;
 
 public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.PictureHolder> {
     public static final String EXTRA_MESSAGE = "pt.ulisboa.tecnico.cmov.foodist.PICTUREID";
 
-    private final RequestManager glide;
     private List<? extends Picture> picturesList;
-
-    public PictureAdapter(final RequestManager glide) {
-        this.glide = glide;
-    }
 
     @NonNull
     @Override
@@ -41,7 +37,7 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.PictureH
     public void onBindViewHolder(final PictureHolder holder, int position) {
         Picture picture = picturesList.get(position);
         holder.listItemPictureBinding.setPicture(picture);
-        holder.updateWithPicture(picturesList.get(position), this.glide);
+        holder.updateWithPicture(picturesList.get(position));
     }
 
     @Override
@@ -69,10 +65,14 @@ public class PictureAdapter extends RecyclerView.Adapter<PictureAdapter.PictureH
             });
         }
 
-        public void updateWithPicture(Picture picture, RequestManager requestManager) {
-            requestManager
-                    .load(ServerFetcher.getPictureUrl(picture.getFilename()))
-                    .into((ImageView) itemView.findViewById(R.id.imageView_thumbnail));
+        public void updateWithPicture(Picture picture) {
+            ImageView imageView = itemView.findViewById(R.id.imageView_thumbnail);
+            Context context = imageView.getContext();
+
+            ((BasicApp) context.getApplicationContext()).networkIO().execute(() -> {
+                Bitmap bitmap = Cache.getInstance(context).downloadPictureIfNeeded(picture.getFilename());
+                imageView.post(() -> imageView.setImageBitmap(bitmap));
+            });
         }
     }
 }

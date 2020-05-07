@@ -22,7 +22,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -131,7 +130,7 @@ public class CafeteriaActivity extends AppCompatActivity implements OnMapReadyCa
         dishListViewModel = new ViewModelProvider(this, factoryDishes).get(DishListViewModel.class);
 
         RecyclerView recyclerViewDishes = this.findViewById(R.id.recyclerView_dishes);
-        DishAdapter adapterDishes = new DishAdapter(Glide.with(this));
+        DishAdapter adapterDishes = new DishAdapter();
         recyclerViewDishes.setAdapter(adapterDishes);
         dishListViewModel.getDishesWithPictures().observe(this, adapterDishes::setDishList);
     }

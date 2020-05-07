@@ -12,8 +12,8 @@ import com.google.android.material.snackbar.Snackbar;
 import pt.ulisboa.tecnico.cmov.foodist.ui.UiUtils;
 
 public abstract class PermissionsHelper {
-    private static final String TAG = PermissionsHelper.class.getSimpleName();
     public static final int REQUEST_PERMISSIONS_REQUEST_CODE = 01;
+    private static final String TAG = PermissionsHelper.class.getSimpleName();
 
     /**
      * Return the current state of the permissions needed.

@@ -28,9 +28,9 @@ public class CafeteriaViewModel extends AndroidViewModel {
 
     private final LiveData<CafeteriaEntity> mObservableCafeteria;
     private final LiveData<List<OpeningHoursEntity>> mObservableOpeningHours;
-    private MutableLiveData<Boolean> updating = new MutableLiveData<>(false);
     private final DataRepository mRepository;
     private final int mCafeteriaId;
+    private MutableLiveData<Boolean> updating = new MutableLiveData<>(false);
     private MutableLiveData<String> openHoursTextDays = new MutableLiveData<>("");
     private MutableLiveData<String> openHoursTextHours = new MutableLiveData<>("");
 
