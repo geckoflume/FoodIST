@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
@@ -74,13 +75,61 @@
             style="@style/Widget.MaterialComponents.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginTop="28dp"
+            android:layout_marginEnd="116dp"
+            android:layout_marginRight="116dp"
             android:onClick="createDish"
             android:text="@string/save_button"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/checkBox_vegan"
+            app:layout_constraintTop_toBottomOf="@+id/checkBox_vegan" />
+
+        <CheckBox
+            android:id="@+id/checkBox_meat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="@string/haveMeat"
+            app:layout_constraintStart_toStartOf="@+id/textInputLayout_price"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout_price" />
+
+        <CheckBox
+            android:id="@+id/checkBox_vege"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="191dp"
+            android:layout_marginLeft="191dp"
+            android:layout_marginTop="40dp"
+            android:text="@string/isVege"
+            app:layout_constraintStart_toStartOf="@+id/textInputLayout_price"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout_price" />
+
+        <CheckBox
+            android:id="@+id/checkBox_fish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="@string/haveFish"
+            app:layout_constraintStart_toStartOf="@+id/checkBox_meat"
+            app:layout_constraintTop_toBottomOf="@+id/checkBox_meat" />
+
+        <CheckBox
+            android:id="@+id/checkBox_vegan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="@string/isVegan"
+            app:layout_constraintStart_toStartOf="@+id/checkBox_vege"
+            app:layout_constraintTop_toBottomOf="@+id/checkBox_vege" />
+
+        <CheckBox
+            android:id="@+id/checkBox_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="@string/information"
+            app:layout_constraintStart_toStartOf="@+id/checkBox_fish"
+            app:layout_constraintTop_toBottomOf="@+id/checkBox_fish" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

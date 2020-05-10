@@ -9,6 +9,8 @@ import androidx.room.PrimaryKey;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 import pt.ulisboa.tecnico.cmov.foodist.model.Dish;
 
 @Entity(tableName = "dishes")
@@ -30,6 +32,25 @@ public class DishEntity implements Dish {
     @ColumnInfo(name = "cafeteria_id")
     private int cafeteriaId;
 
+    @Expose
+    private boolean haveInfo;
+
+    @Expose
+    private boolean haveMeat;
+
+    @Expose
+    private boolean haveFish;
+
+    @Expose
+    private boolean isVegetarian;
+
+    @Expose
+    private boolean isVegan;
+
+    @Expose
+    @NonNull
+    private String data ="";
+
     public DishEntity() {
     }
 
@@ -38,6 +59,27 @@ public class DishEntity implements Dish {
         this.name = name;
         this.price = price;
         this.cafeteriaId = cafeteriaId;
+
+        this.haveInfo = false;
+        this.haveMeat = false;
+        this.haveFish = false;
+        this.isVegan = false;
+        this.isVegetarian = false;
+        this.data = "No information";
+    }
+
+    @Ignore
+    public DishEntity(String name, double price, int cafeteriaId, String info) {
+        this.name = name;
+        this.price = price;
+        this.cafeteriaId = cafeteriaId;
+
+        this.haveInfo = false;
+        this.haveMeat = false;
+        this.haveFish = false;
+        this.isVegan = false;
+        this.isVegetarian = false;
+        this.data = info;
     }
 
     @Override
@@ -78,6 +120,78 @@ public class DishEntity implements Dish {
     @Override
     public void setId(int i) {
         id = i;
+    }
+
+    @Override
+    public boolean getHaveInfo(){
+        return haveInfo;
+    }
+
+    @Override
+    public void setHaveInfo(boolean haveInfo){
+        this.haveInfo = haveInfo;
+    }
+
+    @Override
+    public boolean getHaveMeat(){
+        return haveMeat;
+    }
+
+    @Override
+    public void setHaveMeat(boolean haveMeat) {
+        this.haveMeat = haveMeat;
+    }
+
+    @Override
+    public boolean getHaveFish() {
+        return haveFish;
+    }
+
+    @Override
+    public void setHaveFish(boolean haveFish) {
+        this.haveFish = haveFish;
+    }
+
+    @Override
+    public boolean getIsVegetarian() {
+        return isVegetarian;
+    }
+
+    @Override
+    public void setIsVegetarian(boolean isVegetarian) {
+        this.isVegetarian = isVegetarian;
+    }
+
+    @Override
+    public boolean getIsVegan() {
+        return isVegan;
+    }
+
+    @Override
+    public void setIsVegan(boolean isVegan) {
+        this.isVegan = isVegan;
+    }
+
+    @Override
+    public String getData(){
+        return data;
+    }
+
+    @Override
+    public void setData(String data){
+        this.data = data;
+    }
+    public void setDatas(boolean meat, boolean fish, boolean vege, boolean vegan){
+        setHaveFish(fish);
+        setHaveMeat(meat);
+        setIsVegan(vegan);
+        setIsVegetarian(vege);
+        setHaveInfo(true);
+        this.data = " This is :";
+        if (meat) { data = data + "Meat "; }
+        if (fish) { data = data + "Fish "; }
+        if (vege) { data = data + "Vegetarian "; }
+        if (vegan) { data = data + "Vegan "; }
     }
 
     @Override

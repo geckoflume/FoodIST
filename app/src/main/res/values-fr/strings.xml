@@ -50,6 +50,7 @@
     <string name="pictures">Photos</string>
     <string name="price">Prix : %s</string>
     <string name="cafeteria_name">Cafétéria : %s</string>
+    <string name="info">Informations: %s</string>
     <string name="delete_dish">Supprimer le plat</string>
     <string name="lang">Langue</string>
     <string name="translate">Traduire</string>
@@ -58,4 +59,9 @@
     <string name="share_dish_text">Je pense prendre le \&quot;%1$s\&quot; (%2$s) au %3$s de l\&apos;IST, veux-tu te joindre à moi ?</string>
     <string name="share_cafeteria">Partager cette cafétéria</string>
     <string name="share_cafeteria_text">Rejoins-moi au %1$s de l\&apos;IST ! %2$s</string>
+    <string name="haveMeat">Contient de la viande</string>
+    <string name="haveFish">Contient du poisson</string>
+    <string name="isVege">Est végétarien</string>
+    <string name="isVegan">Est végan</string>
+    <string name="information">Pas d\&apos;information</string>
 </resources>

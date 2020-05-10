@@ -26,6 +26,7 @@ public class DishViewModel extends AndroidViewModel {
 
     private final LiveData<DishWithPictures> mObservableDish;
     private final LiveData<CafeteriaEntity> associatedCafeteria;
+    private String dishInfo;
     private final DataRepository mRepository;
     private final int mDishId;
     private MutableLiveData<String> dishName = new MutableLiveData<>("");
@@ -39,6 +40,7 @@ public class DishViewModel extends AndroidViewModel {
 
         mObservableDish = mRepository.getDishWithPictures(this.mDishId);
         associatedCafeteria = mRepository.getCafeteriaByIdDish(this.mDishId);
+
         resetDishName();
     }
 

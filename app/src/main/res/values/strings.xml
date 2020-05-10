@@ -65,6 +65,7 @@
     <string name="name_dish">Name: %s</string>
     <string name="price">Price: %s</string>
     <string name="cafeteria_name">Cafeteria: %s</string>
+    <string name="info">Information: %s</string>
     <string name="delete_dish">Delete dish</string>
     <string name="lang">Language</string>
     <string name="translate">Translate</string>
@@ -72,4 +73,9 @@
     <string name="share_dish_text">I\&apos;m thinking of getting \&quot;%1$s\&quot; (%2$s) from the IST %3$s, would you like to join me?</string>
     <string name="share_cafeteria">Share cafeteria</string>
     <string name="share_cafeteria_text">Come join me at the IST %1$s! %2$s</string>
+    <string name="haveMeat">Contain meat</string>
+    <string name="haveFish">Contain fish</string>
+    <string name="isVege">Is vegetarian</string>
+    <string name="isVegan">Is vegan</string>
+    <string name="information">No information</string>
 </resources>
