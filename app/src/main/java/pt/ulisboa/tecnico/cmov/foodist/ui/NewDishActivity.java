@@ -100,37 +100,36 @@ public class NewDishActivity extends AppCompatActivity {
         if (!isValidPrice(priceStr))
             textInputLayout_price.setError(getString(R.string.please_enter_valid_price));
 
-        CheckBox repeatChkBxI = findViewById(R.id.checkBox_info);
-        repeatChkBxI.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            isCheckBoxInfo = isChecked;
-        });
+
 
         // save the new values if they are valid
         if (isValidName(name) && isValidPrice(priceStr)) {
             int id = getIntent().getIntExtra("cafeteriaId", 0);
 
-            DishEntity dish = new DishEntity(name, Double.parseDouble(priceStr), id, "coucou");
+            DishEntity dish = new DishEntity(name, Double.parseDouble(priceStr), id, "No information");
+
+            CheckBox repeatChkBxI = findViewById(R.id.checkBox_info);
+            isCheckBoxInfo = repeatChkBxI.isChecked();
+
 
             if (!isCheckBoxInfo) {
                 CheckBox repeatChkBxM = findViewById(R.id.checkBox_meat);
-                repeatChkBxM.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                    isCheckBoxMeat = isChecked;
-                });
+                isCheckBoxMeat = repeatChkBxM.isChecked();
+                Log.i("PROBLEM", String.valueOf(isCheckBoxMeat));
+
 
                 CheckBox repeatChkBxF = findViewById(R.id.checkBox_fish);
-                repeatChkBxF.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                    isCheckBoxFish = isChecked;
-                });
+                isCheckBoxFish = repeatChkBxF.isChecked();
+                Log.i("PROBLEM", String.valueOf(isCheckBoxFish));
 
                 CheckBox repeatChkBxV = findViewById(R.id.checkBox_vege);
-                repeatChkBxV.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                    isCheckBoxVege = isChecked;
-                });
+                isCheckBoxVege = repeatChkBxV.isChecked();
+                Log.i("PROBLEM", String.valueOf(isCheckBoxVege));
+
 
                 CheckBox repeatChkBxVa = findViewById(R.id.checkBox_vegan);
-                repeatChkBxVa.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                    isCheckBoxVegan = isChecked;
-                });
+                isCheckBoxVegan = repeatChkBxVa.isChecked();
+                Log.i("PROBLEM", String.valueOf(isCheckBoxVegan));
 
                 dish.setDatas(isCheckBoxMeat, isCheckBoxFish, isCheckBoxVege, isCheckBoxVegan);
 

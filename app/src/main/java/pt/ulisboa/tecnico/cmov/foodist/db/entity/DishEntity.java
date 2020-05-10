@@ -192,7 +192,7 @@ public class DishEntity implements Dish {
         setIsVegan(vegan);
         setIsVegetarian(vege);
         setHaveInfo(true);
-        this.data = " This is :";
+        this.data = " ";
         if (meat) {
             data = data + "Meat ";
         }
