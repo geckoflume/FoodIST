@@ -47,10 +47,12 @@ public abstract class NetUtils {
             urlConnection.setRequestMethod(method);
             urlConnection.setUseCaches(false);
             urlConnection.setConnectTimeout(TIMEOUT);
-
-            if (urlConnection.getResponseCode() == expectedResponseCode) {
+            int responseCode = urlConnection.getResponseCode();
+            if (responseCode == expectedResponseCode) {
                 InputStream in = new BufferedInputStream(urlConnection.getInputStream());
                 response = readStream(in);
+            } else if (responseCode == HttpsURLConnection.HTTP_NOT_FOUND) {
+                response = "";
             }
         } catch (UnknownHostException e) {
             Log.e(TAG, "UnknownHostException, cannot reach " + urlString);

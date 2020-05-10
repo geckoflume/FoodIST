@@ -47,9 +47,9 @@ public class ServerParser {
     }
 
     public List<DishEntity> parseDishes(String response) {
-        List<DishEntity> dishEntities = null;
+        List<DishEntity> dishEntities = new ArrayList<>();
 
-        if (response != null) {
+        if (response != null && !response.isEmpty()) {
             Type dishListType = new TypeToken<List<DishEntity>>() {
             }.getType();
 
