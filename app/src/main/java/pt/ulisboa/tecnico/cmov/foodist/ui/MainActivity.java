@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
@@ -17,6 +20,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -43,15 +47,15 @@ import com.google.android.gms.location.SettingsClient;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Locale;
 
 import pt.ulisboa.tecnico.cmov.foodist.BasicApp;
 import pt.ulisboa.tecnico.cmov.foodist.BuildConfig;
 import pt.ulisboa.tecnico.cmov.foodist.PermissionsHelper;
 import pt.ulisboa.tecnico.cmov.foodist.R;
-import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
 import pt.ulisboa.tecnico.cmov.foodist.model.Campus;
+import pt.ulisboa.tecnico.cmov.foodist.model.Language;
+import pt.ulisboa.tecnico.cmov.foodist.model.Status;
 import pt.ulisboa.tecnico.cmov.foodist.viewmodel.CafeteriaListViewModel;
 
 public class MainActivity extends AppCompatActivity {
@@ -61,9 +65,7 @@ public class MainActivity extends AppCompatActivity {
     private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS = UPDATE_INTERVAL_IN_MILLISECONDS / 2;
 
     private AppBarConfiguration mAppBarConfiguration;
-    private List<Campus> campuses = new ArrayList<>();
     private ArrayAdapter<Campus> adapterCampus;
-    private List<CafeteriaEntity> currentCafeterias;
     private Spinner spinner;
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest mLocationRequest;
@@ -75,12 +77,17 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences sharedPref;
     private MutableLiveData<Boolean> canRefresh = new MutableLiveData<>(false);
     private MenuItem refreshMenuItem;
+    private TextView textView_username;
+    private TextView textView_email;
+    private Locale mCurrentLocale;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedPref = getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        updateLocale();
         setContentView(R.layout.activity_main);
-        sharedPref = getPreferences(Context.MODE_PRIVATE);
 
         // Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -89,37 +96,38 @@ public class MainActivity extends AppCompatActivity {
         // Drawer and NavigationUI
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_cafeterias).setDrawerLayout(drawer).build();
+        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_cafeterias, R.id.nav_account).setDrawerLayout(drawer).build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        // Campuses spinner
-        initCampuses();
+        // Account data
+        textView_username = navigationView.getHeaderView(0).findViewById(R.id.textView_username);
+        textView_email = navigationView.getHeaderView(0).findViewById(R.id.textView_email);
+        updateUser();
+
         // Create an ArrayAdapter using the string array and a default spinner layout
-        adapterCampus = new ArrayAdapter<>(this, R.layout.layout_drop_item, campuses);
+        adapterCampus = new ArrayAdapter<>(this, R.layout.layout_drop_campus, Campus.getInstance(this));
         // Specify the layout to use when the list of choices appears
         adapterCampus.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         spinner = navigationView.getHeaderView(0).findViewById(R.id.spinner);
         spinner.setAdapter(adapterCampus);
-        spinner.setSelection(sharedPref.getInt(getString(R.string.campus_id_key), 1));
+        //spinner.setSelection(sharedPref.getInt(getString(R.string.campus_id_key), 1));
         spinner.setOnItemSelectedListener(campusSelectedCallback());
+        spinner.setSelection(Campus.DEFAULT);
 
         // Cafeteria ListView
         mCafeteriaListViewModel = new ViewModelProvider(this).get(CafeteriaListViewModel.class);
-        mCafeteriaListViewModel.getCafeterias().observe(this, cafeteriaEntities -> {
-            currentCafeterias = cafeteriaEntities;
-            if (!canRefresh.getValue() && mCurrentLocation != null) {
-                Log.i(TAG, "Toggling refresh button from observer");
-                canRefresh.setValue(true);
-            }
-        });
+        mCafeteriaListViewModel.setStatus(sharedPref.getInt("status", Status.DEFAULT));
 
         // Refresh button
         canRefresh.observe(this, canRefresh -> {
-            if (canRefresh)
+            if (canRefresh) {
                 refreshMenuItem.setEnabled(true);
+                spinner.setSelection(Campus.AUTODETECT);
+                updateCafeterias();
+            }
         });
 
         // Location
@@ -131,15 +139,17 @@ public class MainActivity extends AppCompatActivity {
         createLocationRequest();
         buildLocationSettingsRequest();
 
-        if (PermissionsHelper.checkPermissions(this))
+        if (PermissionsHelper.checkPermissionLocation(this))
             startLocationUpdates();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if (!PermissionsHelper.checkPermissions(this))
-            PermissionsHelper.requestPermissions(MainActivity.this);
+        if (!PermissionsHelper.checkPermissionLocation(this))
+            PermissionsHelper.requestPermissionLocation(MainActivity.this);
+        mCurrentLocale = getResources().getConfiguration().locale;
+
     }
 
     @Override
@@ -168,54 +178,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateCafeterias() {
-        if(mCurrentLocation != null)
-            ((BasicApp) MainActivity.this.getApplication()).networkIO().execute(() -> mCafeteriaListViewModel.updateCafeteriasDistances(currentCafeterias, mCurrentLocation, getString(R.string.google_maps_key)));
-        else {
+        ((BasicApp) MainActivity.this.getApplication()).networkIO().execute(() -> {
+            mCafeteriaListViewModel.setUpdating(true);
+            if (mCurrentLocation != null)
+                mCafeteriaListViewModel.updateCafeteriasDistances(mCurrentLocation, getString(R.string.google_cloud_key));
+            else
+                Toast.makeText(MainActivity.this, R.string.no_location_detected, Toast.LENGTH_LONG).show();
+            mCafeteriaListViewModel.updateCafeteriasWaitTimes();
             mCafeteriaListViewModel.setUpdating(false);
-            Toast.makeText(MainActivity.this, R.string.no_location_detected, Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private void initCampuses() {
-        Campus campus = new Campus(0, getString(R.string.find_nearest), 0, 0);
-        this.campuses.add(campus);
-        campus = new Campus(1, getString(R.string.all_cafeterias), 0, 0);
-        this.campuses.add(campus);
-        campus = new Campus(2, getString(R.string.alameda), 38.736795, -9.138637);
-        this.campuses.add(campus);
-        campus = new Campus(3, getString(R.string.taguspark), 38.737461, -9.303161);
-        this.campuses.add(campus);
-        campus = new Campus(4, getString(R.string.ctn), 38.811911, -9.094221);
-        this.campuses.add(campus);
+        });
     }
 
     private AdapterView.OnItemSelectedListener campusSelectedCallback() {
         return new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (((Campus) parent.getItemAtPosition(position)).getName().equals(getString(R.string.find_nearest))) { // in case the campuses are inserted in a strange order
+                if (position == Campus.AUTODETECT) {
                     // "Find nearest campus" selected
-                    if (mCurrentLocation != null && PermissionsHelper.checkPermissions(MainActivity.this)) {
+                    if (mCurrentLocation != null && PermissionsHelper.checkPermissionLocation(MainActivity.this)) {
                         spinner.setEnabled(false);
                         Toast.makeText(MainActivity.this, R.string.autodetecting_campus_toast, Toast.LENGTH_LONG).show();
-                        Campus nearest = Campus.findNearest(campuses, mCurrentLocation);
+                        Campus nearest = Campus.findNearest(getApplicationContext(), mCurrentLocation);
                         spinner.setSelection(adapterCampus.getPosition(nearest));
                         spinner.setEnabled(true);
                     } else {
                         Toast.makeText(MainActivity.this, getString(R.string.need_location), Toast.LENGTH_LONG).show();
-                        PermissionsHelper.requestPermissions(MainActivity.this);
+                        PermissionsHelper.requestPermissionLocation(MainActivity.this);
                     }
                 } else {
-                    // "All cafeterias" or campus selected
                     // apply() to commit asynchronously
                     sharedPref.edit().putInt(getString(R.string.campus_id_key), position).apply();
-                    if (((Campus) parent.getItemAtPosition(position)).getName().equals(getString(R.string.all_cafeterias))) {
-                        // "All cafeterias" selected
-                        mCafeteriaListViewModel.setQuery("");
-                    } else {
-                        // Campus selected
-                        mCafeteriaListViewModel.setQuery(String.valueOf(position - 1));
-                    }
+                    mCafeteriaListViewModel.setCampus(position);
                 }
             }
 
@@ -237,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
                 // Permission granted.
                 startLocationUpdates();
             } else {
-                UiUtils.showSnackbar(findViewById(android.R.id.content), R.string.permission_denied_explanation, R.string.action_settings, Snackbar.LENGTH_LONG, view -> {
+                UiUtils.showSnackbar(findViewById(android.R.id.content), R.string.permission_denied_explanation_location, R.string.action_settings, Snackbar.LENGTH_LONG, view -> {
                     // Build intent that displays the App settings screen.
                     Intent intent = new Intent();
                     intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
@@ -278,8 +271,8 @@ public class MainActivity extends AppCompatActivity {
 
                 // We fetch the location once, it is not useful to keep tracking the user
                 stopLocationUpdates();
-                if (!canRefresh.getValue() && currentCafeterias != null) {
-                    Log.i(TAG, "Toggling refresh button from createLocationCallback");
+                if (!canRefresh.getValue()) {
+                    Log.d(TAG, "Toggling refresh button from createLocationCallback");
                     canRefresh.setValue(true);
                 }
             }
@@ -318,7 +311,7 @@ public class MainActivity extends AppCompatActivity {
                                 ResolvableApiException rae = (ResolvableApiException) e;
                                 rae.startResolutionForResult(MainActivity.this, REQUEST_CHECK_SETTINGS);
                             } catch (IntentSender.SendIntentException sie) {
-                                Log.i(TAG, "PendingIntent unable to execute request.");
+                                Log.e(TAG, "PendingIntent unable to execute request.");
                             }
                             break;
                         case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
@@ -336,4 +329,31 @@ public class MainActivity extends AppCompatActivity {
         mFusedLocationClient.removeLocationUpdates(mLocationCallback);
     }
 
+    public void updateUser() {
+        textView_username.setText(sharedPref.getString("username", getString(R.string.default_username)) + " - " + Status.getInstance(this).get(sharedPref.getInt("status", Status.DEFAULT)));
+        textView_email.setText(sharedPref.getString("email", getString(R.string.default_email)));
+    }
+
+    public void updateStatus() {
+        mCafeteriaListViewModel.setStatus(sharedPref.getInt("status", Status.DEFAULT));
+    }
+
+    public void updateLocale() {
+        Locale locale = Language.getInstance(this).get(sharedPref.getInt("lang", Language.DEFAULT)).getLocale();
+        Locale.setDefault(locale);
+        Resources res = getResources();
+        Configuration conf = res.getConfiguration();
+        if (Build.VERSION.SDK_INT >= 17) {
+            conf.setLocale(locale);
+        } else {
+            conf.locale = locale;
+        }
+        res.updateConfiguration(conf, res.getDisplayMetrics());
+    }
+
+    public void restart() {
+        Intent refresh = new Intent(this, MainActivity.class);
+        finish();
+        startActivity(refresh);
+    }
 }

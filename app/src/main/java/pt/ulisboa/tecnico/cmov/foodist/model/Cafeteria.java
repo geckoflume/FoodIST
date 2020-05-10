@@ -1,31 +1,11 @@
 package pt.ulisboa.tecnico.cmov.foodist.model;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.maps.model.PolylineOptions;
-
 public interface Cafeteria {
     int getId();
+
     void setId(int id);
 
-    String getName();
-    void setName(@NonNull String name);
-
-    double getLatitude();
-    void setLatitude(double latitude);
-
-    double getLongitude();
-    void setLongitude(double longitude);
-
-    int getDistance();
-    void setDistance(int distance);
-
-    int getCampusId();
-    void setCampusId(int campusId);
-
     int getTimeWait();
-    void setTimeWait(int time);
 
-    int getTimeWalk();
-    void setTimeWalk(int time);
+    void setTimeWait(int time);
 }

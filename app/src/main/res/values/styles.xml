@@ -35,4 +35,16 @@
         <item name="android:drawableStart">@drawable/ic_navigation_24dp</item>
         <item name="android:drawableLeft">@drawable/ic_navigation_24dp</item>
     </style>
+
+    <style name="IconButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:minWidth">0dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetRight">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">0dp</item>
+        <item name="iconTint">@color/colorOnPrimary</item>
+        <item name="rippleColor">?colorOnPrimary</item>
+    </style>
 </resources>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/delete_dish"
+        android:contentDescription="@string/delete_dish"
+        android:icon="@drawable/ic_delete_24dp"
+        android:title="@string/delete_dish"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/share_dish"
+        android:contentDescription="@string/share_dish"
+        android:icon="@drawable/ic_share_24dp"
+        android:title="@string/share_dish"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_refresh"
+        android:orderInCategory="100"
+        android:title="@string/action_refresh"
+        app:showAsAction="never" />
+</menu>

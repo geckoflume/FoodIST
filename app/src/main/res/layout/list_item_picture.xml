@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="pt.ulisboa.tecnico.cmov.foodist.ui.UiUtils" />
+
+        <variable
+            name="picture"
+            type="pt.ulisboa.tecnico.cmov.foodist.model.Picture" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="@dimen/picture_width"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imageView_thumbnail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/desc_dish_picture"
+            android:scaleType="centerInside"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/button_delete_picture"
+            style="@style/IconButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_delete_24dp"
+            app:iconTint="@color/colorOnPrimary"
+            app:layout_constraintEnd_toEndOf="@id/imageView_thumbnail"
+            app:layout_constraintTop_toTopOf="@id/imageView_thumbnail" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

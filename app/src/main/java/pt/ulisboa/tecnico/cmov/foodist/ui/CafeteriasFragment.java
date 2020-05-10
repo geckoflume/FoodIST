@@ -19,7 +19,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 
 import pt.ulisboa.tecnico.cmov.foodist.PermissionsHelper;
 import pt.ulisboa.tecnico.cmov.foodist.R;
-import pt.ulisboa.tecnico.cmov.foodist.location.LocationUtils;
 import pt.ulisboa.tecnico.cmov.foodist.viewmodel.CafeteriaListViewModel;
 
 public class CafeteriasFragment extends Fragment implements OnMapReadyCallback {
@@ -55,11 +54,18 @@ public class CafeteriasFragment extends Fragment implements OnMapReadyCallback {
         // The onChanged() method fires when the observed data changes and the activity is
         // in the foreground.
         // Update the cached copy of the cafeterias in the adapter.
-        mCafeteriaListViewModel.getCafeterias().observe(getViewLifecycleOwner(), adapterCafeterias::setCafeteriaList);
+        mCafeteriaListViewModel.getCafeteriasWithOpeningHours().observe(getViewLifecycleOwner(), cafeteriasList -> {
+            if (adapterCafeterias.getItemCount() == 0 || !mCafeteriaListViewModel.isUpdating().getValue()) {
+                adapterCafeterias.setCafeteriaList(cafeteriasList);
+                if (mMap != null)
+                    mCafeteriaListViewModel.updateMap(mMap, mapFragment);
+            }
+        });
+        mCafeteriaListViewModel.getStatus().observe(getViewLifecycleOwner(), adapterCafeterias::setStatus);
         swipeRefreshLayout = root.findViewById(R.id.swipeRefresh);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(() -> ((MainActivity) getActivity()).updateCafeterias());
-        mCafeteriaListViewModel.isUpdating().observe(getViewLifecycleOwner(), isUpdating -> swipeRefreshLayout.setRefreshing(isUpdating));
+        mCafeteriaListViewModel.isUpdating().observe(getViewLifecycleOwner(), swipeRefreshLayout::setRefreshing);
 
         return root;
     }
@@ -68,18 +74,10 @@ public class CafeteriasFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setIndoorEnabled(true);
-        if (PermissionsHelper.checkPermissions(getActivity())) {
+        if (PermissionsHelper.checkPermissionLocation(getActivity())) {
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
         }
-        // Set observer
-        mCafeteriaListViewModel.getCafeterias().observe(getViewLifecycleOwner(), cafeteriaEntities ->
-                LocationUtils.updateMap(this.mMap, this.mapFragment, cafeteriaEntities));
-        /*
-        mMap.setOnMarkerClickListener(marker -> {
-            recyclerViewCafeterias.scrollToPosition(pos); // TODO: compute pos
-            return true;
-        });
-         */
+        mMap.setOnMapLoadedCallback(() -> mCafeteriaListViewModel.updateMap(mMap, mapFragment));
     }
 }

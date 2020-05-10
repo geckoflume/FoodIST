@@ -1,45 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">FoodIST</string>
+    <string name="app_name" translatable="false">FoodIST</string>
     <string name="select_campus">Select campus:</string>
     <string name="available_cafeterias">Available cafeterias:</string>
     <string name="action_settings">Settings</string>
     <string name="action_refresh">Refresh</string>
-    <string name="permission_denied_explanation">Location permission was denied, but is needed for core functionality.</string>
-    <string name="permission_rationale">Location permission is needed for campus selection and cafeterias distance.</string>
+    <string name="permission_denied_explanation_location">Location permission was denied, but is needed for core functionality.</string>
+    <string name="permission_rationale_location">Location permission is needed for campus selection and cafeterias distance.</string>
     <string name="no_location_detected">No location detected. Make sure location is enabled on the device.</string>
     <string name="cafeteria_picture">Cafeteria picture</string>
-    <string name="more">More</string>
-    <string name="cafeteria_card">Walk time: %d min (%d m)\nQueue wait time: %d min</string>
     <string name="autodetecting_campus_toast">Autodetecting your campus…</string>
-    <string name="duration_seconds">%d s</string>
-    <string name="duration_minutes">%d min</string>
-    <string name="duration_hours">%d h</string>
-    <string name="duration_days">%d d</string>
-    <string name="currency">%.2f €</string>
+    <string name="duration_seconds" translatable="false">%d s</string>
+    <string name="duration_minutes" translatable="false">%d min</string>
+    <string name="duration_hours" translatable="false">%d h</string>
+    <string name="duration_days" translatable="false">%d d</string>
+    <string name="currency" translatable="false">%.2f €</string>
     <string name="open">Open</string>
     <string name="closed">Closed</string>
     <string name="menu">Menu</string>
-    <string name="opening_times">Hours</string>
+    <string name="opening_times">Opening hours</string>
     <string name="desc_cafeteria_banner">Cafeteria banner picture</string>
     <string name="desc_dish_picture">Dish first picture</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">User</string>
-    <string name="nav_header_subtitle">ist000000@tecnico.ulisboa.pt</string>
+    <string name="default_username">User</string>
+    <string name="default_email" translatable="false">ist000000@tecnico.ulisboa.pt</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="menu_cafeterias">Cafeterias</string>
     <string name="menu_account">My Account</string>
     <string name="campus">Campus</string>
-    <string name="campus_id_key">campus_id</string>
-    <string name="set_name_meal">Name</string>
-    <string name="set_price_meal">Price</string>
+    <string name="campus_id_key" translatable="false">campus_id</string>
+    <string name="set_name_dish">Name</string>
+    <string name="set_price_dish">Price</string>
     <string name="save_button">Save</string>
-    <string name="title_add_meal">Add a new meal</string>
+    <string name="title_add_dish">Add a new dish</string>
     <string name="directions">Directions</string>
     <string name="find_nearest">Find nearest campus</string>
     <string name="all_cafeterias">All cafeterias</string>
-    <string name="alameda">Alameda</string>
-    <string name="taguspark">Taguspark</string>
-    <string name="ctn">Tecnológico e Nuclear</string>
+    <string name="alameda" translatable="false">Alameda</string>
+    <string name="taguspark" translatable="false">Taguspark</string>
+    <string name="ctn" translatable="false">Tecnológico e Nuclear</string>
     <string name="need_location">You need to allow location permission first.</string>
+    <string name="username">Username (eg: istxxxxxx)</string>
+    <string name="email">Email (eg: istxxxxxx@tecnico.ulisboa.pt)</string>
+    <string name="status">Status</string>
+    <string name="student">Student</string>
+    <string name="professor">Professor</string>
+    <string name="researcher">Researcher</string>
+    <string name="staff">Staff</string>
+    <string name="general_public">General Public</string>
+    <string name="saved">Saved!</string>
+    <string name="show_route">Show route</string>
+    <string name="preference_file_key" translatable="false">settings</string>
+    <string name="menu_dishes">Dishes</string>
+    <string name="please_enter_valid_username">Please enter a valid username</string>
+    <string name="please_enter_valid_email">Please enter a valid email address</string>
+    <string name="please_enter_valid_dish">Please enter a valid dish name</string>
+    <string name="please_enter_valid_price">Please enter a valid dish price</string>
+    <string name="distance_meters" translatable="false">%d m</string>
+    <string name="distance_km" translatable="false">%d km</string>
+    <string name="toast_added_dish">Successfully added dish \&quot;%1$s\&quot; at %2$s</string>
+    <string name="details">Details</string>
+    <string name="pictures">Pictures</string>
+    <string name="name_dish">Name: %s</string>
+    <string name="price">Price: %s</string>
+    <string name="cafeteria_name">Cafeteria: %s</string>
+    <string name="info">Information: %s</string>
+    <string name="delete_dish">Delete dish</string>
+    <string name="lang">Language</string>
+    <string name="translate">Translate</string>
+    <string name="share_dish">Share dish</string>
+    <string name="share_dish_text">I\&apos;m thinking of getting \&quot;%1$s\&quot; (%2$s) from the IST %3$s, would you like to join me?</string>
+    <string name="share_cafeteria">Share cafeteria</string>
+    <string name="share_cafeteria_text">Come join me at the IST %1$s! %2$s</string>
+    <string name="haveMeat">Contain meat</string>
+    <string name="haveFish">Contain fish</string>
+    <string name="isVege">Is vegetarian</string>
+    <string name="isVegan">Is vegan</string>
+    <string name="no_information">No information</string>
 </resources>

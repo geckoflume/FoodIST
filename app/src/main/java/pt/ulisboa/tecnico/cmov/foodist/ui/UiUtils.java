@@ -4,10 +4,13 @@ import android.view.View;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import pt.ulisboa.tecnico.cmov.foodist.model.Cafeteria;
+import java.util.List;
+
+import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
+import pt.ulisboa.tecnico.cmov.foodist.db.entity.OpeningHoursEntity;
+import pt.ulisboa.tecnico.cmov.foodist.model.Dish;
 
 public abstract class UiUtils {
-
     /**
      * Shows a {@link Snackbar}.
      *
@@ -36,15 +39,35 @@ public abstract class UiUtils {
             return String.format(days, ceilIntDivision(time, 86400));
     }
 
-    public static String formatDistance(int distance) {
+    public static String formatDistance(int distance, String m, String km) {
         if (distance < 1000)
-            return String.format("%d m", distance);
+            return String.format(m, distance);
         else
-            return String.format("%d km", ceilIntDivision(distance, 1000));
+            return String.format(km, ceilIntDivision(distance, 1000));
     }
 
-    public static boolean isOpen(Cafeteria cafeteria) {
-        // TODO
+    public static boolean isOpen(List<OpeningHoursEntity> openingHours, int status) {
+        for (OpeningHoursEntity hour : openingHours) {
+            if (hour.getStatus() == status && hour.isOpen()) {
+                return true;
+            }
+        }
         return false;
+    }
+
+    public static String formatPrice(double price, String currencyFormat) {
+        return String.format(currencyFormat, price);
+    }
+
+    public static String formatShareDish(Dish dish, String cafeteriaName, String currencyFormat, String shareFormat) {
+        String formattedPrice = formatPrice(dish.getPrice(), currencyFormat);
+        return String.format(shareFormat, dish.getName(), formattedPrice, cafeteriaName);
+    }
+
+    public static String formatShareCafeteria(CafeteriaEntity cafeteria, String shareFormat) {
+        String mapsUrl = "http://maps.google.com/maps?&daddr="
+                + cafeteria.getLatitude() + ","
+                + cafeteria.getLongitude();
+        return String.format(shareFormat, cafeteria.getName(), mapsUrl);
     }
 }

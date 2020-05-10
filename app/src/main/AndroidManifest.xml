@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="pt.ulisboa.tecnico.cmov.foodist">
-
-    <!--
-         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
-         Google Maps Android API v2, but you must specify either coarse or fine
-         location permissions for the 'MyLocation' functionality.
-    -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!--
+        Allows Glide + Google Cloud Translate to monitor connectivity status and restart
+        failed requests if users go from a disconnected to a connected network state.
+    -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- To store pictures on Android 4.3 and lower -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <application
         android:name=".BasicApp"
@@ -17,10 +25,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.newMeal" />
+        <activity
+            android:name=".ui.MainActivity"
+            android:theme="@style/AppTheme.Transparent">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.CafeteriaActivity"
+            android:theme="@style/AppTheme.Transparent" />
+        <activity android:name=".ui.NewDishActivity" />
+        <activity android:name=".ui.DishActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
-             (See the file "res/values/google_maps_api.xml").
+             (See the file "res/values/google_cloud_api.xml").
              Note that the API key is linked to the encryption key used to sign the APK.
              You need a different API key for each encryption key, including the release key that is used to
              sign the APK for publishing.
@@ -28,22 +48,16 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
-
-        <activity android:name=".ui.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".ui.CafeteriaActivity"
-            android:parentActivityName=".ui.MainActivity">
+            android:value="@string/google_cloud_key" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="pt.ulisboa.tecnico.cmov.foodist.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
             <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="pt.ulisboa.tecnico.cmov.foodist.ui.MainActivity" />
-        </activity>
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

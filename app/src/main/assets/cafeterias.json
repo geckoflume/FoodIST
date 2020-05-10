@@ -1,107 +1,114 @@
 [
   {
     "id": 1,
-    "name": "Main Buliding Bar",
-    "latitude": 38.736616,
-    "longitude": -9.139603,
+    "name": "Central Bar",
+    "latitude": 38.736606,
+    "longitude": -9.139532,
     "campus_id": 1
   },
   {
     "id": 2,
-    "name": "Civil Building Bar",
-    "latitude": 38.737071,
-    "longitude": -9.14001,
+    "name": "Civil Bar",
+    "latitude": 38.736988,
+    "longitude": -9.139955,
     "campus_id": 1
   },
   {
     "id": 3,
-    "name": "Civil Building Canteen",
-    "latitude": 38.737725,
-    "longitude": -9.140466,
+    "name": "Civil Cafeteria",
+    "latitude": 38.737650,
+    "longitude": -9.140384,
     "campus_id": 1
   },
   {
     "id": 4,
-    "name": "Sena Bar and Restaurant",
-    "latitude": 38.737712,
-    "longitude": -9.138635,
+    "name": "Sena Pastry Shop",
+    "latitude": 38.737677,
+    "longitude": -9.138672,
     "campus_id": 1
   },
   {
     "id": 5,
-    "name": "Mechanics Building II Bar",
-    "latitude": 38.737333,
-    "longitude": -9.137252,
+    "name": "Mechy Bar",
+    "latitude": 38.737247,
+    "longitude": -9.137434,
     "campus_id": 1
   },
   {
     "id": 6,
-    "name": "Alameda Canteen",
-    "latitude": 38.736377,
-    "longitude": -9.13698,
+    "name": "AEIST Bar",
+    "latitude": 38.736542,
+    "longitude": -9.137226,
     "campus_id": 1
   },
   {
     "id": 7,
-    "name": "AEIST Bar",
-    "latitude": 38.73623,
-    "longitude": -9.137158,
+    "name": "AEIST Esplanade",
+    "latitude": 38.736318,
+    "longitude": -9.137820,
     "campus_id": 1
   },
   {
     "id": 8,
-    "name": "Bar da Bola",
-    "latitude": 38.73612,
-    "longitude": -9.137808,
+    "name": "Chemy Bar",
+    "latitude": 38.736240,
+    "longitude": -9.138302,
     "campus_id": 1
   },
   {
     "id": 9,
-    "name": "Alquimia Bar",
-    "latitude": 38.736105,
-    "longitude": -9.138434,
+    "name": "SAS Cafeteria",
+    "latitude": 38.736571,
+    "longitude": -9.137036,
     "campus_id": 1
   },
   {
     "id": 10,
-    "name": "Mathematics Building Canteen",
-    "latitude": 38.735486,
-    "longitude": -9.13955,
+    "name": "Math Cafeteria",
+    "latitude": 38.735508,
+    "longitude": -9.139645,
     "campus_id": 1
   },
   {
     "id": 11,
-    "name": "Interdisciplinary Building Bar",
-    "latitude": 38.73618,
-    "longitude": -9.140113,
+    "name": "Complex Bar",
+    "latitude": 38.736050,
+    "longitude": -9.140156,
     "campus_id": 1
   },
   {
     "id": 12,
-    "name": "Redbar Tagus",
-    "latitude": 38.737977,
-    "longitude": -9.303103,
+    "name": "Tagus Cafeteria",
+    "latitude": 38.737802,
+    "longitude": -9.303223,
     "campus_id": 2
   },
   {
     "id": 13,
-    "name": "Taguspark Restaurant/Bar",
-    "latitude": 38.73655,
-    "longitude": -9.302205,
+    "name": "Red Bar",
+    "latitude": 38.736546,
+    "longitude": -9.302207,
     "campus_id": 2
   },
   {
     "id": 14,
-    "name": "Taguspark Canteen",
-    "latitude": 38.737977,
-    "longitude": -9.303103,
+    "name": "Green Bar",
+    "latitude": 38.738004,
+    "longitude": -9.303058,
     "campus_id": 2
   },
   {
     "id": 15,
-    "name": "CTN Canteen",
-    "latitude": 38.812575,
-    "longitude": -9.093818,
+    "name": "CTN Cafeteria",
+    "latitude": 38.812522,
+    "longitude": -9.093773,
+    "campus_id": 3
+  },
+  {
+    "id": 16,
+    "name": "CTN Bar",
+    "latitude": 38.812522,
+    "longitude": -9.093773,
     "campus_id": 3
   }
 ]
