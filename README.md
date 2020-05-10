@@ -60,7 +60,7 @@ To build it, use the `gradlew build` command or use "Import Project" in Android 
 
 ### Generate opening_hours.json
 
-By default, the opening times are the following:
+By default, the opening times and cafeteria locations are the following:
 | Campus    | Name             | Geo Coordinates      | Hours                                                                                                 |
 |-----------|------------------|----------------------|-------------------------------------------------------------------------------------------------------|
 | Alameda   | Central Bar      | 38.736606, -9.139532 | 9:00-17:00                                                                                            |
@@ -80,7 +80,7 @@ By default, the opening times are the following:
 | CTN       | CTN Cafeteria    | 38.812522, -9.093773 | 12:00-14:00                                                                                           |
 | CTN       | CTN Bar          | 38.812522, -9.093773 | 8:30-12:00, 15:30-16:30                                                                               |
 
-To quickly generate a new JSON file containing different data, you can use the [generate_openingtimes.sh](generate_openingtimes.sh) script, which provides a basic yet useful assistant to help you do that painful task.
+To quickly generate a new JSON file containing different hours, you can use the [generate_openingtimes.sh](generate_openingtimes.sh) script, which provides a basic yet useful assistant to help you do that painful task.
 Syntax :
 ```shell script
 ./generate_openingtimes.sh

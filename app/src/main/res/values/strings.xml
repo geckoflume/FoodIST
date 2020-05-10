@@ -77,5 +77,5 @@
     <string name="haveFish">Contain fish</string>
     <string name="isVege">Is vegetarian</string>
     <string name="isVegan">Is vegan</string>
-    <string name="information">No information</string>
+    <string name="no_information">No information</string>
 </resources>

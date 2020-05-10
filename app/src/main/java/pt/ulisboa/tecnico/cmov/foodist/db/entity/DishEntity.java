@@ -9,8 +9,6 @@ import androidx.room.PrimaryKey;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
 import pt.ulisboa.tecnico.cmov.foodist.model.Dish;
 
 @Entity(tableName = "dishes")
@@ -33,23 +31,29 @@ public class DishEntity implements Dish {
     private int cafeteriaId;
 
     @Expose
+    @SerializedName("have_info")
     private boolean haveInfo;
 
     @Expose
+    @SerializedName("meat")
     private boolean haveMeat;
 
     @Expose
+    @SerializedName("fish")
     private boolean haveFish;
 
     @Expose
+    @SerializedName("vegetarian")
     private boolean isVegetarian;
 
     @Expose
+    @SerializedName("vegan")
     private boolean isVegan;
 
     @Expose
+    @SerializedName("dietary_data")
     @NonNull
-    private String data ="";
+    private String data = "";
 
     public DishEntity() {
     }
@@ -123,17 +127,17 @@ public class DishEntity implements Dish {
     }
 
     @Override
-    public boolean getHaveInfo(){
+    public boolean getHaveInfo() {
         return haveInfo;
     }
 
     @Override
-    public void setHaveInfo(boolean haveInfo){
+    public void setHaveInfo(boolean haveInfo) {
         this.haveInfo = haveInfo;
     }
 
     @Override
-    public boolean getHaveMeat(){
+    public boolean getHaveMeat() {
         return haveMeat;
     }
 
@@ -173,25 +177,34 @@ public class DishEntity implements Dish {
     }
 
     @Override
-    public String getData(){
+    public String getData() {
         return data;
     }
 
     @Override
-    public void setData(String data){
+    public void setData(String data) {
         this.data = data;
     }
-    public void setDatas(boolean meat, boolean fish, boolean vege, boolean vegan){
+
+    public void setDatas(boolean meat, boolean fish, boolean vege, boolean vegan) {
         setHaveFish(fish);
         setHaveMeat(meat);
         setIsVegan(vegan);
         setIsVegetarian(vege);
         setHaveInfo(true);
         this.data = " This is :";
-        if (meat) { data = data + "Meat "; }
-        if (fish) { data = data + "Fish "; }
-        if (vege) { data = data + "Vegetarian "; }
-        if (vegan) { data = data + "Vegan "; }
+        if (meat) {
+            data = data + "Meat ";
+        }
+        if (fish) {
+            data = data + "Fish ";
+        }
+        if (vege) {
+            data = data + "Vegetarian ";
+        }
+        if (vegan) {
+            data = data + "Vegan ";
+        }
     }
 
     @Override

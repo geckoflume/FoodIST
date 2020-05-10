@@ -127,7 +127,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
-            android:text="@string/information"
+            android:text="@string/no_information"
             app:layout_constraintStart_toStartOf="@+id/checkBox_fish"
             app:layout_constraintTop_toBottomOf="@+id/checkBox_fish" />
     </androidx.constraintlayout.widget.ConstraintLayout>

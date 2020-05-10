@@ -63,5 +63,5 @@
     <string name="haveFish">Contient du poisson</string>
     <string name="isVege">Est végétarien</string>
     <string name="isVegan">Est végan</string>
-    <string name="information">Pas d\&apos;information</string>
+    <string name="no_information">Pas d\&apos;information</string>
 </resources>
