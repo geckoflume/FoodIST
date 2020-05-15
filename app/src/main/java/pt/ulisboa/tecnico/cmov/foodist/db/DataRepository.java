@@ -14,7 +14,7 @@ import pt.ulisboa.tecnico.cmov.foodist.db.entity.OpeningHoursEntity;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.PictureEntity;
 
 /**
- * Repository handling the work with cafeterias.
+ * Repository handling the work with cafeterias, dishes, opening hours and pictures.
  */
 public class DataRepository {
     private static DataRepository sInstance;
@@ -41,10 +41,6 @@ public class DataRepository {
         }
         return sInstance;
     }
-
-    /**
-     * Get the list of cafeterias from the database and get notified when the data changes.
-     */
 
     // Cafeterias
     public List<CafeteriaEntity> getCafeteriasEntities() {

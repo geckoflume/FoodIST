@@ -131,7 +131,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract PictureDao pictureDao();
 
     /**
-     * Check whether the database already exists and expose it via {@link #getDatabaseCreated()}
+     * Check whether the database already exists and expose it via {@link #getDatabaseCreated()}.
      */
     private void updateDatabaseCreated(final Context context) {
         if (context.getDatabasePath(DATABASE_NAME).exists()) {

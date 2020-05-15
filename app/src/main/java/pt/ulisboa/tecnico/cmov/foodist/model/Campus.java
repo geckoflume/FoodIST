@@ -62,7 +62,7 @@ public class Campus {
     }
 
     /**
-     * Find and returns the nearest campus
+     * Find and returns the nearest campus.
      */
     public static Campus findNearest(Context context, Location location) {
         List<Campus> campuses = getInstance(context);

@@ -105,7 +105,7 @@ public class CafeteriaViewModel extends AndroidViewModel {
     }
 
     /**
-     * A creator is used to inject the cafeteriaId and a statusId into the ViewModel
+     * A creator is used to inject the cafeteriaId and a statusId into the ViewModel.
      */
     public static class Factory extends ViewModelProvider.NewInstanceFactory {
 

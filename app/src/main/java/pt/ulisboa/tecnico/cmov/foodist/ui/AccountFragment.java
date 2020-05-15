@@ -25,9 +25,6 @@ import pt.ulisboa.tecnico.cmov.foodist.R;
 import pt.ulisboa.tecnico.cmov.foodist.model.Language;
 import pt.ulisboa.tecnico.cmov.foodist.model.Status;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class AccountFragment extends Fragment {
     private Button saveButton;
     private int newStatus;

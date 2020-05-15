@@ -189,6 +189,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Callback received when the user has selected a campus with the spinner.
+     */
     private AdapterView.OnItemSelectedListener campusSelectedCallback() {
         return new AdapterView.OnItemSelectedListener() {
             @Override

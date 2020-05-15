@@ -16,6 +16,10 @@ import pt.ulisboa.tecnico.cmov.foodist.db.entity.DishEntity;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.PictureEntity;
 import pt.ulisboa.tecnico.cmov.foodist.model.Beacon;
 
+/**
+ * Helper class to parse JSON responses and build instances of corresponding classes
+ * using Google's Gson.
+ */
 public class ServerParser {
     private static final String TAG = ServerParser.class.getSimpleName();
 

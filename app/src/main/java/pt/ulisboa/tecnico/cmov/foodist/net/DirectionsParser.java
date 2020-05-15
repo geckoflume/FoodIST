@@ -16,7 +16,7 @@ import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
 
 /**
  * Parses the Directions API response, according to
- * https://developers.google.com/maps/documentation/directions/intro
+ * https://developers.google.com/maps/documentation/directions/intro.
  */
 public class DirectionsParser {
     private static final String TAG = DirectionsParser.class.getSimpleName();
@@ -58,7 +58,7 @@ public class DirectionsParser {
     }
 
     /**
-     * Method to decode polyline points
+     * Method to decode polyline points.
      * <p>
      * Courtesy of Jeffrey Sambells:
      * http://jeffreysambells.com/2010/05/27/decoding-polylines-from-google-maps-direction-api-with-java

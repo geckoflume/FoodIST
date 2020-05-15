@@ -52,10 +52,10 @@ public abstract class LocationUtils {
     }
 
     /**
-     * Method to expand the bounds to fit the markers heights
+     * Method to expand the bounds to fit the markers heights.
      *
-     * @param bounds
-     * @return
+     * @param bounds The LatLngBounds to be expanded
+     * @return The new LatLngBounds
      */
     private static LatLngBounds expandBounds(LatLngBounds bounds) {
         double paddingTop = (bounds.northeast.latitude - bounds.southwest.latitude) * 0.2;

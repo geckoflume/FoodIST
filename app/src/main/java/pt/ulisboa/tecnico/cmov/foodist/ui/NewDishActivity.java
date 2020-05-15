@@ -101,7 +101,6 @@ public class NewDishActivity extends AppCompatActivity {
             textInputLayout_price.setError(getString(R.string.please_enter_valid_price));
 
 
-
         // save the new values if they are valid
         if (isValidName(name) && isValidPrice(priceStr)) {
             int id = getIntent().getIntExtra("cafeteriaId", 0);

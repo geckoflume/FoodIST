@@ -6,7 +6,7 @@
 
 Android application project for Mobile and Ubiquitous Computing class @ Instituto Superior Técnico, Lisbon, Portugal.
 
-Meant to be used with the [FoodIST REST Server](https://github.com/geckoflume/FoodIST-Server), it provides ability to locate cafeterias, crowdsource cafeteria menus, dishes pictures and queue wait times.
+Meant to be used with the [FoodIST REST Server](https://github.com/geckoflume/FoodIST-Server), it provides the ability to locate cafeterias, crowdsource cafeteria menus, dishes pictures and queue wait times.
 
 More information: [https://fenix.tecnico.ulisboa.pt/disciplinas/CMov4/2019-2020/2-semestre](https://fenix.tecnico.ulisboa.pt/disciplinas/CMov4/2019-2020/2-semestre)
 
@@ -16,13 +16,14 @@ More information: [https://fenix.tecnico.ulisboa.pt/disciplinas/CMov4/2019-2020/
 
 - List and map of all dining options (cafeterias, canteens and bars) of IST
 - Filter cafeterias by campus
-- Campus autoselection based on device location
+- Campus auto-selection based on device location
 - Cafeteria details: name, opening hours, map, estimated walk time and itinerary
 - Ability to add, remove dishes and to fetch menus from the server
 - Ability to add pictures to dishes (compressed before being sent)
 - User status selection and cafeterias/opening times displayed accordingly
 - Dark theme compatible
-- Localization in English, French and Portuguese, Google translations for user provided data
+- Localization in English, French and Portuguese, Google translations for user-provided data
+- Dual LRU cache system, in ram and on disk with preload if the device gets connected to wifi
 - Dish, cafeteria sharing
 
 ## TODO
@@ -34,11 +35,11 @@ More information: [https://fenix.tecnico.ulisboa.pt/disciplinas/CMov4/2019-2020/
 
 This application is built around the MVVM (Model View View-Model) design pattern, using Room, a DAO with LiveData and ViewModels.
 
-Static cafeteria data and opening times are stored in a SQLite database, populated from JSON arrays [1](app/src/main/assets/cafeterias.json) and [2](app/src/main/assets/opening_hours.json) (see [Generate opening_hours.json](#generate-opening_hoursjson)).
+Static cafeteria data and opening times are stored in an SQLite database, populated from JSON arrays [1](app/src/main/assets/cafeterias.json) and [2](app/src/main/assets/opening_hours.json) (see [Generate opening_hours.json](#generate-opening_hoursjson)).
 
-The architecture is build around the [Jetpack components collection](https://developer.android.com/jetpack) in Java, to introduce best Android practices (such as AndroidX, DataBinding, LiveData, Fragments...) and the layouts are designed with the help of [Google's Material Design components](https://material.io/develop/android/).
+The architecture is built around the [Jetpack components collection](https://developer.android.com/jetpack) in Java, to introduce best Android practices (such as AndroidX, DataBinding, LiveData, Fragments...) and the layouts are designed with the help of [Google's Material Design components](https://material.io/develop/android/).
 
-The multi-threading are managed by `java.util.concurrent` Executors, to support future Android versions (see [Android AsyncTask API deprecating in Android 11](https://stackoverflow.com/q/58767733/9875498)).
+The multi-threading is managed by `java.util.concurrent` Executors, to support future Android versions (see [Android AsyncTask API deprecating in Android 11](https://stackoverflow.com/q/58767733/9875498)).
 
 ### Local database specification
 
@@ -51,12 +52,12 @@ The multi-threading are managed by `java.util.concurrent` Executors, to support 
 
 ## How to build
 
-This project use the Gradle build system.
-In order to benefit from Google Maps services (itineraries, times) and Google Translate, please set your API key in [debug/res/values/google_cloud_api.xml](app/src/debug/res/values/google_cloud_api.xml) or in [release/res/values/google_cloud_api.xml](app/src/release/res/values/google_cloud_api.xml) by replacing the `google_cloud_key` string:
+This project uses the Gradle build system.  
+In order to benefit from Google Maps services (itineraries, times) and Google Translate, please set an API key (with Directions API, Maps SDK for Android and Cloud Translation API enabled) in [debug/res/values/google_cloud_api.xml](app/src/debug/res/values/google_cloud_api.xml) or [release/res/values/google_cloud_api.xml](app/src/release/res/values/google_cloud_api.xml) by replacing the `google_cloud_key` string:
 ```xml
 <string name="google_cloud_key" templateMergeStrategy="preserve" translatable="false">YOUR_KEY_HERE</string>
 ```
-To build it, use the `gradlew build` command or use "Import Project" in Android Studio. 
+To build this app, use the `gradlew build` command or use "Import Project" in Android Studio. 
 
 ### Generate opening_hours.json
 

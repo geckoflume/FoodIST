@@ -5,6 +5,9 @@ import androidx.room.TypeConverter;
 import org.threeten.bp.DayOfWeek;
 import org.threeten.bp.LocalTime;
 
+/**
+ * Converters used to store threeten LocalTime/DayOfWeek instances in the Room database.
+ */
 public class Converters {
     @TypeConverter
     public static LocalTime stringToLocalTime(String value) {

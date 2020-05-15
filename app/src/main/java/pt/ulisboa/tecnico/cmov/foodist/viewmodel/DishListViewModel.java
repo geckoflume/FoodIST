@@ -96,7 +96,7 @@ public class DishListViewModel extends AndroidViewModel {
     }
 
     /**
-     * A creator is used to inject the cafeteriaId into the ViewModel
+     * A creator is used to inject the cafeteriaId into the ViewModel.
      */
     public static class Factory extends ViewModelProvider.NewInstanceFactory {
 

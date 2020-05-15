@@ -16,6 +16,9 @@ import pt.ulisboa.tecnico.cmov.foodist.db.entity.CafeteriaEntity;
 import pt.ulisboa.tecnico.cmov.foodist.db.entity.DishEntity;
 import pt.ulisboa.tecnico.cmov.foodist.model.Beacon;
 
+/**
+ * Class defining all the URLs used in the app, and allowing calls to each required services.
+ */
 public abstract class ServerFetcher {
     private static final String BASE_URL = "https://data.florianmornet.fr/api";
 
@@ -31,6 +34,7 @@ public abstract class ServerFetcher {
     private static final String DISH_ENDPOINT = DISHES_ENDPOINT + "/%d";
     private static final String DISH_PICTURES_ENDPOINT = DISHES_ENDPOINT + "/%d/pictures";
     private static final String PICTURE_ENDPOINT = PICTURES_ENDPOINT + "/%d";
+    private static final String FIRST_PICTURES_ENDPOINT = PICTURES_ENDPOINT + "/first";
 
     private static final String GOOGLE_TRANSLATE_URL = "https://translation.googleapis.com/language/translate/v2?key=%s";
     private static final String MAPS_DIRECTIONS_URL = "https://maps.googleapis.com/maps/api/directions/json?origin=%f,%f&destination=%f,%f&mode=walking&key=%s";
@@ -81,6 +85,10 @@ public abstract class ServerFetcher {
         String urlString = String.format(Locale.US, DISH_PICTURES_ENDPOINT, dishId);
 
         return NetUtils.get(urlString, HttpsURLConnection.HTTP_OK);
+    }
+
+    public static String fetchFirstPictures() {
+        return NetUtils.get(FIRST_PICTURES_ENDPOINT, HttpsURLConnection.HTTP_OK);
     }
 
     public static String deletePicture(final int pictureId) {

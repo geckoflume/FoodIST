@@ -26,7 +26,6 @@ public class DishViewModel extends AndroidViewModel {
 
     private final LiveData<DishWithPictures> mObservableDish;
     private final LiveData<CafeteriaEntity> associatedCafeteria;
-    private String dishInfo;
     private final DataRepository mRepository;
     private final int mDishId;
     private MutableLiveData<String> dishName = new MutableLiveData<>("");
@@ -144,7 +143,7 @@ public class DishViewModel extends AndroidViewModel {
     }
 
     /**
-     * A creator is used to inject the dishId into the ViewModel
+     * A creator is used to inject the dishId into the ViewModel.
      */
     public static class Factory extends ViewModelProvider.NewInstanceFactory {
 

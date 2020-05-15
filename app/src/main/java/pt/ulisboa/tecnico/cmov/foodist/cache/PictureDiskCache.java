@@ -11,6 +11,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.LinkedHashSet;
 
+/**
+ * DiskCache implementation, limited to cacheSize bytes, to allow persistence.
+ * Least recently used bitmaps are evicted when the max size is reached.
+ */
 public class PictureDiskCache {
     private static final String TAG = PictureDiskCache.class.getSimpleName();
     private final long maxSize;
