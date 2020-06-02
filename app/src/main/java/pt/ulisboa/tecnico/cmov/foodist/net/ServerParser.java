@@ -72,7 +72,7 @@ public class ServerParser {
     public List<PictureEntity> parsePictures(String response) {
         List<PictureEntity> pictures = new ArrayList<>();
 
-        if (response != null) {
+        if (response != null && !response.equals("")) {
             Type pictureListType = new TypeToken<List<PictureEntity>>() {
             }.getType();
 
